@@ -1,0 +1,3 @@
+[submodule "dapple_packages/token-auction"]
+	path = dapple_packages/token-auction
+	url = https://github.com/MakerDAO/token-auction.git
