@@ -1,25 +1,71 @@
 <head>
-  <title>frontend</title>
+  <title>Token auction</title>
 </head>
 
 <body>
-  <h1>Welcome to Meteor!</h1>
+  <h1>Token Auction Test</h1>
 
-  {{> hello}}
-  {{> info}}
+  {{> auction}}
+  {{> createauction}}
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
+<template name="auction">
+  <table>
+    <tr>
+      <td>Beneficiary</td>
+      <td>0xa1bff93e4c672727e6001528e25bbb5568c81a6d</td>
+    </tr>
+    <tr>
+      <td>Selling</td>
+      <td>ETH</td>
+    </tr>
+    <tr>
+      <td>Buying</td>
+      <td>MKR</td>
+    </tr>
+    <tr>
+      <td>Sell amount</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td>Start bid</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <td>Minimum increase</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Duration</td>
+      <td>100000000</td>
+    </tr>
+  </table>
 </template>
 
-<template name="info">
-  <h2>Learn Meteor!</h2>
-  <ul>
-    <li><a href="https://www.meteor.com/try" target="_blank">Do the Tutorial</a></li>
-    <li><a href="http://guide.meteor.com" target="_blank">Follow the Guide</a></li>
-    <li><a href="https://docs.meteor.com" target="_blank">Read the Docs</a></li>
-    <li><a href="https://forums.meteor.com" target="_blank">Discussions</a></li>
-  </ul>
+<template name="createauction">
+  <table>
+    <tbody>
+      <tr>
+        <td>Sell amount</td>
+        <td><input type="number" min="0" {{b "value: sellamount"}}></td>
+      </tr>
+      <tr>
+        <td>Start bid</td>
+        <td><input type="number" min="0" {{b "value: startbid"}}></td>
+      </tr>
+      <tr>
+        <td>Minimum increase</td>
+        <td><input type="number" min="0" {{b "value: minimumincrease"}}></td>
+      </tr>
+      <tr>
+        <td>Duration</td>
+        <td><input type="number" min="0" {{b "value: duration"}}></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td><button {{b "click: create"}}>Create auction</button></td>
+      </tr>
+    </tfoot>
+  </table>  
 </template>
