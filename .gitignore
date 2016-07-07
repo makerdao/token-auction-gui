@@ -5,3 +5,4 @@ dist/
 node_modules/
 npm-debug.log
 nohup.out
+frontend/packages/dapple/build/meteor.js
