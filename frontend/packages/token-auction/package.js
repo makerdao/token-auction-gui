@@ -13,7 +13,6 @@ Package.onUse(function (api) {
 
   api.addFiles(['package-pre-init.js'], 'client')
   api.addFiles(['build/meteor.js'], 'client')
-  api.addFiles(['build/erc20.js'], 'client')
   api.addFiles(['package-post-init.js'], 'client')
 
   api.export('web3', 'client')
