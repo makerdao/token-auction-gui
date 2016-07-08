@@ -32,16 +32,26 @@ Template.createauction.viewmodel({
     var buying = '0xffb1c99b389ba527a9194b1606b3565a07da3eef';
     
     var dapple = new Dapple['token-auction'].class(web3, 'morden');    
-    dapple.objects.auction.getTime(function (error, result) {
+    
+    Dapple.erc20.class(web3);
+    var eth = Dapple.erc20.classes.ERC20.at(selling);
+    eth.approve(dapple.objects.auction.address, 10000);
+    var mkr = Dapple.erc20.classes.ERC20.at(buying);
+    mkr.approve(dapple.objects.auction.address, 10000);
+
+    dapple.objects.auction.NewAuction(function (error, result) {
       if(!error) {
-          console.log(result);
+        console.log(result);
+        console.log("AuctionId: ", result.args.id.toNumber());
+        console.log("BaseId: ", result.args.base_id.toNumber());
       }
       else {
-          console.log(error);
+        console.log("error: ", error);
       }
-    });
+    })
+
     dapple.objects.auction.newAuction(account, selling, buying, 100, 10, 1,
-    100000, {gas: 500000 }, function (error, result) {
+    100000, {gas: 4700000 }, function (error, result) {
       if(!error) {
           var auction_id = result.auction_id;
           var base_id = result.base_id;
@@ -51,5 +61,37 @@ Template.createauction.viewmodel({
           console.log(error);
       }
     });
+  }
+});
+
+Template.allowance.viewmodel({
+  create: function(event) {
+    event.preventDefault();
+    var dapple = new Dapple['token-auction'].class(web3, 'morden');    
+    web3.eth.defaultAccount = web3.eth.accounts[0];
+    
+    dapple.objects.auction.Bid(function (error, result) {
+      if(!error) {
+        console.log(result);
+      }
+      else {
+        console.log("error: ", error);
+      }
+    })
+    Dapple.erc20.class(web3);
+    var selling = '0x52fe88b987c7829e5d5a61c98f67c9c14e6a7a90';
+    var buying = '0xffb1c99b389ba527a9194b1606b3565a07da3eef';
+    var eth = Dapple.erc20.classes.ERC20.at(selling);
+    eth.approve(dapple.objects.auction.address, 10000);
+    var mkr = Dapple.erc20.classes.ERC20.at(buying);
+    mkr.approve(dapple.objects.auction.address, 10000);
+    dapple.objects.auction.newBid(2, web3.eth.accounts[0], 15, {gas: 500000 }, function (error, result) {
+      if(!error) {
+        console.log(result);
+      }
+      else {
+        console.log("error: ", error);
+      }
+    })
   }
 });

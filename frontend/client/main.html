@@ -7,6 +7,7 @@
 
   {{> auction}}
   {{> createauction}}
+  {{> allowance}}
 </body>
 
 <template name="auction">
@@ -68,4 +69,8 @@
       </tr>
     </tfoot>
   </table>  
+</template>
+
+<template name="allowance">
+  <button {{b "click: create"}}>Check allowance</button>
 </template>
