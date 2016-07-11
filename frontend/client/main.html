@@ -8,6 +8,8 @@
   {{> auction}}
   {{> createauction}}
   {{> allowance}}
+  {{> history}}
+  {{> getauctions}}
 </body>
 
 <template name="auction">
@@ -43,7 +45,7 @@
   </table>
 </template>
 
-<template name="createauction">
+<template name="newauction">
   <table>
     <tbody>
       <tr>
@@ -73,4 +75,21 @@
 
 <template name="allowance">
   <button {{b "click: create"}}>Check allowance</button>
+</template>
+
+<template name="getauctions">
+  <h2>Get auctions and auctionlets</h2>
+  <table>
+    <tr>
+      <th>Auction Id</th>
+      <th>Auctionlet Id</th>
+    </tr>
+    {{#each auctions}}
+      <tr>
+        <td>{{id}}</td>
+        <td>{{base_id}}</td>
+      </tr>
+    {{/each}}
+  </table>
+  <button {{b "click: click"}}>Get auctions</button>
 </template>
