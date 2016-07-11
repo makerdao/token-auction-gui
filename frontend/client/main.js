@@ -21,44 +21,7 @@ Template.auction.viewmodel({
   }
 });
 
-Template.newauction.viewmodel({
-  sellamount: '0',
-  startbid: '0',
-  minimumincrease: '0',
-  duration: '0',
-  create: function(event) {
-    event.preventDefault();
 
-    Dapple.erc20.class(web3);
-    var eth = Dapple.erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
-    eth.approve(dapple.objects.auction.address, 10000);
-    var mkr = Dapple.erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
-    mkr.approve(dapple.objects.auction.address, 10000);
-
-    dapple.objects.auction.NewAuction(function (error, result) {
-      if(!error) {
-        console.log(result);
-        console.log("AuctionId: ", result.args.id.toNumber());
-        console.log("BaseId: ", result.args.base_id.toNumber());
-      }
-      else {
-        console.log("error: ", error);
-      }
-    })
-
-    dapple.objects.auction.newAuction(web3.eth.accounts[0], selling, buying, 100, 10, 1,
-    100000, {gas: 4700000 }, function (error, result) {
-      if(!error) {
-          var auction_id = result.auction_id;
-          var base_id = result.base_id;
-          console.log("Auction created with auction_id: ", auction_id, "and base_id: ", base_id);
-      }
-      else {
-          console.log(error);
-      }
-    });
-  }
-});
 
 Template.allowance.viewmodel({
   create: function(event) {
@@ -85,6 +48,36 @@ Template.allowance.viewmodel({
         console.log("error: ", error);
       }
     })
+  }
+});
+
+Template.newauction.viewmodel({
+  sellamount: 0,
+  startbid: 0,
+  minimumincrease: 0,
+  duration: 0,
+  create: function(event) {
+    event.preventDefault();
+
+    dapple.objects.auction.NewAuction(function (error, result) {
+      if(!error) {
+        console.log("AuctionId: ", result.args.id.toNumber());
+        console.log("BaseId: ", result.args.base_id.toNumber());
+      }
+      else {
+        console.log("error: ", error);
+      }
+    })
+
+    dapple.objects.auction.newAuction(web3.eth.accounts[0], selling, buying, sellamount, startbid,
+    minimumincrease, duration, {gas: 4700000 }, function (error, result) {
+      if(!error) {
+          console.log('New auction transaction started')
+      }
+      else {
+          console.log(error);
+      }
+    });
   }
 });
 

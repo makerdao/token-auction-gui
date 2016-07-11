@@ -4,15 +4,14 @@
 
 <body>
   <h1>Token Auction Test</h1>
-
-  {{> auction}}
-  {{> createauction}}
-  {{> allowance}}
-  {{> history}}
   {{> getauctions}}
+  {{> newauction}}
+  {{> auction}}
+  {{> allowance}}
 </body>
 
 <template name="auction">
+  <h2>Latest auction</h2>
   <table>
     <tr>
       <td>Beneficiary</td>
@@ -46,6 +45,7 @@
 </template>
 
 <template name="newauction">
+  <h2>New auction</h2>
   <table>
     <tbody>
       <tr>
