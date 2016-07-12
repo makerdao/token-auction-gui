@@ -21,7 +21,8 @@ Template.auction.viewmodel({
   }
 });
 
-
+Template.auctionlet.viewmodel({
+});
 
 Template.allowance.viewmodel({
   create: function(event) {
