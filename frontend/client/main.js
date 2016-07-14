@@ -7,21 +7,56 @@ import './main.html';
 var dapple = new Dapple['token-auction'].class(web3, 'morden');
 web3.eth.defaultAccount = web3.eth.accounts[0];
 var Auctions = new Mongo.Collection(null);
+var AuctionLet = new Mongo.Collection(null);
 
 Template.auction.viewmodel({
   auction: function () {
-    dapple.objects.auction.isReversed(1, function (error, result) {
+    dapple.objects.auction.getAuction(Meteor.settings.public.auctionId, {gas: 500000 },function (error, result) {
       if(!error) {
-          console.log(result);
+        var auction = {
+          auctionId: Meteor.settings.public.auctionId,
+          creator: result.args.creator,
+          selling: result.args.selling,
+          buying: result.args.buying,
+          start_bid: result.args.start_bid,
+          min_increase: result.args.min_increase,
+          min_decrease: result.args.min_decrease,
+          sell_amount: result.args.sell_amount,
+          duration: result.args.duration,
+          reversed: result.args.reversed,
+          unsold: result.args.unsold
+        }
+        Auctions.insert(auction);
       }
       else {
-          console.log(error);
+        console.log("error: ", error);
       }
     });
   }
 });
 
 Template.auctionlet.viewmodel({
+  auctionlet: function() {
+    dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
+      if(!error) {
+        var auctionlet = {
+          auctionletId: Meteor.settings.public.auctionletId,
+          auction_id: result.args.auction_id,
+          last_bidder: result.args.last_bidder,
+          last_bid_time: result.args.last_bid_time,
+          buy_amount: result.args.buy_amount,
+          sell_amount: result.args.sell_amount,
+          unclaimed: result.args.unclaimed,
+          base: result.args.base
+        }
+        AuctionLet.insert(auctionlet);
+      }
+      else {
+        console.log("error: ", error);
+      }
+    })
+    return AunctionLet.findOne({"auctionlet_id": Meteor.settings.public.auctionletId});
+  }
 });
 
 Template.allowance.viewmodel({
