@@ -4,7 +4,7 @@ import { Meteor } from 'meteor/meteor';
 
 import './main.html';
 
-var dapple = new Dapple['token-auction'].class(web3, 'morden');
+var dapple = new tokenauction.class(web3, 'morden');
 web3.eth.defaultAccount = web3.eth.accounts[0];
 var Auctions = new Mongo.Collection(null);
 var AuctionLet = new Mongo.Collection(null);
@@ -13,6 +13,7 @@ Template.auction.viewmodel({
   auction: function () {
     dapple.objects.auction.getAuction(Meteor.settings.public.auctionId, {gas: 500000 },function (error, result) {
       if(!error) {
+        console.log(result);
         var auction = {
           auctionId: Meteor.settings.public.auctionId,
           creator: result.args.creator,
@@ -25,7 +26,7 @@ Template.auction.viewmodel({
           duration: result.args.duration,
           reversed: result.args.reversed,
           unsold: result.args.unsold
-        }
+        };
         Auctions.insert(auction);
       }
       else {
@@ -39,6 +40,7 @@ Template.auctionlet.viewmodel({
   auctionlet: function() {
     dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
       if(!error) {
+        console.log(result);
         var auctionlet = {
           auctionletId: Meteor.settings.public.auctionletId,
           auction_id: result.args.auction_id,
@@ -48,7 +50,7 @@ Template.auctionlet.viewmodel({
           sell_amount: result.args.sell_amount,
           unclaimed: result.args.unclaimed,
           base: result.args.base
-        }
+        };
         AuctionLet.insert(auctionlet);
       }
       else {
@@ -63,6 +65,29 @@ Template.allowance.viewmodel({
   create: function(event) {
     event.preventDefault();
     
+    erc20.class(web3);
+    var eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
+    
+    eth.balanceOf(web3.eth.accounts[0], function(error, result) {
+      if(!error) {
+        console.log(result.toNumber());
+      }
+      else {
+        console.log(error);
+      }
+    })
+    
+    //eth.approve(dapple.objects.auction.address, 10000);
+    //var mkr = Dapple.erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
+    //mkr.approve(dapple.objects.auction.address, 10000);
+    
+  }
+});
+
+Template.placebid.viewmodel({
+  create: function(event) {
+    event.preventDefault();
+    
     dapple.objects.auction.Bid(function (error, result) {
       if(!error) {
         console.log(result);
@@ -71,11 +96,6 @@ Template.allowance.viewmodel({
         console.log("error: ", error);
       }
     })
-    Dapple.erc20.class(web3);
-    var eth = Dapple.erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
-    eth.approve(dapple.objects.auction.address, 10000);
-    var mkr = Dapple.erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
-    mkr.approve(dapple.objects.auction.address, 10000);
     dapple.objects.auction.newBid(2, web3.eth.accounts[0], 15, {gas: 500000 }, function (error, result) {
       if(!error) {
         console.log(result);

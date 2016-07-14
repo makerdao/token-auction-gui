@@ -13,4 +13,5 @@ Dapple['init'] = function (env) {
   }
 }
 
+erc20 = Dapple['erc20']
 console.log('DAPPLE', Dapple)

@@ -16,7 +16,7 @@ Dapple['init'] = function (env) {
     var code = web3.eth.getCode(Dapple['token-auction'].objects.otc.address, function (error, code) {
       Session.set('contractExists', !error && typeof code === 'string' && code !== '' && code !== '0x')
     })
-  }
+  } 
 }
-
+tokenauction = Dapple['token-auction']
 console.log('DAPPLE', Dapple)

@@ -49,7 +49,7 @@
   <table>
     <tr>
       <td>Last bidder</td>
-      <td>{{last_bidder}}</td>
+      <td>{{auctionlet.last_bidder}}</td>
     </tr>
     <tr>
       <td>Last bid time</td>
@@ -96,7 +96,13 @@
 </template>
 
 <template name="allowance">
+  <h2>Check and set allowance</h2>
   <button {{b "click: create"}}>Check allowance</button>
+</template>
+
+<template name="placebid">
+  <h2>Place a bid</h2>
+  <button {{b "click: create"}}>Place bid</button>
 </template>
 
 <template name="getauctions">

@@ -9,12 +9,10 @@ Package.describe({
 Package.onUse(function (api) {
   api.versionsFrom('1.2.1')
 
-  api.use('ethereum:web3', 'client')
+  api.use('web3:dapple', 'client')
 
-  api.addFiles(['package-pre-init.js'], 'client')
   api.addFiles(['build/meteor.js'], 'client')
   api.addFiles(['package-post-init.js'], 'client')
 
-  api.export('web3', 'client')
-  api.export('Dapple', 'client')
+  api.export('tokenauction', 'client')
 })
