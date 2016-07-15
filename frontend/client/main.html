@@ -4,10 +4,8 @@
 
 <body>
   <h1>Token Auction Test</h1>
-  {{> getauctions}}
-  {{> newauction}}
   {{> auction}}
-  {{> allowance}}
+  {{> auctionlet}}
 </body>
 
 <template name="auction">
@@ -15,31 +13,31 @@
   <table>
     <tr>
       <td>Creator</td>
-      <td>{{creator}}</td>
+      <td>{{auction.creator}}</td>
     </tr>
     <tr>
       <td>Selling</td>
-      <td>{{selling}}</td>
+      <td>{{auction.selling}}</td>
     </tr>
     <tr>
       <td>Buying</td>
-      <td>{{buying}}</td>
+      <td>{{auction.buying}}</td>
     </tr>
     <tr>
       <td>Sell amount</td>
-      <td>{{sell_amount}}</td>
+      <td>{{auction.sell_amount}}</td>
     </tr>
     <tr>
       <td>Start bid</td>
-      <td>{{start_bid}}</td>
+      <td>{{auction.start_bid}}</td>
     </tr>
     <tr>
       <td>Minimum increase</td>
-      <td>{{min_increase}}</td>
+      <td>{{auction.min_increase}}</td>
     </tr>
     <tr>
       <td>Duration</td>
-      <td>{{duration}}</td>
+      <td>{{auction.duration}}</td>
     </tr>
   </table>
 </template>

@@ -1,63 +1,25 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
-
+import { Auctions } from '/imports/api/auctions.js';
+import { Auctionlets } from '/imports/api/auctionlets.js';
 import './main.html';
+import '/imports/startup/client/index.js';
 
 var dapple = new tokenauction.class(web3, 'morden');
 web3.eth.defaultAccount = web3.eth.accounts[0];
-var Auctions = new Mongo.Collection(null);
-var AuctionLet = new Mongo.Collection(null);
 
 Template.auction.viewmodel({
   auction: function () {
-    dapple.objects.auction.getAuction(Meteor.settings.public.auctionId, {gas: 500000 },function (error, result) {
-      if(!error) {
-        console.log(result);
-        var auction = {
-          auctionId: Meteor.settings.public.auctionId,
-          creator: result.args.creator,
-          selling: result.args.selling,
-          buying: result.args.buying,
-          start_bid: result.args.start_bid,
-          min_increase: result.args.min_increase,
-          min_decrease: result.args.min_decrease,
-          sell_amount: result.args.sell_amount,
-          duration: result.args.duration,
-          reversed: result.args.reversed,
-          unsold: result.args.unsold
-        };
-        Auctions.insert(auction);
-      }
-      else {
-        console.log("error: ", error);
-      }
-    });
+    var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
+    return singleAuction;
   }
 });
 
 Template.auctionlet.viewmodel({
   auctionlet: function() {
-    dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
-      if(!error) {
-        console.log(result);
-        var auctionlet = {
-          auctionletId: Meteor.settings.public.auctionletId,
-          auction_id: result.args.auction_id,
-          last_bidder: result.args.last_bidder,
-          last_bid_time: result.args.last_bid_time,
-          buy_amount: result.args.buy_amount,
-          sell_amount: result.args.sell_amount,
-          unclaimed: result.args.unclaimed,
-          base: result.args.base
-        };
-        AuctionLet.insert(auctionlet);
-      }
-      else {
-        console.log("error: ", error);
-      }
-    })
-    return AunctionLet.findOne({"auctionlet_id": Meteor.settings.public.auctionletId});
+    var singleAuctionlet = AunctionLet.findOne({"auctionlet_id": Meteor.settings.public.auctionletId});
+    return singleAuctionlet;
   }
 });
 
@@ -77,9 +39,9 @@ Template.allowance.viewmodel({
       }
     })
     
-    //eth.approve(dapple.objects.auction.address, 10000);
-    //var mkr = Dapple.erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
-    //mkr.approve(dapple.objects.auction.address, 10000);
+    eth.approve(dapple.objects.auction.address, 10000, {gas: 500000 });
+    var mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
+    mkr.approve(dapple.objects.auction.address, 10000, {gas: 500000 });
     
   }
 });
@@ -123,10 +85,11 @@ Template.newauction.viewmodel({
       else {
         console.log("error: ", error);
       }
-    })
+    });
 
-    dapple.objects.auction.newAuction(web3.eth.accounts[0], selling, buying, sellamount, startbid,
-    minimumincrease, duration, {gas: 4700000 }, function (error, result) {
+    dapple.objects.auction.newAuction(web3.eth.accounts[0], Meteor.settings.public.ETH.address, 
+    Meteor.settings.public.MKR.address, this.sellamount(), this.startbid(), this.minimumincrease(), this.duration(), 
+    {gas: 4700000 }, function (error, result) {
       if(!error) {
           console.log('New auction transaction started')
       }
