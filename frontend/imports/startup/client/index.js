@@ -13,11 +13,11 @@ Meteor.startup(function() {
           creator: result[0],
           selling: result[1],
           buying: result[2],
-          start_bid: result[3],
-          min_increase: result[4],
-          min_decrease: result[5],
-          sell_amount: result[6],
-          duration: result[7],
+          start_bid: result[3].toNumber(),
+          min_increase: result[4].toNumber(),
+          min_decrease: result[5].toNumber(),
+          sell_amount: result[6].toNumber(),
+          duration: result[7].toNumber(),
           reversed: result[8],
           unsold: result[9]
         };
@@ -34,11 +34,11 @@ Meteor.startup(function() {
         Auctionlets.remove({});
         var auctionlet = {
           auctionletId: Meteor.settings.public.auctionletId,
-          auction_id: result[0],
+          auction_id: result[0].toNumber(),
           last_bidder: result[1],
-          last_bid_time: result[2],
-          buy_amount: result[3],
-          sell_amount: result[4],
+          last_bid_time: new Date(result[2].toNumber()*1000),
+          buy_amount: result[3].toNumber(),
+          sell_amount: result[4].toNumber(),
           unclaimed: result[5],
           base: result[6]
         };

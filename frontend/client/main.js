@@ -18,7 +18,8 @@ Template.auction.viewmodel({
 
 Template.auctionlet.viewmodel({
   auctionlet: function() {
-    var singleAuctionlet = AunctionLet.findOne({"auctionlet_id": Meteor.settings.public.auctionletId});
+    var singleAuctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
+    console.log('auctionlet: ', singleAuctionlet)
     return singleAuctionlet;
   }
 });
