@@ -2,6 +2,7 @@ var exec = require('child_process').exec
 
 var gulp = require('gulp')
 var gulpsync = require('gulp-sync')(gulp)
+var ghPages = require('gulp-gh-pages')
 
 // npm run build
 gulp.task('build-dapple-token-auction', function (cb) {
@@ -46,7 +47,7 @@ gulp.task('copy-dapple-erc20', ['build-dapple-erc20'], function (){
 
 // meteor-build-client ../build
 gulp.task('build-meteor', function (cb) {
-  exec('meteor-build-client ../dist --path ""', {cwd: 'frontend'}, function (err, res, failed) {
+  exec('meteor-build-client ../dist --path "" -s settings.json', {cwd: 'frontend'}, function (err, res, failed) {
     if (err) {
       console.log(err)
     } else if (failed) {
@@ -58,9 +59,17 @@ gulp.task('build-meteor', function (cb) {
   })
 })
 
+// gh-pages
+gulp.task('deploy-gh-pages', function () {
+  return gulp.src('./dist/**/*')
+    .pipe(ghPages())
+})
+
 gulp.task('build-dapple', ['copy-dapple-token-auction', 'copy-dapple-erc20'])
 
-gulp.task('deploy', gulpsync.sync(['build-dapple', 'build-meteor']))
+gulp.task('deploy', gulpsync.sync(['build-dapple', 'build-meteor', 'deploy-gh-pages']))
+
+gulp.task('meteor', ['build-meteor'])
 
 gulp.task('build', ['build-dapple'])
 gulp.task('default', ['build'])
