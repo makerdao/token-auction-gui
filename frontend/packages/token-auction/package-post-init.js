@@ -19,4 +19,3 @@ Dapple['init'] = function (env) {
   } 
 }
 tokenauction = Dapple['token-auction']
-console.log('DAPPLE', Dapple)
