@@ -21,16 +21,19 @@ Template.auctionlet.viewmodel({
   auctionlet: function() {
     var singleAuctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
     console.log('auctionlet: ', singleAuctionlet)
+    this.bid(singleAuctionlet.buy_amount + 1)
     return singleAuctionlet;
   },
   bid: 0,
   create: function(event) {
     event.preventDefault();
   
+    document.getElementById("spnPlacingBid").style.display = "block";
     //move this elsewhere or it will be called multiple times ?
     dapple.objects.auction.Bid(function (error, result) {
       if(!error) {
         console.log(result);
+        document.getElementById("spnPlacingBid").style.display = "none";
         //update the results in the UI, retrieve the auctionlet again
         dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
           if(!error) {
@@ -73,22 +76,21 @@ Template.auctionlet.viewmodel({
 Template.allowance.viewmodel({
   create: function(event) {
     event.preventDefault();
-    
+    document.getElementById("spnSetAllowance").style.display = "block";
     erc20.class(web3);
     var eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
     
-    eth.balanceOf(web3.eth.accounts[0], function(error, result) {
+    eth.Approval(function(error, result) {
       if(!error) {
-        console.log(result.toNumber());
-      }
-      else {
-        console.log(error);
+        console.log(result)
+        document.getElementById("spnSetAllowance").style.display = "none";
+        document.getElementById("spnAllowanceSet").style.display = "block";
       }
     })
-    
-    eth.approve(dapple.objects.auction.address, 10000, {gas: 500000 });
+
+    eth.approve(dapple.objects.auction.address, 1000000, {gas: 500000 });
     var mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
-    mkr.approve(dapple.objects.auction.address, 10000, {gas: 500000 });
+    mkr.approve(dapple.objects.auction.address, 1000000, {gas: 500000 });
     
   }
 });
@@ -134,8 +136,8 @@ Template.newauction.viewmodel({
       }
     });
 
-    dapple.objects.auction.newAuction(web3.eth.accounts[0], Meteor.settings.public.ETH.address, 
-    Meteor.settings.public.MKR.address, this.sellamount(), this.startbid(), this.minimumincrease(), this.duration(), 
+    dapple.objects.auction.newAuction(web3.eth.accounts[0], Meteor.settings.public.MKR.address, 
+    Meteor.settings.public.ETH.address, this.sellamount(), this.startbid(), this.minimumincrease(), this.duration(), 
     {gas: 4700000 }, function (error, result) {
       if(!error) {
           console.log('New auction transaction started')
