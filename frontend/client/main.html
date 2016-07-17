@@ -62,6 +62,8 @@
       <td>{{auctionlet.sell_amount}}</td>
     </tr>
   </table>
+  <input type="number" min="0" {{b "value: bid"}}>
+  <button {{b "click: create"}}>Place bid</button>
 </template>
 
 <template name="newauction">

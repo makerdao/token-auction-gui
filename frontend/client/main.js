@@ -16,12 +16,58 @@ Template.auction.viewmodel({
   }
 });
 
+//TODO Add check whether bid is high enough, has to be minimum of current auctionlet bid
 Template.auctionlet.viewmodel({
   auctionlet: function() {
     var singleAuctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
     console.log('auctionlet: ', singleAuctionlet)
     return singleAuctionlet;
-  }
+  },
+  bid: 0,
+  create: function(event) {
+    event.preventDefault();
+  
+    //move this elsewhere or it will be called multiple times ?
+    dapple.objects.auction.Bid(function (error, result) {
+      if(!error) {
+        console.log(result);
+        //update the results in the UI, retrieve the auctionlet again
+        dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
+          if(!error) {
+            console.log(result);
+            Auctionlets.remove({});
+            var auctionlet = {
+              auctionletId: Meteor.settings.public.auctionletId,
+              auction_id: result[0].toNumber(),
+              last_bidder: result[1],
+              last_bid_time: new Date(result[2].toNumber()*1000),
+              buy_amount: result[3].toNumber(),
+              sell_amount: result[4].toNumber(),
+              unclaimed: result[5],
+              base: result[6]
+            };
+            Auctionlets.insert(auctionlet);
+          }
+          else {
+            console.log("error: ", error);
+          }
+        })
+      }
+      else {
+        console.log("error: ", error);
+      }
+    })
+
+    dapple.objects.auction.newBid(Meteor.settings.public.auctionletId, web3.eth.accounts[0], this.bid(), {gas: 1500000 }, function (error, result) {
+      if(!error) {
+        console.log(result);
+        
+      }
+      else {
+        console.log("error: ", error);
+      }
+    })
+}
 });
 
 Template.allowance.viewmodel({
