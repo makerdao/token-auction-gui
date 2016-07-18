@@ -111,20 +111,3 @@
   <span id="spnSetAllowance" style="display:none">Setting allowance</span>
   <span id="spnAllowanceSet" style="display:none">Allowance set, place a bid</span>
 </template>
-
-<template name="getauctions">
-  <h2>Get auctions and auctionlets</h2>
-  <table>
-    <tr>
-      <th>Auction Id</th>
-      <th>Auctionlet Id</th>
-    </tr>
-    {{#each auctions}}
-      <tr>
-        <td>{{id}}</td>
-        <td>{{base_id}}</td>
-      </tr>
-    {{/each}}
-  </table>
-  <button {{b "click: click"}}>Get auctions</button>
-</template>
