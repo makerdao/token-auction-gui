@@ -1,7 +1,7 @@
 Package.describe({
   name: 'web3:dapple',
   version: '0.0.1',
-  summary: 'Dapple related code for web3',
+  summary: 'Web 3 initalisation',
   git: '',
   documentation: 'README.md'
 })
@@ -14,5 +14,4 @@ Package.onUse(function (api) {
   api.addFiles(['package-pre-init.js'], 'client')
 
   api.export('web3', 'client')
-  api.export('Dapple', 'client')
 })
