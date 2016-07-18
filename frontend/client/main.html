@@ -27,6 +27,10 @@
   <h2>Latest auction</h2>
   <table class="table table-condensed">
     <tr>
+      <td>ID</td>
+      <td>{{auction.auctionId}}</td>
+    </tr>
+    <tr>
       <td>Creator</td>
       <td><a href="http://testnet.etherscan.io/address/0xa1bff93e4c672727e6001528e25bbb5568c81a6d" target="_blank">{{auction.creator}}</a></td>
     </tr>
@@ -42,12 +46,20 @@
       <td>Minimum increase</td>
       <td>{{auction.min_increase}}</td>
     </tr>
+    <tr>
+      <td>Duration</td>
+      <td>{{auction.duration}} seconds</td>
+    </tr>
   </table>
 </template>
 
 <template name="auctionlet">
   <h2>Auctionlet</h2>
   <table class="table">
+    <tr>
+      <td>Auctionlet ID</td>
+      <td>{{auctionlet.auctionletId}}</td>
+    </tr>
     <tr>
       <td>Selling</td>
       <td>{{auctionlet.sell_amount}} <a href="http://testnet.etherscan.io/address/0xffb1c99b389ba527a9194b1606b3565a07da3eef" target="_blank">MKR</a></td>
@@ -100,7 +112,7 @@
         <td><button {{b "click: create"}}>Create auction</button></td>
       </tr>
     </tfoot>
-  </table>  
+  </table>
 </template>
 
 <template name="allowance">
