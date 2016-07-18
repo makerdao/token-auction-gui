@@ -27,7 +27,11 @@
   <h2>Latest auction</h2>
   <table class="table table-condensed">
     <tr>
-      <td>ID</td>
+      <td>Contract address</td>
+      <td>0x6601758972dab5a8a807d890289e4bb2d0d22eca</td>
+    </tr>
+    <tr>
+      <td>Auction id</td>
       <td>{{auction.auctionId}}</td>
     </tr>
     <tr>
@@ -48,7 +52,7 @@
     </tr>
     <tr>
       <td>Duration</td>
-      <td>{{auction.duration}} seconds</td>
+      <td>{{auction.duration}}</td>
     </tr>
   </table>
 </template>
@@ -57,7 +61,7 @@
   <h2>Auctionlet</h2>
   <table class="table">
     <tr>
-      <td>Auctionlet ID</td>
+      <td>Auctionlet id</td>
       <td>{{auctionlet.auctionletId}}</td>
     </tr>
     <tr>
@@ -112,7 +116,7 @@
         <td><button {{b "click: create"}}>Create auction</button></td>
       </tr>
     </tfoot>
-  </table>
+  </table>  
 </template>
 
 <template name="allowance">
@@ -122,21 +126,4 @@
   <button id="btnSetAllowance" {{b "click: create"}}>Check allowance</button>
   <span id="spnSetAllowance" style="display:none">Setting allowance</span>
   <span id="spnAllowanceSet" style="display:none">Allowance set, place a bid</span>
-</template>
-
-<template name="getauctions">
-  <h2>Get auctions and auctionlets</h2>
-  <table>
-    <tr>
-      <th>Auction Id</th>
-      <th>Auctionlet Id</th>
-    </tr>
-    {{#each auctions}}
-      <tr>
-        <td>{{id}}</td>
-        <td>{{base_id}}</td>
-      </tr>
-    {{/each}}
-  </table>
-  <button {{b "click: click"}}>Get auctions</button>
 </template>

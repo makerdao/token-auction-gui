@@ -126,21 +126,3 @@ Template.newauction.viewmodel({
   }
 });
 
-Template.getauctions.viewmodel({
-  auctions: function () {
-    return Auctions.find({});
-  },
-  click: function(event) {
-    event.preventDefault();
-    Auctions.remove({})
-    //Get the auction info and auctionlets information
-    dapple.objects.auction.NewAuction({}, { fromBlock: Meteor.settings.public.auctionFromBlock }, function (error, trade) {
-      if (!error) {
-        if(!Auctions.findOne({id: trade.args.id.toNumber()})) {
-          Auctions.insert({id: trade.args.id.toNumber(), base_id: trade.args.base_id.toNumber()})
-        }        
-      }
-    })
-  }
-})
-
