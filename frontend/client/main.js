@@ -61,7 +61,7 @@ Template.auctionlet.viewmodel({
       }
     })
 
-    dapple.objects.auction.newBid(Meteor.settings.public.auctionletId, web3.eth.accounts[0], this.bid(), {gas: 1500000 }, function (error, result) {
+    dapple.objects.auction.bid(Meteor.settings.public.auctionletId, this.bid(), {gas: 1500000 }, function (error, result) {
       if(!error) {
         console.log(result);
         
@@ -92,29 +92,6 @@ Template.allowance.viewmodel({
     var mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
     mkr.approve(dapple.objects.auction.address, 1000000, {gas: 500000 });
     
-  }
-});
-
-Template.placebid.viewmodel({
-  create: function(event) {
-    event.preventDefault();
-    
-    dapple.objects.auction.Bid(function (error, result) {
-      if(!error) {
-        console.log(result);
-      }
-      else {
-        console.log("error: ", error);
-      }
-    })
-    dapple.objects.auction.newBid(2, web3.eth.accounts[0], 15, {gas: 500000 }, function (error, result) {
-      if(!error) {
-        console.log(result);
-      }
-      else {
-        console.log("error: ", error);
-      }
-    })
   }
 });
 
