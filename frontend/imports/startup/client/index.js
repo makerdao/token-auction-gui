@@ -30,7 +30,7 @@ Meteor.startup(function() {
 
     dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
       if(!error) {
-        console.log(result);
+        console.log('auctionlet info result: ',result);
         Auctionlets.remove({});
         var auctionlet = {
           auctionletId: Meteor.settings.public.auctionletId,
@@ -45,7 +45,7 @@ Meteor.startup(function() {
         Auctionlets.insert(auctionlet);
       }
       else {
-        console.log("error: ", error);
+        console.log("auctionlet info error: ", error);
       }
     })
 })
