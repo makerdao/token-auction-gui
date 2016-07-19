@@ -13,30 +13,33 @@ var mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
 var eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
 
 Template.balance.viewmodel({
-  mkrName: function () {
+  mkrName() {
     return Meteor.settings.public.MKR.name;
   },
-  mkrAddress: function() {
+  mkrAddress() {
     return Meteor.settings.public.MKR.address;
   },
-  mkrBalance: function() {
+  mkrBalance() {
+    var balance = 0;
     mkr.balanceOf(web3.eth.accounts[0], function(error, result) {
       if(!error) {
-        return result.toNumber();
+        console.log('mkr balance: ', result)
+        console.log(result.toNumber())
+        balance = result.toNumber();
       }
       else {
-        console.log(error);
-        return 0;
+        console.log('mkr error: ', error);
       }
     })
+    return balance;
   },
-  ethName: function () {
+  ethName() {
     return Meteor.settings.public.ETH.name;
   },
-  ethAddress: function() {
+  ethAddress() {
     return Meteor.settings.public.ETH.address;
   },
-  ethBalance: function() {
+  ethBalance() {
     eth.balanceOf(web3.eth.accounts[0], function(error, result) {
       if(!error) {
         return result.toNumber();
@@ -50,18 +53,18 @@ Template.balance.viewmodel({
 });
 
 Template.auction.viewmodel({
-  auction: function () {
+  auction() {
     var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
     return singleAuction;
   },
-  contractaddress: function() {
+  contractaddress() {
     return dapple.objects.auction.address;
   }
 });
 
 //TODO Add check whether bid is high enough, has to be minimum of current auctionlet bid
 Template.auctionlet.viewmodel({
-  auctionlet: function() {
+  auctionlet() {
     var singleAuctionlet = Auctionlets.findOne({});
     console.log('auctionlet: ', singleAuctionlet)
     /*if(auctionlet != undefined) {
@@ -70,7 +73,7 @@ Template.auctionlet.viewmodel({
     return Auctionlets.findOne({});
   },
   bid: 0,
-  create: function(event) {
+  create(event) {
     event.preventDefault();
   
     document.getElementById("spnPlacingBid").style.display = "block";
@@ -119,7 +122,7 @@ Template.auctionlet.viewmodel({
 });
 
 Template.allowance.viewmodel({
-  create: function(event) {
+  create(event) {
     event.preventDefault();
     document.getElementById("spnSetAllowance").style.display = "block";
     
@@ -141,7 +144,7 @@ Template.newauction.viewmodel({
   startbid: 0,
   minimumincrease: 0,
   duration: 0,
-  create: function(event) {
+  create(event) {
     event.preventDefault();
 
     dapple.objects.auction.NewAuction(function (error, result) {
