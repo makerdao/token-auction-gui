@@ -59,32 +59,35 @@ Template.auctionlet.viewmodel({
   bid: 0,
   create(event) {
     event.preventDefault();
-  
-    document.getElementById("spnPlacingBid").style.display = "block";
-    //move this elsewhere or it will be called multiple times ?
-    dapple.objects.auction.Bid(function (error, result) {
-      if(!error) {
-        console.log(result);
-        document.getElementById("spnPlacingBid").style.display = "none";
-        //update the results in the UI, retrieve the auctionlet again
-        getAuctionlet();
-      }
-      else {
-        console.log("error: ", error);
-      }
-    })
+    let auction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
+    if(auction != undefined && isBalanceSufficient(this.bid(), auction.buying)) {
+      document.getElementById("spnPlacingBid").style.display = "block";
+      //move this elsewhere or it will be called multiple times ?
+      dapple.objects.auction.Bid(function (error, result) {
+        if(!error) {
+          document.getElementById("spnPlacingBid").style.display = "none";
+          //update the results in the UI, retrieve the auctionlet again
+          getAuctionlet();
+        }
+        else {
+          console.log("error: ", error);
+        }
+      })
 
-    dapple.objects.auction.bid['uint256,uint256'](Meteor.settings.public.auctionletId, this.bid(), {gas: 1500000 }, function (error, result) {
-      if(!error) {
-        console.log(result);
-        
-      }
-      else {
-        console.log("error: ", error);
-      }
-    })
+      dapple.objects.auction.bid['uint256,uint256'](Meteor.settings.public.auctionletId, this.bid(), {gas: 1500000 }, function (error, result) {
+        if(!error) {
+          console.log(result);
+          
+        }
+        else {
+          console.log("error: ", error);
+        }
+      })
+    }
 }
 });
+
+
 
 Template.allowance.viewmodel({
   create(event) {

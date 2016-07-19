@@ -93,6 +93,16 @@ getMkrBalance = function() {
     })
 }
 
+isBalanceSufficient = function(bid, tokenAddress) {
+    let token = Balances.findOne({tokenAddress: tokenAddress});
+    if(token != undefined && token.balance >= bid) {
+      return true;
+    }
+    else {
+      return false;
+    }
+}
+
 export {
     dapple,
     eth,
