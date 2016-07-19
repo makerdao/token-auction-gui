@@ -3,14 +3,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
 import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
+import { Balances } from '/imports/api/balances.js';
 import './main.html';
-import '/imports/startup/client/index.js';
-
-var dapple = new tokenauction.class(web3, 'morden');
-web3.eth.defaultAccount = web3.eth.accounts[0];
-erc20.class(web3);
-var mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
-var eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
+import { dapple, eth, mkr } from '/imports/startup/client/index.js';
 
 Template.balance.viewmodel({
   mkrName() {
@@ -19,19 +14,9 @@ Template.balance.viewmodel({
   mkrAddress() {
     return Meteor.settings.public.MKR.address;
   },
-  mkrBalance() {
-    var balance = 0;
-    mkr.balanceOf(web3.eth.accounts[0], function(error, result) {
-      if(!error) {
-        console.log('mkr balance: ', result)
-        console.log(result.toNumber())
-        balance = result.toNumber();
-      }
-      else {
-        console.log('mkr error: ', error);
-      }
-    })
-    return balance;
+  mkrToken() {
+    let token = Balances.findOne({"tokenAddress": Meteor.settings.public.MKR.address});
+    return token;
   },
   ethName() {
     return Meteor.settings.public.ETH.name;
@@ -39,16 +24,9 @@ Template.balance.viewmodel({
   ethAddress() {
     return Meteor.settings.public.ETH.address;
   },
-  ethBalance() {
-    eth.balanceOf(web3.eth.accounts[0], function(error, result) {
-      if(!error) {
-        return result.toNumber();
-      }
-      else {
-        console.log(error);
-        return 0;
-      }
-    })
+  ethToken() {
+    let token = Balances.findOne({"tokenAddress": Meteor.settings.public.ETH.address});
+    return token;
   },
 });
 

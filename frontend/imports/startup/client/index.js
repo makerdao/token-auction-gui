@@ -1,14 +1,19 @@
 //import { web3 } from 'meteor/ethereum:web3';
 import { Auctions } from '../../api/auctions.js';
 import { Auctionlets } from '../../api/auctionlets.js';
+import { Balances } from '../../api/balances.js';
 
-var dapple = new tokenauction.class(web3, 'morden');
-
+const dapple = new tokenauction.class(web3, 'morden');
+web3.eth.defaultAccount = web3.eth.accounts[0];
+erc20.class(web3);
+const mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
+const eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
 
 Meteor.startup(function() {
-    console.log('Running startup function');
     getAuction();
     getAuctionlet();
+    getEthBalance();
+    getMkrBalance();
 })
 
 getAuction = function() {
@@ -37,10 +42,8 @@ getAuction = function() {
 }
 
 getAuctionlet = function() {
-    console.log('function called!')
     dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
       if(!error) {
-        console.log('auctionlet info result: ',result);
         Auctionlets.remove({});
         var auctionlet = {
           auctionletId: Meteor.settings.public.auctionletId,
@@ -58,4 +61,40 @@ getAuctionlet = function() {
         console.log("auctionlet info error: ", error);
       }
     })
+}
+
+getEthBalance = function() {
+    eth.balanceOf(web3.eth.accounts[0], function(error, result) {
+      if(!error) {
+        console.log('eth balance: ', result)
+        balance = result.toNumber();
+        Balances.upsert({ tokenAddress: Meteor.settings.public.ETH.address },
+                        { tokenAddress: Meteor.settings.public.ETH.address, balance: balance },
+                        { upsert: true })
+      }
+      else {
+        console.log('mkr error: ', error);
+      }
+    })
+}
+
+getMkrBalance = function() {
+    mkr.balanceOf(web3.eth.accounts[0], function(error, result) {
+      if(!error) {
+        console.log('mkr balance: ', result)
+        balance = result.toNumber();
+        Balances.upsert({ tokenAddress: Meteor.settings.public.MKR.address },
+                        { tokenAddress: Meteor.settings.public.MKR.address, balance: balance },
+                        { upsert: true })
+      }
+      else {
+        console.log('mkr error: ', error);
+      }
+    })
+}
+
+export {
+    dapple,
+    eth,
+    mkr
 }
