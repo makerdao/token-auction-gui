@@ -8,6 +8,9 @@ import '/imports/startup/client/index.js';
 
 var dapple = new tokenauction.class(web3, 'morden');
 web3.eth.defaultAccount = web3.eth.accounts[0];
+erc20.class(web3);
+var mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
+var eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
 
 Template.balance.viewmodel({
   mkrName: function () {
@@ -17,8 +20,6 @@ Template.balance.viewmodel({
     return Meteor.settings.public.MKR.address;
   },
   mkrBalance: function() {
-    erc20.class(web3);
-    var mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
     mkr.balanceOf(web3.eth.accounts[0], function(error, result) {
       if(!error) {
         return result.toNumber();
@@ -36,8 +37,6 @@ Template.balance.viewmodel({
     return Meteor.settings.public.ETH.address;
   },
   ethBalance: function() {
-    erc20.class(web3);
-    var eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
     eth.balanceOf(web3.eth.accounts[0], function(error, result) {
       if(!error) {
         return result.toNumber();
@@ -54,6 +53,9 @@ Template.auction.viewmodel({
   auction: function () {
     var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
     return singleAuction;
+  },
+  contractaddress: function() {
+    return dapple.objects.auction.address;
   }
 });
 
@@ -120,8 +122,6 @@ Template.allowance.viewmodel({
   create: function(event) {
     event.preventDefault();
     document.getElementById("spnSetAllowance").style.display = "block";
-    erc20.class(web3);
-    var eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
     
     eth.Approval(function(error, result) {
       if(!error) {
@@ -132,9 +132,7 @@ Template.allowance.viewmodel({
     })
 
     eth.approve(dapple.objects.auction.address, 1000000, {gas: 500000 });
-    var mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
     mkr.approve(dapple.objects.auction.address, 1000000, {gas: 500000 });
-    
   }
 });
 
