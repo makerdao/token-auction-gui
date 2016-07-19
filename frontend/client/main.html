@@ -12,7 +12,13 @@
     </div>
     <div class="row">
       <div class="col-cs-12">
+        {{> balance}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-cs-12">
         {{> allowance}}
+        {{> newauction}}
       </div>
     </div>
     <div class="row">
@@ -22,6 +28,20 @@
     </div>
   </div>
 </body>
+
+<template name="balance">
+  <h2>Balance</h2>
+  <table class="table table-condensed">
+    <tr>
+      <td><a href="http://testnet.etherscan.io/address/{{mkrAddress}}">{{mkrName}}</a></td>
+      <td>{{mkrBalance}}</td>
+    </tr>
+    <tr>
+      <td><a href="http://testnet.etherscan.io/address/{{ethAddress}}">{{ethName}}</a></td>
+      <td>{{ethBalance}}</td>
+    </tr>
+  </table>
+</template>
 
 <template name="auction">
   <h2>Latest auction</h2>

@@ -9,6 +9,47 @@ import '/imports/startup/client/index.js';
 var dapple = new tokenauction.class(web3, 'morden');
 web3.eth.defaultAccount = web3.eth.accounts[0];
 
+Template.balance.viewmodel({
+  mkrName: function () {
+    return Meteor.settings.public.MKR.name;
+  },
+  mkrAddress: function() {
+    return Meteor.settings.public.MKR.address;
+  },
+  mkrBalance: function() {
+    erc20.class(web3);
+    var mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
+    mkr.balanceOf(web3.eth.accounts[0], function(error, result) {
+      if(!error) {
+        return result.toNumber();
+      }
+      else {
+        console.log(error);
+        return 0;
+      }
+    })
+  },
+  ethName: function () {
+    return Meteor.settings.public.ETH.name;
+  },
+  ethAddress: function() {
+    return Meteor.settings.public.ETH.address;
+  },
+  ethBalance: function() {
+    erc20.class(web3);
+    var eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
+    eth.balanceOf(web3.eth.accounts[0], function(error, result) {
+      if(!error) {
+        return result.toNumber();
+      }
+      else {
+        console.log(error);
+        return 0;
+      }
+    })
+  },
+});
+
 Template.auction.viewmodel({
   auction: function () {
     var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
@@ -19,10 +60,12 @@ Template.auction.viewmodel({
 //TODO Add check whether bid is high enough, has to be minimum of current auctionlet bid
 Template.auctionlet.viewmodel({
   auctionlet: function() {
-    var singleAuctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
+    var singleAuctionlet = Auctionlets.findOne({});
     console.log('auctionlet: ', singleAuctionlet)
-    this.bid(singleAuctionlet.buy_amount + 1)
-    return singleAuctionlet;
+    /*if(auctionlet != undefined) {
+      this.bid(singleAuctionlet.buy_amount + 1)
+    }*/
+    return Auctionlets.findOne({});
   },
   bid: 0,
   create: function(event) {
@@ -61,7 +104,7 @@ Template.auctionlet.viewmodel({
       }
     })
 
-    dapple.objects.auction.bid(Meteor.settings.public.auctionletId, this.bid(), {gas: 1500000 }, function (error, result) {
+    dapple.objects.auction.bid['uint256,uint256'](Meteor.settings.public.auctionletId, this.bid(), {gas: 1500000 }, function (error, result) {
       if(!error) {
         console.log(result);
         
