@@ -52,6 +52,12 @@ Template.balance.viewmodel({
   },
 });
 
+Template.test.viewmodel({
+  create(event) {
+    getAuctionlet()
+  }
+});
+
 Template.auction.viewmodel({
   auction() {
     var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
@@ -66,7 +72,7 @@ Template.auction.viewmodel({
 Template.auctionlet.viewmodel({
   auctionlet() {
     var singleAuctionlet = Auctionlets.findOne({});
-    console.log('auctionlet: ', singleAuctionlet)
+    //console.log('auctionlet: ', singleAuctionlet)
     /*if(auctionlet != undefined) {
       this.bid(singleAuctionlet.buy_amount + 1)
     }*/
@@ -83,26 +89,7 @@ Template.auctionlet.viewmodel({
         console.log(result);
         document.getElementById("spnPlacingBid").style.display = "none";
         //update the results in the UI, retrieve the auctionlet again
-        dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
-          if(!error) {
-            console.log(result);
-            Auctionlets.remove({});
-            var auctionlet = {
-              auctionletId: Meteor.settings.public.auctionletId,
-              auction_id: result[0].toNumber(),
-              last_bidder: result[1],
-              last_bid_time: new Date(result[2].toNumber()*1000),
-              buy_amount: result[3].toNumber(),
-              sell_amount: result[4].toNumber(),
-              unclaimed: result[5],
-              base: result[6]
-            };
-            Auctionlets.insert(auctionlet);
-          }
-          else {
-            console.log("error: ", error);
-          }
-        })
+        getAuctionlet();
       }
       else {
         console.log("error: ", error);
@@ -128,7 +115,7 @@ Template.allowance.viewmodel({
     
     eth.Approval(function(error, result) {
       if(!error) {
-        console.log(result)
+        console.log('Allowance approved: ', result)
         document.getElementById("spnSetAllowance").style.display = "none";
         document.getElementById("spnAllowanceSet").style.display = "block";
       }

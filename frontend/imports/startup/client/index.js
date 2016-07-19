@@ -2,9 +2,16 @@
 import { Auctions } from '../../api/auctions.js';
 import { Auctionlets } from '../../api/auctionlets.js';
 
+var dapple = new tokenauction.class(web3, 'morden');
+
+
 Meteor.startup(function() {
     console.log('Running startup function');
-    var dapple = new tokenauction.class(web3, 'morden');
+    getAuction();
+    getAuctionlet();
+})
+
+getAuction = function() {
     dapple.objects.auction.getAuctionInfo(Meteor.settings.public.auctionId, {gas: 500000 },function (error, result) {
       if(!error) {
         Auctions.remove({});
@@ -27,7 +34,10 @@ Meteor.startup(function() {
         console.log("error: ", error);
       }
     });
+}
 
+getAuctionlet = function() {
+    console.log('function called!')
     dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
       if(!error) {
         console.log('auctionlet info result: ',result);
@@ -48,4 +58,4 @@ Meteor.startup(function() {
         console.log("auctionlet info error: ", error);
       }
     })
-})
+}
