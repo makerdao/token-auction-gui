@@ -10,9 +10,10 @@ Package.onUse(function (api) {
   api.versionsFrom('1.2.1')
 
   api.use('web3:dapple', 'client')
+  api.use('session', 'client')
 
   api.addFiles(['build/meteor.js'], 'client')
   api.addFiles(['package-post-init.js'], 'client')
 
-  api.export('tokenauction', 'client')
+  api.export('TokenAuction', 'client')
 })

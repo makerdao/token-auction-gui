@@ -5,7 +5,7 @@ import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Balances } from '/imports/api/balances.js';
 import './main.html';
-import { dapple, eth, mkr } from '/imports/startup/client/index.js';
+import { eth, mkr } from '/imports/startup/client/index.js';
 
 Template.balance.viewmodel({
   mkrName() {
@@ -36,13 +36,19 @@ Template.test.viewmodel({
   }
 });
 
+Template.claimbid.viewmodel({
+  create(event) {
+    getAuctionlet()
+  }
+});
+
 Template.auction.viewmodel({
   auction() {
     var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
     return singleAuction;
   },
   contractaddress() {
-    return dapple.objects.auction.address;
+    return TokenAuction.objects.auction.address;
   }
 });
 
@@ -50,7 +56,8 @@ Template.auction.viewmodel({
 Template.auctionlet.viewmodel({
   auctionlet() {
     var singleAuctionlet = Auctionlets.findOne({});
-    //console.log('auctionlet: ', singleAuctionlet)
+    
+    //TODO Set bid to singleauction.buy_amount + 1
     /*if(auctionlet != undefined) {
       this.bid(singleAuctionlet.buy_amount + 1)
     }*/
@@ -63,7 +70,7 @@ Template.auctionlet.viewmodel({
     if(auction != undefined && isBalanceSufficient(this.bid(), auction.buying)) {
       document.getElementById("spnPlacingBid").style.display = "block";
       //move this elsewhere or it will be called multiple times ?
-      dapple.objects.auction.Bid(function (error, result) {
+      TokenAuction.objects.auction.Bid(function (error, result) {
         if(!error) {
           document.getElementById("spnPlacingBid").style.display = "none";
           //update the results in the UI, retrieve the auctionlet again
@@ -74,7 +81,7 @@ Template.auctionlet.viewmodel({
         }
       })
 
-      dapple.objects.auction.bid['uint256,uint256'](Meteor.settings.public.auctionletId, this.bid(), {gas: 1500000 }, function (error, result) {
+      TokenAuction.objects.auction.bid['uint256,uint256'](Meteor.settings.public.auctionletId, this.bid(), {gas: 1500000 }, function (error, result) {
         if(!error) {
           console.log(result);
           
@@ -86,8 +93,6 @@ Template.auctionlet.viewmodel({
     }
 }
 });
-
-
 
 Template.allowance.viewmodel({
   create(event) {
@@ -102,8 +107,8 @@ Template.allowance.viewmodel({
       }
     })
 
-    eth.approve(dapple.objects.auction.address, 1000000, {gas: 500000 });
-    mkr.approve(dapple.objects.auction.address, 1000000, {gas: 500000 });
+    //eth.approve(TokenAuction.objects.auction.address, 1000000, {gas: 500000 });
+    //mkr.approve(TokenAuction.objects.auction.address, 1000000, {gas: 500000 });
   }
 });
 
@@ -115,7 +120,7 @@ Template.newauction.viewmodel({
   create(event) {
     event.preventDefault();
 
-    dapple.objects.auction.NewAuction(function (error, result) {
+    TokenAuction.objects.auction.NewAuction(function (error, result) {
       if(!error) {
         console.log("AuctionId: ", result.args.id.toNumber());
         console.log("BaseId: ", result.args.base_id.toNumber());
@@ -125,7 +130,7 @@ Template.newauction.viewmodel({
       }
     });
 
-    dapple.objects.auction.newAuction(web3.eth.accounts[0], Meteor.settings.public.MKR.address, 
+    TokenAuction.objects.auction.newAuction(web3.eth.accounts[0], Meteor.settings.public.MKR.address, 
     Meteor.settings.public.ETH.address, this.sellamount(), this.startbid(), this.minimumincrease(), this.duration(), 
     {gas: 4700000 }, function (error, result) {
       if(!error) {
@@ -137,4 +142,3 @@ Template.newauction.viewmodel({
     });
   }
 });
-

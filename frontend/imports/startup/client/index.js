@@ -1,23 +1,25 @@
-//import { web3 } from 'meteor/ethereum:web3';
 import { Auctions } from '../../api/auctions.js';
 import { Auctionlets } from '../../api/auctionlets.js';
 import { Balances } from '../../api/balances.js';
+import { Tracker } from 'meteor/tracker';
 
-const dapple = new tokenauction.class(web3, 'morden');
-web3.eth.defaultAccount = web3.eth.accounts[0];
-erc20.class(web3);
-const mkr = erc20.classes.ERC20.at(Meteor.settings.public.MKR.address);
-const eth = erc20.classes.ERC20.at(Meteor.settings.public.ETH.address);
+TokenAuction.init('morden')
+ERC20.init('morden');
+const mkr = ERC20.classes.ERC20.at(Meteor.settings.public.MKR.address);
+const eth = ERC20.classes.ERC20.at(Meteor.settings.public.ETH.address);
 
-Meteor.startup(function() {
-    getAuction();
-    getAuctionlet();
-    getEthBalance();
-    getMkrBalance();
+
+Tracker.autorun(function() {
+  console.log('lalalala')
+  web3.checkAccounts();  
+  getAuction();
+  getAuctionlet();
+  getEthBalance();
+  getMkrBalance();
 })
 
-getAuction = function() {
-    dapple.objects.auction.getAuctionInfo(Meteor.settings.public.auctionId, {gas: 500000 },function (error, result) {
+function getAuction() {
+    TokenAuction.objects.auction.getAuctionInfo(Meteor.settings.public.auctionId, function (error, result) {
       if(!error) {
         Auctions.remove({});
         var auction = {
@@ -41,8 +43,8 @@ getAuction = function() {
     });
 }
 
-getAuctionlet = function() {
-    dapple.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, {gas: 500000 }, function (error, result) {
+function getAuctionlet() {
+    TokenAuction.objects.auction.getAuctionletInfo(Meteor.settings.public.auctionletId, function (error, result) {
       if(!error) {
         Auctionlets.remove({});
         var auctionlet = {
@@ -63,10 +65,12 @@ getAuctionlet = function() {
     })
 }
 
-getEthBalance = function() {
-    eth.balanceOf(web3.eth.accounts[0], function(error, result) {
+function getEthBalance() {
+    console.log('default account: ', Session.get('address'))
+    eth.balanceOf(Session.get('address'), function(error, result) {
       if(!error) {
         console.log('eth balance: ', result)
+        console.log(Session.get('address'))
         balance = result.toNumber();
         Balances.upsert({ tokenAddress: Meteor.settings.public.ETH.address },
                         { tokenAddress: Meteor.settings.public.ETH.address, balance: balance },
@@ -78,8 +82,8 @@ getEthBalance = function() {
     })
 }
 
-getMkrBalance = function() {
-    mkr.balanceOf(web3.eth.accounts[0], function(error, result) {
+function getMkrBalance() {
+    mkr.balanceOf(Session.get('address'), function(error, result) {
       if(!error) {
         console.log('mkr balance: ', result)
         balance = result.toNumber();
@@ -104,7 +108,7 @@ isBalanceSufficient = function(bid, tokenAddress) {
 }
 
 export {
-    dapple,
+    TokenAuction,
     eth,
     mkr
 }

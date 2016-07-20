@@ -14,5 +14,5 @@ Package.onUse(function (api) {
   api.addFiles(['build/meteor.js'], 'client')
   api.addFiles(['package-post-init.js'], 'client')
 
-  api.export('erc20', 'client')
+  api.export('ERC20', 'client')
 })
