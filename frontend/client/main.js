@@ -66,21 +66,30 @@ Template.auctionlet.viewmodel({
   create(event) {
     event.preventDefault();
     let auction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
-    if(auction != undefined && isBalanceSufficient(this.bid(), auction.buying)) {
+    if(auction != undefined && Balances.isBalanceSufficient(this.bid(), auction.buying)) {
       document.getElementById("spnPlacingBid").style.display = "block";
       //move this elsewhere or it will be called multiple times ?
       TokenAuction.objects.auction.Bid(function (error, result) {
         if(!error) {
+          console.log('bid is set');
           document.getElementById("spnPlacingBid").style.display = "none";
-          //update the results in the UI, retrieve the auctionlet again
-          getAuctionlet();
+          Auctionlets.getAuctionlet();
         }
         else {
           console.log("error: ", error);
         }
       })
 
-      Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, this.bid());
+      let bidAmount = this.bid()
+      ETH.Approval(function(error, result) {
+        if(!error) {
+          console.log('bid approval result: ', result)
+          Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, bidAmount);
+        }
+      });
+
+      console.log('setting allowance')
+      Balances.setEthAllowance(this.bid());
     }
   }
 });
