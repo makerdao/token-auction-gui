@@ -83,12 +83,10 @@ Template.auctionlet.viewmodel({
       let bidAmount = this.bid()
       ETH.Approval(function(error, result) {
         if(!error) {
-          console.log('bid approval result: ', result)
-          Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, bidAmount);
+          Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, bidAmount, auction.sell_amount);
         }
       });
 
-      console.log('setting allowance')
       Balances.setEthAllowance(this.bid());
     }
   }
