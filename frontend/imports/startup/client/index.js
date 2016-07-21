@@ -13,7 +13,3 @@ Tracker.autorun(function() {
   Balances.getEthBalance();
   Balances.getMkrBalance();
 })
-
-export {
-    TokenAuction
-}

@@ -3,9 +3,9 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
 import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
-import { Balances } from '/imports/api/balances.js';
+import { Balances, ETH, MKR } from '/imports/api/balances.js';
 import './main.html';
-import { eth, mkr } from '/imports/startup/client/index.js';
+import '/imports/startup/client/index.js'
 
 Template.balance.viewmodel({
   mkrName() {
@@ -56,7 +56,6 @@ Template.auction.viewmodel({
 Template.auctionlet.viewmodel({
   auctionlet() {
     var singleAuctionlet = Auctionlets.findOne({});
-    
     //TODO Set bid to singleauction.buy_amount + 1
     /*if(auctionlet != undefined) {
       this.bid(singleAuctionlet.buy_amount + 1)
@@ -81,17 +80,9 @@ Template.auctionlet.viewmodel({
         }
       })
 
-      TokenAuction.objects.auction.bid['uint256,uint256'](Meteor.settings.public.auctionletId, this.bid(), {gas: 1500000 }, function (error, result) {
-        if(!error) {
-          console.log(result);
-          
-        }
-        else {
-          console.log("error: ", error);
-        }
-      })
+      Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, this.bid());
     }
-}
+  }
 });
 
 Template.allowance.viewmodel({
@@ -99,16 +90,24 @@ Template.allowance.viewmodel({
     event.preventDefault();
     document.getElementById("spnSetAllowance").style.display = "block";
     
-    eth.Approval(function(error, result) {
+    ETH.Approval(function(error, result) {
       if(!error) {
-        console.log('Allowance approved: ', result)
+        console.log('Allowance approved for ETH: ', result)
         document.getElementById("spnSetAllowance").style.display = "none";
         document.getElementById("spnAllowanceSet").style.display = "block";
       }
-    })
+    });
 
-    //eth.approve(TokenAuction.objects.auction.address, 1000000, {gas: 500000 });
-    //mkr.approve(TokenAuction.objects.auction.address, 1000000, {gas: 500000 });
+    MKR.Approval(function(error, result) {
+      if(!error) {
+        console.log('Allowance approved for MKR: ', result)
+        document.getElementById("spnSetAllowance").style.display = "none";
+        document.getElementById("spnAllowanceSet").style.display = "block";
+      }
+    });
+
+    Balances.setEthAllowance(1000000);
+    Balances.setMkrAllowance(1000000);
   }
 });
 
@@ -130,15 +129,8 @@ Template.newauction.viewmodel({
       }
     });
 
-    TokenAuction.objects.auction.newAuction(web3.eth.accounts[0], Meteor.settings.public.MKR.address, 
-    Meteor.settings.public.ETH.address, this.sellamount(), this.startbid(), this.minimumincrease(), this.duration(), 
-    {gas: 4700000 }, function (error, result) {
-      if(!error) {
-          console.log('New auction transaction started')
-      }
-      else {
-          console.log(error);
-      }
-    });
+    Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
+    Meteor.settings.public.ETH.address, this.sellamount(), this.startbid(), this.minimumincrease(), 
+    this.duration())
   }
 });

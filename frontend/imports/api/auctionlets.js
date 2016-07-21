@@ -24,4 +24,15 @@ Auctionlets.getAuctionlet = function() {
     })
 }
 
+Auctionlets.bidOnAuctionlet = function(auctionletId, bidAmount) {
+    TokenAuction.objects.auction.bid['uint256,uint256'](auctionletId, bidAmount, {gas: 1500000 }, function (error, result) {
+        if(!error) {
+          console.log(result);
+        }
+        else {
+          console.log("error: ", error);
+        }
+      })
+}
+
 export { Auctionlets }

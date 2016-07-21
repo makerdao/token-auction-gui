@@ -47,4 +47,20 @@ Balances.isBalanceSufficient = function(bid, tokenAddress) {
     }
 }
 
+Balances.setMkrAllowance = function(amount) {
+    MKR.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
+      if(error) {
+        console.log(error)
+      }
+    });
+}
+
+Balances.setEthAllowance = function(amount) {
+    ETH.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
+      if(error) {
+        console.log(error)
+      }
+    });
+}
+
 export { Balances, ETH, MKR }

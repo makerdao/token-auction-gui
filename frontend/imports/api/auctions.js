@@ -27,4 +27,17 @@ Auctions.getAuction = function() {
     });
 }
 
+Auctions.newAuction = function(selling, buying, sellAmount, startBid, minIncrease, duration) {
+    TokenAuction.objects.auction.newAuction(Session.get('address'), selling, 
+    buying, sellAmount, startBid, minIncrease, duration, 
+    {gas: 4700000 }, function (error, result) {
+      if(!error) {
+          console.log('New auction transaction started')
+      }
+      else {
+          console.log(error);
+      }
+    });
+}
+
 export { Auctions }
