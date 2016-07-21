@@ -33,6 +33,12 @@
   <button id="btnTest" {{b "click: create"}}>Test</button>
 </template>
 
+<template name="claimbid">
+  <h2>Claim bid</h2>
+  <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
+    <span id="spnPlacingBid" style="display:none">Bid is being placed</span>
+</template>
+
 <template name="balance">
   <h2>Balance</h2>
   <table class="table table-condensed">
