@@ -6,7 +6,6 @@ import { Tracker } from 'meteor/tracker';
 TokenAuction.init('morden')
 
 Tracker.autorun(function() {
-  console.log('lalalala')
   web3.checkAccounts();    
   Auctions.getAuction();
   Auctionlets.getAuctionlet();

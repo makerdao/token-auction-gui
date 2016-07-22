@@ -11,7 +11,6 @@ if (typeof web3 !== 'undefined') {
 
 web3.checkAccounts = function() {
   web3.eth.getAccounts(function (error, accounts) {
-    console.log('check accounts')
     if (!error) {
       if (!_.contains(accounts, web3.eth.defaultAccount)) {
         if (_.contains(accounts, localStorage.getItem('address'))) {

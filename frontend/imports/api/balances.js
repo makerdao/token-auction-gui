@@ -6,11 +6,10 @@ const MKR = ERC20.classes.ERC20.at(Meteor.settings.public.MKR.address);
 const ETH = ERC20.classes.ERC20.at(Meteor.settings.public.ETH.address);
 
 Balances.getEthBalance = function() {
-    console.log('default account: ', Session.get('address'))
+    //console.log('default account: ', Session.get('address'))
     ETH.balanceOf(Session.get('address'), function(error, result) {
       if(!error) {
-        console.log('eth balance: ', result)
-        console.log(Session.get('address'))
+        //console.log('eth balance: ', result)
         balance = result.toNumber();
         Balances.upsert({ tokenAddress: Meteor.settings.public.ETH.address },
                         { tokenAddress: Meteor.settings.public.ETH.address, balance: balance },
@@ -25,7 +24,7 @@ Balances.getEthBalance = function() {
 Balances.getMkrBalance = function() {
     MKR.balanceOf(Session.get('address'), function(error, result) {
       if(!error) {
-        console.log('mkr balance: ', result)
+        //console.log('mkr balance: ', result)
         balance = result.toNumber();
         Balances.upsert({ tokenAddress: Meteor.settings.public.MKR.address },
                         { tokenAddress: Meteor.settings.public.MKR.address, balance: balance },
