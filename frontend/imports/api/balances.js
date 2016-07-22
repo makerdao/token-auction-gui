@@ -40,10 +40,15 @@ Balances.getMkrBalance = function() {
 Balances.isBalanceSufficient = function(bid, tokenAddress) {
     let token = Balances.findOne({tokenAddress: tokenAddress});
     if(token != undefined && token.balance >= bid) {
+      console.log('Success! Balance is', token.balance, 'and bid is', bid)
       return true;
     }
-    else {
+    else if(token != undefined) {
+      console.log('Insufficient! Balance is', token.balance, 'and bid is', bid)
       return false;
+    }
+    else {
+      console.log('token is not found')
     }
 }
 

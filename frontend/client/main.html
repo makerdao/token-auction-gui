@@ -25,6 +25,11 @@
         {{> auctionlet}}
       </div>
     </div>
+    <div class="row">
+      <div class="col-cs-12">
+        {{> newauction}}
+      </div>
+    </div>
   </div>
 </body>
 
@@ -117,6 +122,8 @@
     <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
     <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
     <span id="spnPlacingBid" style="display:none">Bid is being placed</span>
+    <span id="spnBalanceInsufficient" style="display:none">Your balance is insufficient</span>
+    <span id="spnBidInsufficient" style="display:none">Your bid is not high enough</span>
   </div>
 </template>
 

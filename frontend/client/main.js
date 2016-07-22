@@ -52,42 +52,61 @@ Template.auction.viewmodel({
   }
 });
 
-//TODO Add check whether bid is high enough, has to be minimum of current auctionlet bid
 Template.auctionlet.viewmodel({
   auctionlet() {
-    var singleAuctionlet = Auctionlets.findOne({});
-    //TODO Set bid to singleauction.buy_amount + 1
-    /*if(auctionlet != undefined) {
-      this.bid(singleAuctionlet.buy_amount + 1)
-    }*/
-    return Auctionlets.findOne({});
+    var singleAuctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
+    var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
+    if(singleAuctionlet != undefined && singleAuction != undefined) {
+      var requiredBid = Math.ceil(singleAuctionlet.buy_amount * (100 + singleAuction.min_increase) / 100)
+      this.bid(requiredBid)
+    }
+    return singleAuctionlet
   },
   bid: 0,
   create(event) {
     event.preventDefault();
+    document.getElementById("spnBidInsufficient").style.display = "none";
+    document.getElementById("spnBalanceInsufficient").style.display = "none";
+    
     let auction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
+    let auctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
+    
+    console.log('You clicked with bid:', this.bid())
     if(auction != undefined && Balances.isBalanceSufficient(this.bid(), auction.buying)) {
-      document.getElementById("spnPlacingBid").style.display = "block";
-      //move this elsewhere or it will be called multiple times ?
-      TokenAuction.objects.auction.Bid(function (error, result) {
-        if(!error) {
-          console.log('bid is set');
+      console.log('Auction min increase:', auction.min_increase, 'and auctionlet buy amount is', auctionlet.buy_amount)
+      let minimumBid = Math.ceil(auctionlet.buy_amount * (100 + auction.min_increase) / 100)
+      console.log('Minimum bid is:',minimumBid)
+      if(auctionlet != undefined && this.bid() >= Math.ceil(auctionlet.buy_amount * (100 + auction.min_increase) / 100)) {
+        console.log('Balance and bid ok, setting allowance')
+        document.getElementById("spnPlacingBid").style.display = "block";
+        //move this elsewhere or it will be called multiple times ?
+        TokenAuction.objects.auction.Bid(function (error, result) {
           document.getElementById("spnPlacingBid").style.display = "none";
-          Auctionlets.getAuctionlet();
-        }
-        else {
-          console.log("error: ", error);
-        }
-      })
+          if(!error) {
+            console.log('bid is set');
+            Auctionlets.getAuctionlet();
+          }
+          else {
+            console.log("error: ", error);
+          }
+        })
 
-      let bidAmount = this.bid()
-      ETH.Approval(function(error, result) {
-        if(!error) {
-          Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, bidAmount, auction.sell_amount);
-        }
-      });
+        let bidAmount = this.bid()
+        ETH.Approval(function(error, result) {
+          if(!error) {
+            console.log('Placing bid')
+            Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, bidAmount, auction.sell_amount);
+          }
+        });
 
-      Balances.setEthAllowance(this.bid());
+        Balances.setEthAllowance(this.bid());
+      }
+      else {
+        document.getElementById("spnBidInsufficient").style.display = "block";
+      }
+    }
+    else {
+      document.getElementById("spnBalanceInsufficient").style.display = "block";
     }
   }
 });
