@@ -7,6 +7,29 @@ import { Balances, ETH, MKR } from '/imports/api/balances.js';
 import './main.html';
 import '/imports/startup/client/index.js'
 
+Template.body.onCreated(function() {
+   console.log('On body created');
+   
+   TokenAuction.objects.auction.Bid(function (error, result) {
+      document.getElementById("spnPlacingBid").style.display = "none";
+      if(!error) {
+        console.log('bid is set');
+        Auctionlets.getAuctionlet();
+      }
+      else {
+        console.log("error: ", error);
+      }
+    });
+
+    ETH.Approval(function(error, result) {
+      if(!error) {
+        console.log('Placing bid')
+        let auction = Auctions.findOne({});
+        Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toNumber(), auction.sell_amount);
+      }
+    });
+})
+
 Template.balance.viewmodel({
   mkrName() {
     return Meteor.settings.public.MKR.name;
@@ -71,34 +94,10 @@ Template.auctionlet.viewmodel({
     let auction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
     let auctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
     
-    console.log('You clicked with bid:', this.bid())
     if(auction != undefined && Balances.isBalanceSufficient(this.bid(), auction.buying)) {
-      console.log('Auction min increase:', auction.min_increase, 'and auctionlet buy amount is', auctionlet.buy_amount)
-      let minimumBid = Math.ceil(auctionlet.buy_amount * (100 + auction.min_increase) / 100)
-      console.log('Minimum bid is:',minimumBid)
       if(auctionlet != undefined && this.bid() >= Math.ceil(auctionlet.buy_amount * (100 + auction.min_increase) / 100)) {
-        console.log('Balance and bid ok, setting allowance')
         document.getElementById("spnPlacingBid").style.display = "block";
-        //move this elsewhere or it will be called multiple times ?
-        TokenAuction.objects.auction.Bid(function (error, result) {
-          document.getElementById("spnPlacingBid").style.display = "none";
-          if(!error) {
-            console.log('bid is set');
-            Auctionlets.getAuctionlet();
-          }
-          else {
-            console.log("error: ", error);
-          }
-        })
-
         let bidAmount = this.bid()
-        ETH.Approval(function(error, result) {
-          if(!error) {
-            console.log('Placing bid')
-            Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, bidAmount, auction.sell_amount);
-          }
-        });
-
         Balances.setEthAllowance(this.bid());
       }
       else {
