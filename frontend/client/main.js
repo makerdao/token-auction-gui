@@ -21,9 +21,12 @@ Template.body.onCreated(function() {
       }
     });
 
-    ETH.Approval(function(error, result) {
+    let ownerAddress = Session.get('address')
+    console.log("Address",ownerAddress)
+
+    ETH.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
       if(!error) {
-        console.log('Placing bid')
+        console.log('Approved, placing bid')
         let auction = Auctions.findOne({});
         Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toNumber(), auction.sell_amount);
       }
@@ -51,12 +54,6 @@ Template.balance.viewmodel({
     let token = Balances.findOne({"tokenAddress": Meteor.settings.public.ETH.address});
     return token;
   },
-});
-
-Template.test.viewmodel({
-  create(event) {
-    getAuctionlet()
-  }
 });
 
 Template.claimbid.viewmodel({
