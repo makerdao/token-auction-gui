@@ -5,7 +5,8 @@ import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Balances, ETH, MKR } from '/imports/api/balances.js';
 import './main.html';
-import '/imports/startup/client/index.js'
+import '/imports/startup/client/index.js';
+import '/imports/helpers.js';
 
 Template.body.onCreated(function() {
    console.log('On body created');
@@ -28,7 +29,7 @@ Template.body.onCreated(function() {
       if(!error) {
         console.log('Approved, placing bid')
         let auction = Auctions.findOne({});
-        Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toNumber(), auction.sell_amount);
+        Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toString(10), auction.sell_amount);
       }
     });
 })
@@ -55,6 +56,22 @@ Template.balance.viewmodel({
     return token;
   },
 });
+
+Template.test.viewmodel({
+  create(event) {
+    ETH.balanceOf(Session.get('address'), function(error, result) {
+      if(!error) {
+        console.log(web3.toBigNumber(result))
+        console.log(result.toNumber());
+        console.log(result.toString(10))
+      }
+      else {
+        console.log('mkr error: ', error);
+      }
+    })
+  }
+});
+
 
 Template.claimbid.viewmodel({
   create(event) {

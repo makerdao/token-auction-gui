@@ -59,6 +59,7 @@ modules-runtime@0.6.5
 mongo@1.1.9_1
 mongo-id@1.0.5
 npm-mongo@1.4.45
+numeral:numeral@1.5.3_1
 observe-sequence@1.0.12
 ordered-dict@1.0.8
 promise@0.7.3

@@ -10,7 +10,7 @@ Balances.getEthBalance = function() {
     ETH.balanceOf(Session.get('address'), function(error, result) {
       if(!error) {
         //console.log('eth balance: ', result)
-        balance = result.toNumber();
+        balance = result.toString(10);
         Balances.upsert({ tokenAddress: Meteor.settings.public.ETH.address },
                         { tokenAddress: Meteor.settings.public.ETH.address, balance: balance },
                         { upsert: true })
@@ -25,7 +25,7 @@ Balances.getMkrBalance = function() {
     MKR.balanceOf(Session.get('address'), function(error, result) {
       if(!error) {
         //console.log('mkr balance: ', result)
-        balance = result.toNumber();
+        balance = result.toString(10);
         Balances.upsert({ tokenAddress: Meteor.settings.public.MKR.address },
                         { tokenAddress: Meteor.settings.public.MKR.address, balance: balance },
                         { upsert: true })
