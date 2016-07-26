@@ -10,27 +10,28 @@ import '/imports/helpers.js';
 
 Template.body.onCreated(function() {
    console.log('On body created');
-   
-   TokenAuction.objects.auction.Bid(function (error, result) {
-      document.getElementById("spnPlacingBid").style.display = "none";
-      if(!error) {
-        console.log('bid is set');
-        Auctionlets.getAuctionlet();
-      }
-      else {
-        console.log("error: ", error);
-      }
-    });
+   this.autorun(() => {
+    TokenAuction.objects.auction.Bid(function (error, result) {
+        document.getElementById("spnPlacingBid").style.display = "none";
+        if(!error) {
+          console.log('bid is set');
+          Auctionlets.getAuctionlet();
+        }
+        else {
+          console.log("error: ", error);
+        }
+      });
 
-    let ownerAddress = Session.get('address')
-    console.log("Address",ownerAddress)
+      let ownerAddress = Session.get('address')
+      console.log("Address",ownerAddress)
 
-    ETH.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
-      if(!error) {
-        console.log('Approved, placing bid')
-        let auction = Auctions.findOne({});
-        Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toString(10), auction.sell_amount);
-      }
+      ETH.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
+        if(!error) {
+          console.log('Approved, placing bid')
+          let auction = Auctions.findOne({});
+          Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toString(10), auction.sell_amount);
+        }
+      });
     });
 })
 
@@ -95,24 +96,24 @@ Template.auctionlet.viewmodel({
     var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
     if(singleAuctionlet != undefined && singleAuction != undefined) {
       var requiredBid = Math.ceil(singleAuctionlet.buy_amount * (100 + singleAuction.min_increase) / 100)
-      this.bid(requiredBid)
+      this.bid(web3.fromWei(requiredBid))
     }
     return singleAuctionlet
   },
   bid: 0,
   create(event) {
     event.preventDefault();
+    console.log(this.bid())
     document.getElementById("spnBidInsufficient").style.display = "none";
     document.getElementById("spnBalanceInsufficient").style.display = "none";
-    
+    let auctionletBid = web3.toWei(this.bid())
     let auction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
     let auctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
     
-    if(auction != undefined && Balances.isBalanceSufficient(this.bid(), auction.buying)) {
-      if(auctionlet != undefined && this.bid() >= Math.ceil(auctionlet.buy_amount * (100 + auction.min_increase) / 100)) {
+    if(auction != undefined && Balances.isBalanceSufficient(auctionletBid, auction.buying)) {
+      if(auctionlet != undefined && auctionletBid >= Math.ceil(auctionlet.buy_amount * (100 + auction.min_increase) / 100)) {
         document.getElementById("spnPlacingBid").style.display = "block";
-        let bidAmount = this.bid()
-        Balances.setEthAllowance(this.bid());
+        Balances.setEthAllowance(auctionletBid);
       }
       else {
         document.getElementById("spnBidInsufficient").style.display = "block";
