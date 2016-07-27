@@ -33,12 +33,6 @@
   </div>
 </body>
 
-<template name="test">
-  <h2>Test</h2>
-  <button class="btn btn-primary" {{b "click: create"}}>Test</button>
-  <span id="spnPlacingBid" style="display:none">Button clicked</span>
-</template>
-
 <template name="claimbid">
   <h2>Claim bid</h2>
   <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
@@ -84,11 +78,11 @@
     </tr>
     <tr>
       <td>Minimum increase</td>
-      <td>{{formatBalance (fromWei auction.min_increase)}}</td>
+      <td>{{auction.min_increase}}%</td>
     </tr>
     <tr>
       <td>Duration</td>
-      <td>{{auction.duration}}</td>
+      <td>{{auction.duration}} seconds</td>
     </tr>
   </table>
 </template>
@@ -134,19 +128,19 @@
     <tbody>
       <tr>
         <td>Sell amount</td>
-        <td><input type="number" min="0" {{b "value: sellamount"}}></td>
+        <td><input type="number" min="0" {{b "value: sellamount"}}> MKR</td>
       </tr>
       <tr>
         <td>Start bid</td>
-        <td><input type="number" min="0" {{b "value: startbid"}}></td>
+        <td><input type="number" min="0" {{b "value: startbid"}}> ETH</td>
       </tr>
       <tr>
         <td>Minimum increase</td>
-        <td><input type="number" min="0" {{b "value: minimumincrease"}}></td>
+        <td><input type="number" min="1" step="1" {{b "value: minimumincrease"}}> %</td>
       </tr>
       <tr>
         <td>Duration</td>
-        <td><input type="number" min="0" {{b "value: duration"}}></td>
+        <td><input type="number" min="0" {{b "value: duration"}}> seconds</td>
       </tr>
     </tbody>
     <tfoot>
