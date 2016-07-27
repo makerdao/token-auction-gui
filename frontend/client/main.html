@@ -27,6 +27,11 @@
     </div>
     <div class="row">
       <div class="col-cs-12">
+        {{> transactions}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-cs-12">
         {{> allowance}}
       </div>
     </div>
@@ -158,4 +163,17 @@
   <button id="btnSetAllowance" {{b "click: create"}}>Check allowance</button>
   <span id="spnSetAllowance" style="display:none">Setting allowance</span>
   <span id="spnAllowanceSet" style="display:none">Allowance set, place a bid</span>
+</template>
+
+<template name="transactions">
+  <h2>Transactions</h2>
+  <table class="table table-condensed">
+    {{#each transactions}}
+    <tr>
+      <td>{{type}}</td>
+      <td>{{tx}}</td>
+      <td>{{object}} </td>
+    </tr>
+    {{/each}}
+  </table>
 </template>

@@ -12,16 +12,12 @@ import { Transactions } from '/imports/lib/_transactions.js';
 Template.body.onCreated(function() {
   console.log('On body created');
   this.autorun(() => {
-      
       Auctionlets.watchBid();
-
       let ownerAddress = Session.get('address')
       console.log("Address",ownerAddress)
-
       Balances.watchEthApproval()
     });
 
-    //TODO Do we need status for allowance or is logs.length enough?
     Transactions.observeRemoved('allowance', function (document) {
         if (document.receipt.logs.length === 0) {
           //Show error in User interface
@@ -174,5 +170,11 @@ Template.newauction.viewmodel({
     //Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
     //Meteor.settings.public.ETH.address, web3.toWei(this.sellamount()), web3.toWei(this.startbid()), this.minimumincrease(), 
     //this.duration())
+  }
+});
+
+Template.transactions.viewmodel({
+  transactions() {
+    return Transactions.find({});
   }
 });
