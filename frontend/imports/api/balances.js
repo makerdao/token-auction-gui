@@ -95,4 +95,21 @@ Balances.watchMkrApproval = function() {
     });
 }
 
+Balances.watchAllowanceTransactions = function() {
+  Transactions.observeRemoved('allowance', function (document) {
+      if (document.receipt.logs.length === 0) {
+        //Show error in User interface
+        console.log('bid went wrong')
+      } else {
+        //Show bid is succesful
+        console.log('bid is succesful')
+        let auction = Auctions.findAuction();
+        console.log(document)
+        console.log('Document value', document.object.value)
+        Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, document.object.value, auction.sell_amount);
+      }
+  })
+
+}
+
 export { Balances, ETH, MKR }

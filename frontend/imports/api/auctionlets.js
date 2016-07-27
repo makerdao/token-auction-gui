@@ -59,6 +59,20 @@ Auctionlets.watchBid = function() {
   }); 
 }
 
+Auctionlets.watchBidTransactions = function() {
+  Transactions.observeRemoved('bid', function (document) {
+      if (document.receipt.logs.length === 0) {
+        //Show error in User interface
+        console.log('bid went wrong')
+      } else {
+        //Show bid is succesful
+        console.log('bid is succesful')
+        console.log('auctionletId', document.object.auctionletId);
+        console.log('bid', document.object.bid);
+      }
+  })
+}
+
 Auctionlets.calculateRequiredBid = function(buy_amount, min_increase) {
   return web3.toBigNumber(buy_amount).mul(100 + min_increase).div(100)
 }
