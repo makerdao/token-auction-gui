@@ -22,7 +22,7 @@ Tracker.autorun(function() {
     console.log('is syncing outside of error')
     if (!error) {
       console.log('is syncing')
-      /*Session.set('syncing', sync !== false)
+      Session.set('syncing', sync !== false)
 
       // Stop all app activity
       if (sync === true) {
@@ -38,10 +38,10 @@ Tracker.autorun(function() {
         Session.set('outOfSync', false)
         //Offers.sync()
         web3.eth.filter('latest', function () {
-          Tokens.sync()
+          //Tokens.sync()
           Transactions.sync()
         })
-      }*/
+      }
     }
   })
 
@@ -50,7 +50,7 @@ Tracker.autorun(function() {
 })
 
 // CHECK FOR NETWORK
-/*function checkNetwork () {
+function checkNetwork () {
   web3.version.getNode(function (error, node) {
     var isConnected = !error
 
@@ -89,4 +89,4 @@ Tracker.autorun(function() {
       }
     }
   })
-}*/
+}

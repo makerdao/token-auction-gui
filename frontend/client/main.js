@@ -10,51 +10,45 @@ import '/imports/helpers.js';
 import { Transactions } from '/imports/lib/_transactions.js';
 
 Template.body.onCreated(function() {
-   console.log('On body created');
-   this.autorun(() => {
-    TokenAuction.objects.auction.Bid(function (error, result) {
-        document.getElementById("spnPlacingBid").style.display = "none";
-        if(!error) {
-          Transactions.add('bid', result.transactionHash, { id: idx, status: Status.BID })
-          console.log('bid is set');
-          Auctionlets.getAuctionlet();
-        }
-        else {
-          console.log("error: ", error);
-        }
-      });
+  console.log('On body created');
+  this.autorun(() => {
+      
+      Auctionlets.watchBid();
 
       let ownerAddress = Session.get('address')
       console.log("Address",ownerAddress)
 
-      ETH.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
-        if(!error) {
-          console.log('Approved, placing bid')
-          let auction = Auctions.findOne({});
-          Transactions.add('bid', result.transactionHash, { id: idx, status: Status.PENDING })
-          Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toString(10), auction.sell_amount);
-        }
-      });
+      Balances.watchEthApproval()
     });
 
-    Transactions.observeRemoved('bid', function (document) {
-    switch (document.object.status) {
-      case Status.CANCELLED:
-      case Status.BID:
+    //TODO Do we need status for allowance or is logs.length enough?
+    Transactions.observeRemoved('allowance', function (document) {
         if (document.receipt.logs.length === 0) {
           //Show error in User interface
           console.log('bid went wrong')
         } else {
           //Show bid is succesful
           console.log('bid is succesful')
+          let auction = Auctions.findAuction();
+          console.log(document)
+          console.log('Document value', document.object.value)
+          Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, document.object.value, auction.sell_amount);
         }
-        break
-      case Status.PENDING:
-        // Shown an error in the UI?
-        console.log('bid is pending')
-        
-    }
-  })
+    })
+
+    Transactions.observeRemoved('bid', function (document) {
+        if (document.receipt.logs.length === 0) {
+          //Show error in User interface
+          console.log('bid went wrong')
+        } else {
+          //Show bid is succesful
+          console.log('bid is succesful')
+          console.log('auctionletId', document.object.auctionletId);
+          console.log('bid', document.object.bid);
+        }
+    })
+
+    Auctions.watchNewAuction();
 })
 
 Template.balance.viewmodel({
@@ -80,22 +74,6 @@ Template.balance.viewmodel({
   },
 });
 
-Template.test.viewmodel({
-  create(event) {
-    ETH.balanceOf(Session.get('address'), function(error, result) {
-      if(!error) {
-        console.log(web3.toBigNumber(result))
-        console.log(result.toNumber());
-        console.log(result.toString(10))
-      }
-      else {
-        console.log('mkr error: ', error);
-      }
-    })
-  }
-});
-
-
 Template.claimbid.viewmodel({
   create(event) {
     getAuctionlet()
@@ -104,7 +82,7 @@ Template.claimbid.viewmodel({
 
 Template.auction.viewmodel({
   auction() {
-    var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
+    var singleAuction = Auctions.findAuction()
     return singleAuction;
   },
   contractaddress() {
@@ -114,10 +92,13 @@ Template.auction.viewmodel({
 
 Template.auctionlet.viewmodel({
   auctionlet() {
-    var singleAuctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
-    var singleAuction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
+    var singleAuctionlet = Auctionlets.findAuctionlet()
+    var singleAuction = Auctions.findAuction()
     if(singleAuctionlet != undefined && singleAuction != undefined) {
-      var requiredBid = Math.ceil(singleAuctionlet.buy_amount * (100 + singleAuction.min_increase) / 100)
+      //console.log('buy amount:', web3.toBigNumber(singleAuctionlet.buy_amount).toString(10), ' min_increase:', singleAuction.min_increase)
+      var requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase)
+      //console.log('required bid in eth', web3.fromWei(requiredBid.toString(10)))
+      //console.log('required bid in wei', requiredBid.toString(10))
       this.bid(web3.fromWei(requiredBid))
     }
     return singleAuctionlet
@@ -126,16 +107,17 @@ Template.auctionlet.viewmodel({
   create(event) {
     event.preventDefault();
     console.log(this.bid())
+    //TODO Set this via template instead of directly on the DOM
     document.getElementById("spnBidInsufficient").style.display = "none";
     document.getElementById("spnBalanceInsufficient").style.display = "none";
     let auctionletBid = web3.toWei(this.bid())
-    let auction = Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
-    let auctionlet = Auctionlets.findOne({"auctionletId": Meteor.settings.public.auctionletId});
+    let auction = Auctions.findAuction();
+    let auctionlet = Auctionlets.findAuctionlet()
     
     if(auction != undefined && Balances.isBalanceSufficient(auctionletBid, auction.buying)) {
-      if(auctionlet != undefined && auctionletBid >= Math.ceil(auctionlet.buy_amount * (100 + auction.min_increase) / 100)) {
+      if(auctionlet != undefined && auctionletBid >= Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase)) {
         document.getElementById("spnPlacingBid").style.display = "block";
-        Balances.setEthAllowance(auctionletBid);
+        Auctionlets.doBid(auctionletBid);
       }
       else {
         document.getElementById("spnBidInsufficient").style.display = "block";
@@ -181,24 +163,16 @@ Template.newauction.viewmodel({
   create(event) {
     event.preventDefault();
 
-    TokenAuction.objects.auction.NewAuction(function (error, result) {
-      if(!error) {
-        console.log("AuctionId: ", result.args.id.toNumber());
-        console.log("BaseId: ", result.args.base_id.toNumber());
-      }
-      else {
-        console.log("error: ", error);
-      }
-    });
-
-    let weiSellAmount = web3.toWei(this.sellamount())
-    console.log('wei sell amount: ', weiSellAmount)
-    let weiStartBid = web3.toWei(this.startbid())
-    console.log('wei start bid: ', weiStartBid)
-    let weiMinIncrease = web3.toWei(this.minimumincrease())
-    console.log('wei minimum increase:', weiMinIncrease)
-    Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
-    Meteor.settings.public.ETH.address, web3.toWei(this.sellamount()), web3.toWei(this.startbid()), web3.toWei(this.minimumincrease()), 
-    this.duration())
+    Balances.watchMkrApproval();
+    Balances.setMkrAllowance(web3.toWei(this.sellamount()));
+    //TODO use session for creating auction
+    
+    //let weiSellAmount = web3.toWei(this.sellamount())
+    //console.log('wei sell amount: ', weiSellAmount)
+    //let weiStartBid = web3.toWei(this.startbid())
+    //console.log('wei start bid: ', weiStartBid)
+    //Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
+    //Meteor.settings.public.ETH.address, web3.toWei(this.sellamount()), web3.toWei(this.startbid()), this.minimumincrease(), 
+    //this.duration())
   }
 });

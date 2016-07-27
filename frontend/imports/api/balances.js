@@ -1,4 +1,5 @@
 import { Mongo } from 'meteor/mongo';
+import { Transactions } from '../lib/_transactions.js';
 
 const Balances = new Mongo.Collection(null);
 ERC20.init('morden');
@@ -38,7 +39,7 @@ Balances.getMkrBalance = function() {
 
 Balances.isBalanceSufficient = function(bid, tokenAddress) {
     let token = Balances.findOne({tokenAddress: tokenAddress});
-    if(token != undefined && token.balance >= bid) {
+    if(token != undefined && web3.toBigNumber(token.balance).gte(web3.toBigNumber(bid))) {
       console.log('Success! Balance is', token.balance, 'and bid is', bid)
       return true;
     }
@@ -55,14 +56,41 @@ Balances.setMkrAllowance = function(amount) {
     MKR.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
       if(error) {
         console.log(error)
+        //TODO Set transaction hash in Transactions
       }
     });
 }
 
 Balances.setEthAllowance = function(amount) {
     ETH.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
-      if(error) {
-        console.log(error)
+      if(!error) {
+        //TODO Set transaction hash in Transactions
+        console.log('approve transaction adding')
+        Transactions.add('allowance', result, { value: amount })
+      }
+    });
+}
+
+Balances.watchEthApproval = function() {
+  ETH.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
+      if(!error) {
+        console.log('Approved, placing bid')
+        //let auction = Auctions.findOne({});
+        //TODO Remove bidding on auctionlet
+        //Transactions.add('allowance', result.transactionHash, { id: idx, status: Status.PENDING })
+        //Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toString(10), auction.sell_amount);
+      }
+    });
+}
+
+Balances.watchMkrApproval = function() {
+  MKR.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
+      if(!error) {
+        console.log('Approved, creating auction')
+        let weiSellAmount = web3.toWei(this.sellamount())
+        console.log('wei sell amount: ', weiSellAmount)
+        let weiStartBid = web3.toWei(this.startbid())
+        console.log('wei start bid: ', weiStartBid)
       }
     });
 }

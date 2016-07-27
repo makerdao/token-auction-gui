@@ -19,7 +19,7 @@ Transactions.observeRemoved = function (type, callback) {
 
 Transactions.sync = function () {
   var open = Transactions.find().fetch()
-
+  console.log('transactions sync called and open.length = ', open.length)
   // Sync all open transactions non-blocking and asynchronously
   var syncTransaction = function (index) {
     if (index >= 0 && index < open.length) {
@@ -35,9 +35,15 @@ Transactions.sync = function () {
             Transactions.remove({ tx: document.tx })
           })
         }
+        else {
+          console.log(error, result)
+        }
         // Sync next transaction
         syncTransaction(index + 1)
       })
+    }
+    else {
+      console.log('Index', index, ' and open.length', open.length)
     }
   }
   syncTransaction(0)

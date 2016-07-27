@@ -12,10 +12,10 @@ Auctions.getAuction = function() {
           selling: result[1],
           buying: result[2],
           start_bid: result[3].toString(10),
-          min_increase: result[4].toString(10),
-          min_decrease: result[5].toString(10),
+          min_increase: result[4].toNumber(),
+          min_decrease: result[5].toNumber(),
           sell_amount: result[6].toString(10),
-          duration: result[7].toString(10),
+          duration: result[7].toNumber(),
           reversed: result[8],
           unsold: result[9]
         };
@@ -38,6 +38,22 @@ Auctions.newAuction = function(account, selling, buying, sellAmount, startBid, m
           console.log(error);
       }
     });
+}
+
+Auctions.watchNewAuction = function() {
+      TokenAuction.objects.auction.NewAuction(function (error, result) {
+      if(!error) {
+        console.log("AuctionId: ", result.args.id.toNumber());
+        console.log("BaseId: ", result.args.base_id.toNumber());
+      }
+      else {
+        console.log("error: ", error);
+      }
+    });
+}
+
+Auctions.findAuction = function() {
+  return Auctions.findOne({"auctionId": Meteor.settings.public.auctionId});
 }
 
 export { Auctions }
