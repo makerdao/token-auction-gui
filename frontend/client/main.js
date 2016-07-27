@@ -14,6 +14,7 @@ Template.body.onCreated(function() {
     TokenAuction.objects.auction.Bid(function (error, result) {
         document.getElementById("spnPlacingBid").style.display = "none";
         if(!error) {
+          Transactions.add('offer', tx, { id: idx, status: Status.BID })
           console.log('bid is set');
           Auctionlets.getAuctionlet();
         }
@@ -29,10 +30,30 @@ Template.body.onCreated(function() {
         if(!error) {
           console.log('Approved, placing bid')
           let auction = Auctions.findOne({});
+          Transactions.add('offer', tx, { id: idx, status: Status.PENDING })
           Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toString(10), auction.sell_amount);
         }
       });
     });
+
+    Transactions.observeRemoved('bid', function (document) {
+    switch (document.object.status) {
+      case Status.CANCELLED:
+      case Status.BID:
+        if (document.receipt.logs.length === 0) {
+          //Show error in User interface
+          console.log('bid went wrong')
+        } else {
+          //Show bid is succesful
+          console.log('bid is succesful')
+        }
+        break
+      case Status.PENDING:
+        // Shown an error in the UI?
+        console.log('bid is pending')
+        
+    }
+  })
 })
 
 Template.balance.viewmodel({
