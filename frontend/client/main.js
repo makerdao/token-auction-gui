@@ -7,6 +7,7 @@ import { Balances, ETH, MKR } from '/imports/api/balances.js';
 import './main.html';
 import '/imports/startup/client/index.js';
 import '/imports/helpers.js';
+import { Transactions } from '/imports/lib/_transactions.js';
 
 Template.body.onCreated(function() {
    console.log('On body created');
