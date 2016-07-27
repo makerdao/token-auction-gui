@@ -15,7 +15,7 @@ Template.body.onCreated(function() {
     TokenAuction.objects.auction.Bid(function (error, result) {
         document.getElementById("spnPlacingBid").style.display = "none";
         if(!error) {
-          Transactions.add('offer', tx, { id: idx, status: Status.BID })
+          Transactions.add('bid', result.transactionHash, { id: idx, status: Status.BID })
           console.log('bid is set');
           Auctionlets.getAuctionlet();
         }
@@ -31,7 +31,7 @@ Template.body.onCreated(function() {
         if(!error) {
           console.log('Approved, placing bid')
           let auction = Auctions.findOne({});
-          Transactions.add('offer', tx, { id: idx, status: Status.PENDING })
+          Transactions.add('bid', result.transactionHash, { id: idx, status: Status.PENDING })
           Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toString(10), auction.sell_amount);
         }
       });
@@ -168,8 +168,8 @@ Template.allowance.viewmodel({
       }
     });
 
-    Balances.setEthAllowance(1000000);
-    Balances.setMkrAllowance(1000000);
+    Balances.setEthAllowance(10000000000000000000);
+    Balances.setMkrAllowance(10000000000000000000);
   }
 });
 
@@ -191,8 +191,14 @@ Template.newauction.viewmodel({
       }
     });
 
+    let weiSellAmount = web3.toWei(this.sellamount())
+    console.log('wei sell amount: ', weiSellAmount)
+    let weiStartBid = web3.toWei(this.startbid())
+    console.log('wei start bid: ', weiStartBid)
+    let weiMinIncrease = web3.toWei(this.minimumincrease())
+    console.log('wei minimum increase:', weiMinIncrease)
     Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
-    Meteor.settings.public.ETH.address, this.sellamount(), this.startbid(), this.minimumincrease(), 
+    Meteor.settings.public.ETH.address, web3.toWei(this.sellamount()), web3.toWei(this.startbid()), web3.toWei(this.minimumincrease()), 
     this.duration())
   }
 });
