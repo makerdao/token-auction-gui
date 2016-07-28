@@ -31,7 +31,7 @@ Template.balance.viewmodel({
     return Meteor.settings.public.MKR.address;
   },
   mkrToken() {
-    let token = Tokens.findOne({"MKR": Meteor.settings.public.MKR.address});
+    let token = Tokens.findOne({"_id": Meteor.settings.public.MKR.name});
     return token;
   },
   ethName() {
@@ -41,7 +41,7 @@ Template.balance.viewmodel({
     return Meteor.settings.public.ETH.address;
   },
   ethToken() {
-    let token = Tokens.findOne({"ETH": Meteor.settings.public.ETH.address});
+    let token = Tokens.findOne({"_id": Meteor.settings.public.ETH.name});
     return token;
   },
 });
@@ -157,8 +157,6 @@ Template.transactions.viewmodel({
 
 Template.tokens.viewmodel({
   tokens() {
-    let tokens = Tokens.find({}).fetch();
-    console.log(JSON.stringify(tokens))
-    return tokens
+    return Tokens.find({});
   }
 });

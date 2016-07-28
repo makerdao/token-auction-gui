@@ -19,7 +19,7 @@ Transactions.observeRemoved = function (type, callback) {
 
 Transactions.sync = function () {
   var open = Transactions.find().fetch()
-  console.log('transactions sync called and open.length = ', open.length)
+  //console.log('transactions sync called and open.length = ', open.length)
   // Sync all open transactions non-blocking and asynchronously
   var syncTransaction = function (index) {
     if (index >= 0 && index < open.length) {
@@ -43,7 +43,7 @@ Transactions.sync = function () {
       })
     }
     else {
-      console.log('Index', index, ' and open.length', open.length)
+      //console.log('Index', index, ' and open.length', open.length)
     }
   }
   syncTransaction(0)

@@ -8,7 +8,6 @@ TokenAuction.init('morden')
 
 Meteor.startup(function() {
   web3.eth.filter('latest', function () {
-    //console.log("filtering")
     Tokens.sync()
     Transactions.sync()
   })

@@ -8,7 +8,7 @@ ERC20.init('morden');
 const MKR = ERC20.classes.ERC20.at(Meteor.settings.public.MKR.address);
 const ETH = ERC20.classes.ERC20.at(Meteor.settings.public.ETH.address);
 
-var allTokens = {'MKR': MKR, 'ETH': ETH}
+var allTokens = {MKR: MKR, ETH: ETH}
 
 Session.set('buying', localStorage.getItem('buying') || 'ETH')
 Session.set('selling', localStorage.getItem('selling') || 'MKR')
@@ -28,22 +28,19 @@ Tokens.sync = function () {
       }
     })
 
-    var ALL_TOKENS = allTokens
-
     if (network !== 'private') {
       var contract_address = TokenAuction.objects.auction.address
 
       // Sync token balances and allowances asynchronously
-      for(token_id in ALL_TOKENS) {
+      for(let token_id in allTokens) {
         // XXX EIP20
-        let token = ALL_TOKENS[token_id]
-        console.log('token_id:', token_id, ' and token:', ALL_TOKENS[token_id])
-            token.balanceOf(address, function (error, balance) {
+        console.log('token_id:', token_id, ' and token:', allTokens[token_id])
+            allTokens[token_id].balanceOf(address, function (error, balance) {
               if (!error) {
                 Tokens.upsert(token_id, { $set: { balance: balance.toString(10) } })
               }
             })
-            token.allowance(address, contract_address, function (error, allowance) {
+            allTokens[token_id].allowance(address, contract_address, function (error, allowance) {
               if (!error) {
                 Tokens.upsert(token_id, { $set: { allowance: allowance.toString(10) } })
               }
@@ -57,38 +54,6 @@ Tokens.sync = function () {
     }
   }
 }
-
-/*
-Tokens.getEthBalance = function() {
-    //console.log('default account: ', Session.get('address'))
-    ETH.balanceOf(Session.get('address'), function(error, result) {
-      if(!error) {
-        //console.log('eth balance: ', result)
-        balance = result.toString(10);
-        Tokens.upsert({ tokenAddress: Meteor.settings.public.ETH.address },
-                        { tokenAddress: Meteor.settings.public.ETH.address, balance: balance },
-                        { upsert: true })
-      }
-      else {
-        console.log('mkr error: ', error);
-      }
-    })
-}
-
-Tokens.getMkrBalance = function() {
-    MKR.balanceOf(Session.get('address'), function(error, result) {
-      if(!error) {
-        //console.log('mkr balance: ', result)
-        balance = result.toString(10);
-        Tokens.upsert({ tokenAddress: Meteor.settings.public.MKR.address },
-                        { tokenAddress: Meteor.settings.public.MKR.address, balance: balance },
-                        { upsert: true })
-      }
-      else {
-        console.log('mkr error: ', error);
-      }
-    })
-}*/
 
 Tokens.isBalanceSufficient = function(bid, tokenAddress) {
     let token = Tokens.findOne({tokenAddress: tokenAddress});
