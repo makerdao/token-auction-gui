@@ -1,5 +1,5 @@
 import { Mongo } from 'meteor/mongo';
-import { Balances } from './balances.js';
+import { Tokens } from './balances.js';
 import { Transactions } from '../lib/_transactions.js';
 
 const Auctionlets = new Mongo.Collection(null);
@@ -41,7 +41,7 @@ Auctionlets.bidOnAuctionlet = function(auctionletId, bidAmount, quantity) {
 }
 
 Auctionlets.doBid = function(bidAmount) {
-  Balances.setEthAllowance(bidAmount);
+  Tokens.setEthAllowance(bidAmount);
 }
 
 Auctionlets.watchBid = function() {

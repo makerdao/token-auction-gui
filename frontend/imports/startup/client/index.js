@@ -1,6 +1,6 @@
 import { Auctions } from '../../api/auctions.js';
 import { Auctionlets } from '../../api/auctionlets.js';
-import { Balances } from '../../api/balances.js';
+import { Tokens } from '../../api/balances.js';
 import { Tracker } from 'meteor/tracker';
 import { Transactions } from '../../lib/_transactions.js';
 
@@ -8,14 +8,13 @@ TokenAuction.init('morden')
 
 Meteor.startup(function() {
   web3.eth.filter('latest', function () {
-    console.log("filtering")
+    //console.log("filtering")
+    Tokens.sync()
     Transactions.sync()
   })
 
   web3.eth.isSyncing(function (error, sync) {
-    console.log('is syncing outside of error')
     if (!error) {
-      console.log('is syncing')
       Session.set('syncing', sync !== false)
 
       // Stop all app activity
@@ -32,7 +31,7 @@ Meteor.startup(function() {
         Session.set('outOfSync', false)
         //Offers.sync()
         web3.eth.filter('latest', function () {
-          //Tokens.sync()
+          Tokens.sync()
           Transactions.sync()
         })
       }
@@ -47,8 +46,6 @@ Tracker.autorun(function() {
   web3.checkAccounts();
   Auctions.getAuction();
   Auctionlets.getAuctionlet();
-  Balances.getEthBalance();
-  Balances.getMkrBalance();
 })
 
 // CHECK FOR NETWORK

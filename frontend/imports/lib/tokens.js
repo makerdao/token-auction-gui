@@ -1,12 +1,18 @@
 import { Mongo } from 'meteor/mongo';
 
+ERC20.init('morden');
+const MKR = ERC20.classes.ERC20.at(Meteor.settings.public.MKR.address);
+const ETH = ERC20.classes.ERC20.at(Meteor.settings.public.ETH.address);
+
+var allTokens = {'MKR': MKR, 'ETH': ETH}
+
 const Tokens = new Meteor.Collection(null)
 
 Session.set('buying', localStorage.getItem('buying') || 'ETH')
 Session.set('selling', localStorage.getItem('selling') || 'MKR')
 
 /**
- * Syncs the buying and base selling' balances and allowances of selected account,
+ * Syncs the buying and selling' balances and allowances of selected account,
  * usually called for each new block
  */
 Tokens.sync = function () {
@@ -20,16 +26,16 @@ Tokens.sync = function () {
       }
     })
 
-    var ALL_TOKENS = _.uniq([ Session.get('buying'), Session.get('selling') ])
+    var ALL_TOKENS = allTokens
 
     if (network !== 'private') {
       var contract_address = TokenAuction.objects.auction.address
 
       // Sync token balances and allowances asynchronously
-      ALL_TOKENS.forEach(function (token_id) {
+      for(token_id in ALL_TOKENS) {
         // XXX EIP20
-        Dapple.getToken(token_id, function (error, token) {
-          if (!error) {
+        let token = ALL_TOKENS[token_id]
+        console.log('token_id:', token_id, ' and token:', ALL_TOKENS[token_id])
             token.balanceOf(address, function (error, balance) {
               if (!error) {
                 Tokens.upsert(token_id, { $set: { balance: balance.toString(10) } })
@@ -40,13 +46,12 @@ Tokens.sync = function () {
                 Tokens.upsert(token_id, { $set: { allowance: allowance.toString(10) } })
               }
             })
-          }
-        })
-      })
+      }
     } else {
-      ALL_TOKENS.forEach(function (token) {
-        Tokens.upsert(token, { $set: { balance: '0', allowance: '0' } })
-      })
+      for(token_id in ALL_TOKENS){
+        console.log('NETWORK IS PRIVATE')
+        Tokens.upsert(ALL_TOKENS[token_id], { $set: { balance: '0', allowance: '0' } })
+      }
     }
   }
 }

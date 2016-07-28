@@ -6,13 +6,13 @@
   <div class="container">
     <div class="row">
       <div class="col-cs-12">
-        <h1>Token Auction</h1>
-        {{> auction}}
+        {{> balance}}
       </div>
     </div>
     <div class="row">
       <div class="col-cs-12">
-        {{> balance}}
+        <h1>Token Auction</h1>
+        {{> auction}}
       </div>
     </div>
     <div class="row">
@@ -22,17 +22,12 @@
     </div>
     <div class="row">
       <div class="col-cs-12">
-        {{> newauction}}
+        {{> tokens}}
       </div>
     </div>
     <div class="row">
       <div class="col-cs-12">
         {{> transactions}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-cs-12">
-        {{> allowance}}
       </div>
     </div>
   </div>
@@ -173,6 +168,24 @@
       <td>{{type}}</td>
       <td>{{tx}}</td>
       <td>{{json object}} </td>
+    </tr>
+    {{/each}}
+  </table>
+</template>
+
+<template name="tokens">
+  <h2>Tokens</h2>
+  <table class="table table-condensed">
+    <th>
+        <td>Token id</td>
+        <td>Balance</td>
+        <td>Allowance</td>
+    </th>    
+    {{#each tokens}}
+    <tr>
+      <td>{{_id}}</td>
+      <td>{{balance}}</td>
+      <td>{{allowance}} </td>
     </tr>
     {{/each}}
   </table>

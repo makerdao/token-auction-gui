@@ -3,11 +3,11 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
 import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
-import { Balances, ETH, MKR } from '/imports/api/balances.js';
+import { Tokens, ETH, MKR } from '/imports/api/balances.js';
+import { Transactions } from '/imports/lib/_transactions.js';
 import './main.html';
 import '/imports/startup/client/index.js';
 import '/imports/helpers.js';
-import { Transactions } from '/imports/lib/_transactions.js';
 
 Template.body.onCreated(function() {
   console.log('On body created');
@@ -15,11 +15,11 @@ Template.body.onCreated(function() {
       Auctionlets.watchBid();
       let ownerAddress = Session.get('address')
       console.log("Address",ownerAddress)
-      Balances.watchEthApproval()
+      Tokens.watchEthApproval()
       Auctions.watchNewAuction();
     });
 
-    Balances.watchAllowanceTransactions();
+    Tokens.watchAllowanceTransactions();
     Auctionlets.watchBidTransactions();
 })
 
@@ -31,7 +31,7 @@ Template.balance.viewmodel({
     return Meteor.settings.public.MKR.address;
   },
   mkrToken() {
-    let token = Balances.findOne({"tokenAddress": Meteor.settings.public.MKR.address});
+    let token = Tokens.findOne({"MKR": Meteor.settings.public.MKR.address});
     return token;
   },
   ethName() {
@@ -41,7 +41,7 @@ Template.balance.viewmodel({
     return Meteor.settings.public.ETH.address;
   },
   ethToken() {
-    let token = Balances.findOne({"tokenAddress": Meteor.settings.public.ETH.address});
+    let token = Tokens.findOne({"ETH": Meteor.settings.public.ETH.address});
     return token;
   },
 });
@@ -86,7 +86,7 @@ Template.auctionlet.viewmodel({
     let auction = Auctions.findAuction();
     let auctionlet = Auctionlets.findAuctionlet()
     
-    if(auction != undefined && Balances.isBalanceSufficient(auctionletBid, auction.buying)) {
+    if(auction != undefined && Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
       if(auctionlet != undefined && auctionletBid >= Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase)) {
         document.getElementById("spnPlacingBid").style.display = "block";
         Auctionlets.doBid(auctionletBid);
@@ -122,8 +122,8 @@ Template.allowance.viewmodel({
       }
     });
 
-    Balances.setEthAllowance(10000000000000000000);
-    Balances.setMkrAllowance(10000000000000000000);
+    Tokens.setEthAllowance(10000000000000000000);
+    Tokens.setMkrAllowance(10000000000000000000);
   }
 });
 
@@ -135,8 +135,8 @@ Template.newauction.viewmodel({
   create(event) {
     event.preventDefault();
 
-    Balances.watchMkrApproval();
-    Balances.setMkrAllowance(web3.toWei(this.sellamount()));
+    Tokens.watchMkrApproval();
+    Tokens.setMkrAllowance(web3.toWei(this.sellamount()));
     //TODO use session for creating auction
     
     //let weiSellAmount = web3.toWei(this.sellamount())
@@ -152,5 +152,13 @@ Template.newauction.viewmodel({
 Template.transactions.viewmodel({
   transactions() {
     return Transactions.find({});
+  }
+});
+
+Template.tokens.viewmodel({
+  tokens() {
+    let tokens = Tokens.find({}).fetch();
+    console.log(JSON.stringify(tokens))
+    return tokens
   }
 });

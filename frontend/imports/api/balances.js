@@ -3,18 +3,69 @@ import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Transactions } from '../lib/_transactions.js';
 
-const Balances = new Mongo.Collection(null);
+const Tokens = new Mongo.Collection(null);
 ERC20.init('morden');
 const MKR = ERC20.classes.ERC20.at(Meteor.settings.public.MKR.address);
 const ETH = ERC20.classes.ERC20.at(Meteor.settings.public.ETH.address);
 
-Balances.getEthBalance = function() {
+var allTokens = {'MKR': MKR, 'ETH': ETH}
+
+Session.set('buying', localStorage.getItem('buying') || 'ETH')
+Session.set('selling', localStorage.getItem('selling') || 'MKR')
+
+/**
+ * Syncs the buying and selling' balances and allowances of selected account,
+ * usually called for each new block
+ */
+Tokens.sync = function () {
+  var network = Session.get('network')
+  var address = Session.get('address')
+  if (address) {
+    web3.eth.getBalance(address, function (error, balance) {
+      var newETHBalance = balance.toString(10)
+      if (!error && !Session.equals('ETHBalance', newETHBalance)) {
+        Session.set('ETHBalance', newETHBalance)
+      }
+    })
+
+    var ALL_TOKENS = allTokens
+
+    if (network !== 'private') {
+      var contract_address = TokenAuction.objects.auction.address
+
+      // Sync token balances and allowances asynchronously
+      for(token_id in ALL_TOKENS) {
+        // XXX EIP20
+        let token = ALL_TOKENS[token_id]
+        console.log('token_id:', token_id, ' and token:', ALL_TOKENS[token_id])
+            token.balanceOf(address, function (error, balance) {
+              if (!error) {
+                Tokens.upsert(token_id, { $set: { balance: balance.toString(10) } })
+              }
+            })
+            token.allowance(address, contract_address, function (error, allowance) {
+              if (!error) {
+                Tokens.upsert(token_id, { $set: { allowance: allowance.toString(10) } })
+              }
+            })
+      }
+    } else {
+      for(token_id in ALL_TOKENS){
+        console.log('NETWORK IS PRIVATE')
+        Tokens.upsert(ALL_TOKENS[token_id], { $set: { balance: '0', allowance: '0' } })
+      }
+    }
+  }
+}
+
+/*
+Tokens.getEthBalance = function() {
     //console.log('default account: ', Session.get('address'))
     ETH.balanceOf(Session.get('address'), function(error, result) {
       if(!error) {
         //console.log('eth balance: ', result)
         balance = result.toString(10);
-        Balances.upsert({ tokenAddress: Meteor.settings.public.ETH.address },
+        Tokens.upsert({ tokenAddress: Meteor.settings.public.ETH.address },
                         { tokenAddress: Meteor.settings.public.ETH.address, balance: balance },
                         { upsert: true })
       }
@@ -24,12 +75,12 @@ Balances.getEthBalance = function() {
     })
 }
 
-Balances.getMkrBalance = function() {
+Tokens.getMkrBalance = function() {
     MKR.balanceOf(Session.get('address'), function(error, result) {
       if(!error) {
         //console.log('mkr balance: ', result)
         balance = result.toString(10);
-        Balances.upsert({ tokenAddress: Meteor.settings.public.MKR.address },
+        Tokens.upsert({ tokenAddress: Meteor.settings.public.MKR.address },
                         { tokenAddress: Meteor.settings.public.MKR.address, balance: balance },
                         { upsert: true })
       }
@@ -37,10 +88,10 @@ Balances.getMkrBalance = function() {
         console.log('mkr error: ', error);
       }
     })
-}
+}*/
 
-Balances.isBalanceSufficient = function(bid, tokenAddress) {
-    let token = Balances.findOne({tokenAddress: tokenAddress});
+Tokens.isBalanceSufficient = function(bid, tokenAddress) {
+    let token = Tokens.findOne({tokenAddress: tokenAddress});
     if(token != undefined && web3.toBigNumber(token.balance).gte(web3.toBigNumber(bid))) {
       console.log('Success! Balance is', token.balance, 'and bid is', bid)
       return true;
@@ -54,7 +105,7 @@ Balances.isBalanceSufficient = function(bid, tokenAddress) {
     }
 }
 
-Balances.setMkrAllowance = function(amount) {
+Tokens.setMkrAllowance = function(amount) {
     MKR.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
       if(error) {
         console.log(error)
@@ -63,17 +114,16 @@ Balances.setMkrAllowance = function(amount) {
     });
 }
 
-Balances.setEthAllowance = function(amount) {
+Tokens.setEthAllowance = function(amount) {
     ETH.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
       if(!error) {
-        //TODO Set transaction hash in Transactions
         console.log('approve transaction adding')
         Transactions.add('allowance', result, { value: amount.toString(10) })
       }
     });
 }
 
-Balances.watchEthApproval = function() {
+Tokens.watchEthApproval = function() {
   ETH.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
       if(!error) {
         console.log('Approved, placing bid')
@@ -85,7 +135,7 @@ Balances.watchEthApproval = function() {
     });
 }
 
-Balances.watchMkrApproval = function() {
+Tokens.watchMkrApproval = function() {
   MKR.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
       if(!error) {
         console.log('Approved, creating auction')
@@ -97,7 +147,7 @@ Balances.watchMkrApproval = function() {
     });
 }
 
-Balances.watchAllowanceTransactions = function() {
+Tokens.watchAllowanceTransactions = function() {
   Transactions.observeRemoved('allowance', function (document) {
       if (document.receipt.logs.length === 0) {
         //Show error in User interface
@@ -114,4 +164,4 @@ Balances.watchAllowanceTransactions = function() {
 
 }
 
-export { Balances, ETH, MKR }
+export { Tokens, ETH, MKR }
