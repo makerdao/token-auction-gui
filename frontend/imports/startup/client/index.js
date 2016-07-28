@@ -6,16 +6,10 @@ import { Transactions } from '../../lib/_transactions.js';
 
 TokenAuction.init('morden')
 
-Tracker.autorun(function() {
-  web3.checkAccounts();    
-  Auctions.getAuction();
-  Auctionlets.getAuctionlet();
-  Balances.getEthBalance();
-  Balances.getMkrBalance();
-
+Meteor.startup(function() {
   web3.eth.filter('latest', function () {
     console.log("filtering")
-    Transactions.sync();
+    Transactions.sync()
   })
 
   web3.eth.isSyncing(function (error, sync) {
@@ -47,6 +41,14 @@ Tracker.autorun(function() {
 
   //Meteor.setInterval(checkNetwork, 2503)
   //Meteor.setInterval(web3.checkAccounts, 10657)
+})
+
+Tracker.autorun(function() {
+  web3.checkAccounts();
+  Auctions.getAuction();
+  Auctionlets.getAuctionlet();
+  Balances.getEthBalance();
+  Balances.getMkrBalance();
 })
 
 // CHECK FOR NETWORK
