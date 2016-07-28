@@ -3,7 +3,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
 import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
-import { Tokens, ETH, MKR } from '/imports/api/balances.js';
+import { Tokens, ETH, MKR } from '/imports/api/tokens.js';
 import { Transactions } from '/imports/lib/_transactions.js';
 import './main.html';
 import '/imports/startup/client/index.js';

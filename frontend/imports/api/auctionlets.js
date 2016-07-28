@@ -1,5 +1,5 @@
 import { Mongo } from 'meteor/mongo';
-import { Tokens } from './balances.js';
+import { Tokens } from './tokens.js';
 import { Transactions } from '../lib/_transactions.js';
 
 const Auctionlets = new Mongo.Collection(null);

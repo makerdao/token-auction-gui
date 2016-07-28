@@ -1,6 +1,6 @@
 import { Auctions } from '../../api/auctions.js';
 import { Auctionlets } from '../../api/auctionlets.js';
-import { Tokens } from '../../api/balances.js';
+import { Tokens } from '../../api/tokens.js';
 import { Tracker } from 'meteor/tracker';
 import { Transactions } from '../../lib/_transactions.js';
 
