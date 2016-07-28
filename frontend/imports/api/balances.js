@@ -68,7 +68,7 @@ Balances.setEthAllowance = function(amount) {
       if(!error) {
         //TODO Set transaction hash in Transactions
         console.log('approve transaction adding')
-        Transactions.add('allowance', result, { value: amount })
+        Transactions.add('allowance', result, { value: amount.toString(10) })
       }
     });
 }

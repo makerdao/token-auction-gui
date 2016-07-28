@@ -31,7 +31,7 @@ Auctionlets.bidOnAuctionlet = function(auctionletId, bidAmount, quantity) {
     if(!error) {
       //TODO Add the necessary transaction info
       console.log(result)
-      Transactions.add('bid', result, { auctionletId: auctionletId, bid: bidAmount })
+      Transactions.add('bid', result, { auctionletId: auctionletId, bid: bidAmount.toString(10) })
       console.log(result);
     }
     else {
@@ -56,7 +56,7 @@ Auctionlets.watchBid = function() {
     else {
       console.log("error: ", error);
     }
-  }); 
+  });
 }
 
 Auctionlets.watchBidTransactions = function() {
