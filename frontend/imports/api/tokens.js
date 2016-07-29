@@ -34,17 +34,16 @@ Tokens.sync = function () {
       // Sync token balances and allowances asynchronously
       for(let token_id in allTokens) {
         // XXX EIP20
-        console.log('token_id:', token_id, ' and token:', allTokens[token_id])
-            allTokens[token_id].balanceOf(address, function (error, balance) {
-              if (!error) {
-                Tokens.upsert(token_id, { $set: { balance: balance.toString(10) } })
-              }
-            })
-            allTokens[token_id].allowance(address, contract_address, function (error, allowance) {
-              if (!error) {
-                Tokens.upsert(token_id, { $set: { allowance: allowance.toString(10) } })
-              }
-            })
+        allTokens[token_id].balanceOf(address, function (error, balance) {
+          if (!error) {
+            Tokens.upsert({ _id: token_id, address: allTokens[token_id].address}, { $set: { balance: balance.toString(10) } })
+          }
+        })
+        allTokens[token_id].allowance(address, contract_address, function (error, allowance) {
+          if (!error) {
+            Tokens.upsert({ _id: token_id, address: allTokens[token_id].address}, { $set: { allowance: allowance.toString(10) } })
+          }
+        })
       }
     } else {
       for(token_id in ALL_TOKENS){
@@ -56,7 +55,7 @@ Tokens.sync = function () {
 }
 
 Tokens.isBalanceSufficient = function(bid, tokenAddress) {
-    let token = Tokens.findOne({tokenAddress: tokenAddress});
+    let token = Tokens.findOne({address: tokenAddress});
     if(token != undefined && web3.toBigNumber(token.balance).gte(web3.toBigNumber(bid))) {
       console.log('Success! Balance is', token.balance, 'and bid is', bid)
       return true;
