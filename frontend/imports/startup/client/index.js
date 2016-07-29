@@ -7,6 +7,7 @@ import { Transactions } from '../../lib/_transactions.js';
 TokenAuction.init('morden')
 
 Meteor.startup(function() {
+  
   web3.eth.filter('latest', function () {
     Tokens.sync()
     Transactions.sync()
@@ -45,6 +46,7 @@ Tracker.autorun(function() {
   web3.checkAccounts();
   Auctions.getAuction();
   Auctionlets.getAuctionlet();
+  Tokens.sync()
 })
 
 // CHECK FOR NETWORK
@@ -76,9 +78,6 @@ function checkNetwork () {
               default:
                 network = 'private'
             }
-          }
-          if (!Session.equals('network', network)) {
-            initNetwork(network, isConnected)
           }
         })
       } else {
