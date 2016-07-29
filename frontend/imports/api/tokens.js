@@ -71,9 +71,12 @@ Tokens.isBalanceSufficient = function(bid, tokenAddress) {
 
 Tokens.setMkrAllowance = function(amount) {
     MKR.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
-      if(error) {
-        console.log(error)
-        //TODO Set transaction hash in Transactions
+      if(!error) {
+        console.log('mkr approve transaction adding')        
+        Transactions.add('mkrallowance', result, { value: amount.toString(10) })
+      }
+      else {
+        //TODO Show error in UI
       }
     });
 }
@@ -81,8 +84,8 @@ Tokens.setMkrAllowance = function(amount) {
 Tokens.setEthAllowance = function(amount) {
     ETH.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
       if(!error) {
-        console.log('approve transaction adding')
-        Transactions.add('allowance', result, { value: amount.toString(10) })
+        console.log('eth approve transaction adding')
+        Transactions.add('ethallowance', result, { value: amount.toString(10) })
       }
       else {
         //TODO Show error in UI
@@ -107,26 +110,37 @@ Tokens.watchMkrApproval = function() {
   MKR.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
       if(!error) {
         console.log('Approved, creating auction')
-        let weiSellAmount = web3.toWei(this.sellamount())
-        console.log('wei sell amount: ', weiSellAmount)
-        let weiStartBid = web3.toWei(this.startbid())
-        console.log('wei start bid: ', weiStartBid)
       }
     });
 }
 
-Tokens.watchAllowanceTransactions = function() {
-  Transactions.observeRemoved('allowance', function (document) {
+Tokens.watchEthAllowanceTransactions = function() {
+  Transactions.observeRemoved('ethallowance', function (document) {
       if (document.receipt.logs.length === 0) {
-        //Show error in User interface
-        console.log('bid went wrong')
+        //TODO Show error in User interface
+        console.log('setting ETH allowance went wrong')
       } else {
-        //Show bid is succesful
-        console.log('bid is succesful')
+        console.log('ETH allowance is set')
         let auction = Auctions.findAuction();
-        console.log(document)
         console.log('Document value', document.object.value)
         Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, document.object.value, auction.sell_amount);
+      }
+  })
+}
+
+  Tokens.watchMkrAllowanceTransactions = function() {
+    Transactions.observeRemoved('mkrallowance', function (document) {
+      if (document.receipt.logs.length === 0) {
+        //TODO Show error in User interface
+        console.log('setting MKR allowance went wrong')
+      } else {
+        console.log('MKR allowance is set')
+        let newAuction = Session.get('newAuction')
+        console.log('account:', Session.get('address'), newAuction.sellamount, newAuction.startbid,
+        newAuction.min_increase, newAuction.duration)
+        Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
+                            Meteor.settings.public.ETH.address, newAuction.sellamount.toString(10), newAuction.startbid.toString(10), 
+                            newAuction.min_increase, newAuction.duration.toString(10))
       }
   })
 

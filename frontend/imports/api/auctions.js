@@ -1,4 +1,6 @@
 import { Mongo } from 'meteor/mongo';
+import { Tokens } from './tokens.js';
+import { Transactions } from '../lib/_transactions.js';
 
 const Auctions = new Mongo.Collection(null);
 
@@ -27,6 +29,10 @@ Auctions.getAuction = function() {
     });
 }
 
+Auctions.createAuction = function(sellAmount) {
+    Tokens.setMkrAllowance(sellAmount);
+}
+
 Auctions.newAuction = function(account, selling, buying, sellAmount, startBid, minIncrease, duration) {
     TokenAuction.objects.auction.newAuction(account, selling, 
     buying, sellAmount, startBid, minIncrease, duration, 
@@ -50,6 +56,19 @@ Auctions.watchNewAuction = function() {
         console.log("error: ", error);
       }
     });
+}
+
+Auctions.watchNewAuctionTransactions = function() {
+  Transactions.observeRemoved('auction', function (document) {
+      if (document.receipt.logs.length === 0) {
+        //Show error in User interface
+        console.log('creating auction went wrong')
+      } else {
+        //Show bid is succesful
+        console.log('creating auction is succesful')
+        console.log('auctionletId', document.object.auctionId);
+      }
+  })
 }
 
 Auctions.findAuction = function() {

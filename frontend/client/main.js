@@ -16,11 +16,14 @@ Template.body.onCreated(function() {
       let ownerAddress = Session.get('address')
       console.log("Address",ownerAddress)
       Tokens.watchEthApproval()
+      Tokens.watchMkrApproval();
       Auctions.watchNewAuction();
     });
 
-    Tokens.watchAllowanceTransactions();
+    Tokens.watchEthAllowanceTransactions();
+    Tokens.watchMkrAllowanceTransactions();
     Auctionlets.watchBidTransactions();
+    Auctions.watchNewAuctionTransactions();
 })
 
 Template.balance.viewmodel({
@@ -150,15 +153,20 @@ Template.newauction.viewmodel({
   duration: 0,
   create(event) {
     event.preventDefault();
-
-    Tokens.watchMkrApproval();
-    Tokens.setMkrAllowance(web3.toWei(this.sellamount()));
-    //TODO use session for creating auction
-    
-    //let weiSellAmount = web3.toWei(this.sellamount())
+    let weiSellAmount = web3.toWei(this.sellamount())
     //console.log('wei sell amount: ', weiSellAmount)
-    //let weiStartBid = web3.toWei(this.startbid())
+    let weiStartBid = web3.toWei(this.startbid())
     //console.log('wei start bid: ', weiStartBid)
+    
+    let newAuction = {
+                      sellamount: weiSellAmount, 
+                      startbid: weiStartBid, 
+                      min_increase: this.minimumincrease(),
+                      duration: this.duration()
+                    }
+    Session.set("newAuction", newAuction)
+    Auctions.createAuction(web3.toWei(this.sellamount()));
+    
     //Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
     //Meteor.settings.public.ETH.address, web3.toWei(this.sellamount()), web3.toWei(this.startbid()), this.minimumincrease(), 
     //this.duration())
