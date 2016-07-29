@@ -6,12 +6,12 @@
   <div class="container">
     <div class="row">
       <div class="col-cs-12">
+        <h1>Token Auction</h1>
         {{> balance}}
       </div>
     </div>
     <div class="row">
       <div class="col-cs-12">
-        <h1>Token Auction</h1>
         {{> auction}}
       </div>
     </div>
@@ -110,8 +110,12 @@
       <td>Highest bid</td>
       <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a href="http://testnet.etherscan.io/address/0x52fe88b987c7829e5d5a61c98f67c9c14e6a7a90" target="_blank">ETH</a></td>
     </tr>
-
+    <tr>
+      <td>Base</td>
+      <td>{{auctionlet.base}}</td>
+    </tr>
   </table>
+  {{#unless expired}}
   <div class="form-group">
     <label for="inputBid">Enter a bid for the auctionlet</label>
     <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
@@ -120,6 +124,19 @@
     <span id="spnBalanceInsufficient" style="display:none">Your balance is insufficient</span>
     <span id="spnBidInsufficient" style="display:none">Your bid is not high enough</span>
   </div>
+  {{else}}
+  <div class="form-group">
+    <span>Auctionlet has expired</span>
+    {{#if auctionwinner}}
+      {{#if auctionlet.unclaimed}}
+        <span>You made the highest bid. Click to receive the tokens</span>
+        <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
+      {{else}}
+        <span>You have claimed the tokens</span>
+      {{/if}}
+    {{/if}}
+  </div>
+  {{/unless}}
 </template>
 
 <template name="newauction">

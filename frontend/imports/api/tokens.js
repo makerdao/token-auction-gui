@@ -84,6 +84,10 @@ Tokens.setEthAllowance = function(amount) {
         console.log('approve transaction adding')
         Transactions.add('allowance', result, { value: amount.toString(10) })
       }
+      else {
+        //TODO Show error in UI
+        console.log('setEthAllowance error:', error)
+      }
     });
 }
 

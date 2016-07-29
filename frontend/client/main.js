@@ -83,6 +83,7 @@ Template.auctionlet.viewmodel({
     document.getElementById("spnBidInsufficient").style.display = "none";
     document.getElementById("spnBalanceInsufficient").style.display = "none";
     let auctionletBid = web3.toWei(this.bid())
+    console.log('auctionletBid:', auctionletBid.toString(10))
     let auction = Auctions.findAuction();
     let auctionlet = Auctionlets.findAuctionlet()
     
@@ -97,6 +98,21 @@ Template.auctionlet.viewmodel({
     }
     else {
       document.getElementById("spnBalanceInsufficient").style.display = "block";
+    }
+  },
+  expired() {
+    let auctionlet = Auctionlets.findAuctionlet()
+    return auctionlet != undefined && auctionlet.isExpired
+  },
+  auctionwinner() {
+    let auctionlet = Auctionlets.findAuctionlet()
+    return this.expired() && auctionlet != undefined && Session.get('address') == auctionlet.last_bidder && auctionlet.unclaimed
+  },
+  claim(event) {
+    event.preventDefault();
+    let auctionlet = Auctionlets.findAuctionlet()
+    if(auctionlet.unclaimed && !this.expired()) {
+      Auctionlets.doClaim(Meteor.settings.public.auctionletId)
     }
   }
 });

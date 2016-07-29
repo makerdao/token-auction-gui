@@ -11,6 +11,7 @@ Meteor.startup(function() {
   web3.eth.filter('latest', function () {
     Tokens.sync()
     Transactions.sync()
+    Auctionlets.syncExpired()
   })
 
   web3.eth.isSyncing(function (error, sync) {
@@ -29,7 +30,6 @@ Meteor.startup(function() {
         Session.set('highestBlock', sync.highestBlock)
       } else {
         Session.set('outOfSync', false)
-        //Offers.sync()
         web3.eth.filter('latest', function () {
           Tokens.sync()
           Transactions.sync()
