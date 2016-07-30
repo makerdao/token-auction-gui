@@ -120,32 +120,6 @@ Template.auctionlet.viewmodel({
   }
 });
 
-Template.allowance.viewmodel({
-  create(event) {
-    event.preventDefault();
-    document.getElementById("spnSetAllowance").style.display = "block";
-    
-    ETH.Approval(function(error, result) {
-      if(!error) {
-        console.log('Allowance approved for ETH: ', result)
-        document.getElementById("spnSetAllowance").style.display = "none";
-        document.getElementById("spnAllowanceSet").style.display = "block";
-      }
-    });
-
-    MKR.Approval(function(error, result) {
-      if(!error) {
-        console.log('Allowance approved for MKR: ', result)
-        document.getElementById("spnSetAllowance").style.display = "none";
-        document.getElementById("spnAllowanceSet").style.display = "block";
-      }
-    });
-
-    Tokens.setEthAllowance(10000000000000000000);
-    Tokens.setMkrAllowance(10000000000000000000);
-  }
-});
-
 Template.newauction.viewmodel({
   sellamount: 0,
   startbid: 0,
