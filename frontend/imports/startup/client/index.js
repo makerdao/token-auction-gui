@@ -5,6 +5,12 @@ import { Tracker } from 'meteor/tracker';
 import { Transactions } from '../../lib/_transactions.js';
 
 TokenAuction.init('morden')
+Session.set('network', false)
+Session.set('loading', false)
+Session.set('outOfSync', false)
+Session.set('syncing', false)
+Session.set('isConnected', false)
+Session.set('latestBlock', 0)
 
 Meteor.startup(function() {
   
@@ -49,6 +55,15 @@ Tracker.autorun(function() {
   Tokens.sync()
 })
 
+
+// Initialize everything on new network
+function initNetwork (newNetwork) {
+  Session.set('network', newNetwork)
+  Session.set('isConnected', true)
+  Session.set('latestBlock', 0)
+  Tokens.sync()
+}
+
 // CHECK FOR NETWORK
 function checkNetwork () {
   web3.version.getNode(function (error, node) {
@@ -57,7 +72,14 @@ function checkNetwork () {
     // Check if we are synced
     if (isConnected) {
       web3.eth.getBlock('latest', function (e, res) {
-        Session.set('outOfSync', e != null || new Date().getTime() / 1000 - res.timestamp > 600)
+        if (res.number >= Session.get('latestBlock')) {
+           Session.set('outOfSync', e != null || new Date().getTime() / 1000 - res.timestamp > 600)
+           Session.set('latestBlock', res.number)
+         } else {
+           // XXX MetaMask frequently returns old blocks
+           // https://github.com/MetaMask/metamask-plugin/issues/504
+           console.debug('Skipping old block')
+         }
       })
     }
 
@@ -79,10 +101,14 @@ function checkNetwork () {
                 network = 'private'
             }
           }
+          if (!Session.equals('network', network)) {
+            initNetwork(network)
+          }
         })
       } else {
         Session.set('isConnected', isConnected)
         Session.set('network', false)
+        Session.set('latestBlock', 0)
       }
     }
   })
