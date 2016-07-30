@@ -27,6 +27,9 @@ Template.body.onCreated(function() {
 })
 
 Template.balance.viewmodel({
+  account() {
+    return Session.get("address")
+  },
   mkrName() {
     return Meteor.settings.public.MKR.name;
   },
@@ -128,9 +131,7 @@ Template.newauction.viewmodel({
   create(event) {
     event.preventDefault();
     let weiSellAmount = web3.toWei(this.sellamount())
-    //console.log('wei sell amount: ', weiSellAmount)
     let weiStartBid = web3.toWei(this.startbid())
-    //console.log('wei start bid: ', weiStartBid)
     
     let newAuction = {
                       sellamount: weiSellAmount, 
@@ -140,10 +141,6 @@ Template.newauction.viewmodel({
                     }
     Session.set("newAuction", newAuction)
     Auctions.createAuction(web3.toWei(this.sellamount()));
-    
-    //Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
-    //Meteor.settings.public.ETH.address, web3.toWei(this.sellamount()), web3.toWei(this.startbid()), this.minimumincrease(), 
-    //this.duration())
   }
 });
 
