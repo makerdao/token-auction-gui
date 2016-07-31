@@ -59,10 +59,8 @@ Auctionlets.doBid = function(bidAmount) {
 Auctionlets.bidOnAuctionlet = function(auctionletId, bidAmount, quantity) {
   TokenAuction.objects.auction.bid['uint256,uint256,uint256'](auctionletId, bidAmount, quantity, {gas: 1500000 }, function (error, result) {
     if(!error) {
-      //TODO Add the necessary transaction info
       console.log(result)
       Transactions.add('bid', result, { auctionletId: auctionletId, bid: bidAmount.toString(10) })
-      console.log(result);
     }
     else {
       console.log("error: ", error);
@@ -73,7 +71,7 @@ Auctionlets.bidOnAuctionlet = function(auctionletId, bidAmount, quantity) {
 Auctionlets.watchBid = function() {
   TokenAuction.objects.auction.Bid(function (error, result) {
     if(!error) {
-      console.log('bid is set');
+      console.log('Bid is set');
       Auctionlets.getAuctionlet();
     }
     else {
@@ -85,13 +83,8 @@ Auctionlets.watchBid = function() {
 Auctionlets.watchBidTransactions = function() {
   Transactions.observeRemoved('bid', function (document) {
       if (document.receipt.logs.length === 0) {
-        //Show error in User interface
-        console.log('bid went wrong')
         Session.set('bidMessage', 'Error placing bid')
       } else {
-        //Show bid is succesful
-        console.log('bid is succesful')
-        console.log('auctionletId', document.object.auctionletId);
         console.log('bid', document.object.bid);
         Session.set('bidMessage', 'Bid placed succesfully')        
       }
@@ -105,7 +98,7 @@ Auctionlets.doClaim = function(auctionletId) {
       Session.set('claimMessage', 'Claiming your tokens')              
     }
     else {
-      console.log("error: ", error);
+      console.log("Claim error: ", error);
       Session.set('claimMessage', 'Error claiming tokens: ' + error.toString())                    
     }
   })
@@ -114,10 +107,10 @@ Auctionlets.doClaim = function(auctionletId) {
 Auctionlets.watchClaimTransactions = function() {
   Transactions.observeRemoved('claim', function (document) {
       if (document.receipt.logs.length === 0) {
-        console.log('claim went wrong')
+        console.log('Claim went wrong')
         Session.set('claimMessage', 'Error claiming tokens')   
       } else {
-        console.log('claim is succesful')
+        console.log('Claim is succesful')
         Session.set('claimMessage', 'Tokens successfully claimed')                      
         Auctionlets.getAuctionlet()
       }

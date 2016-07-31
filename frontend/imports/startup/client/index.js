@@ -55,7 +55,6 @@ Tracker.autorun(function() {
   Tokens.sync()
 })
 
-
 // Initialize everything on new network
 function initNetwork (newNetwork) {
   Session.set('network', newNetwork)
@@ -98,6 +97,8 @@ function checkNetwork () {
                 network = 'main'
                 break
               default:
+                console.log('setting network to private')
+                console.log('res.hash:', res.hash)
                 network = 'private'
             }
           }

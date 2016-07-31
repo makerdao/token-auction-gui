@@ -20,28 +20,8 @@
         {{> auctionlet}}
       </div>
     </div>
-    <div class="row">
-      <div class="col-cs-12">
-        {{> newauction}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-cs-12">
-        {{> tokens}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-cs-12">
-        {{> transactions}}
-      </div>
-    </div>
   </div>
 </body>
-
-<template name="test">
-  <h2>Test</h2>
-  <button class="btn btn-primary" {{b "click: create"}}>Test</button>
-</template>
 
 <template name="balance">
   <h2>Balance</h2>
@@ -62,11 +42,11 @@
 </template>
 
 <template name="auction">
-  <h2>Latest auction</h2>
+  <h2>Auction</h2>
   <table class="table table-condensed">
     <tr>
       <td>Contract address</td>
-      <td>{{contractaddress}}</td>
+      <td><a href="http://testnet.etherscan.io/address/0xa1bff93e4c672727e6001528e25bbb5568c81a6d" target="_blank">{{contractaddress}}</a></td>
     </tr>
     <tr>
       <td>Auction id</td>
@@ -117,10 +97,6 @@
     <tr>
       <td>Highest bid</td>
       <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a href="http://testnet.etherscan.io/address/0x52fe88b987c7829e5d5a61c98f67c9c14e6a7a90" target="_blank">ETH</a></td>
-    </tr>
-    <tr>
-      <td>Base</td>
-      <td>{{auctionlet.base}}</td>
     </tr>
   </table>
   {{#unless expired}}

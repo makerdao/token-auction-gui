@@ -72,7 +72,7 @@ Tokens.isBalanceSufficient = function(bid, tokenAddress) {
 Tokens.setMkrAllowance = function(amount) {
     MKR.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
       if(!error) {
-        console.log('mkr approve transaction adding')
+        console.log('Mkr approve transaction adding')
         Session.set('newAuctionMessage', 'Setting allowance for new auction')   
         Transactions.add('mkrallowance', result, { value: amount.toString(10) })
       }
@@ -85,12 +85,12 @@ Tokens.setMkrAllowance = function(amount) {
 Tokens.setEthAllowance = function(amount) {
     ETH.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
       if(!error) {
-        console.log('eth approve transaction adding')
+        console.log('Eth approve transaction adding')
         Session.set('bidMessage', 'Setting allowance for bid')
         Transactions.add('ethallowance', result, { value: amount.toString(10) })
       }
       else {
-        console.log('setEthAllowance error:', error)
+        console.log('SetEthAllowance error:', error)
         Session.set('bidMessage', 'Error setting allowance for bid: ' + error.toString())
       }
     });
@@ -115,13 +115,12 @@ Tokens.watchMkrApproval = function() {
 Tokens.watchEthAllowanceTransactions = function() {
   Transactions.observeRemoved('ethallowance', function (document) {
       if (document.receipt.logs.length === 0) {
-        console.log('setting ETH allowance went wrong')
+        console.log('Setting ETH allowance went wrong')
         Session.set('bidMessage', 'Error setting allowance for bid')
       } else {
         console.log('ETH allowance is set')
         let auction = Auctions.findAuction();
         Session.set('bidMessage', 'Allowance set, placing bid')
-        console.log('Document value', document.object.value)
         Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, document.object.value, auction.sell_amount);
       }
   })
@@ -130,7 +129,7 @@ Tokens.watchEthAllowanceTransactions = function() {
   Tokens.watchMkrAllowanceTransactions = function() {
     Transactions.observeRemoved('mkrallowance', function (document) {
       if (document.receipt.logs.length === 0) {
-        console.log('setting MKR allowance went wrong')
+        console.log('Setting MKR allowance went wrong')
         Session.set('newAuctionMessage', 'Error setting allowance for new auction: ' + error.toString())
       } else {
         console.log('MKR allowance is set')

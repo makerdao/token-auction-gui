@@ -53,12 +53,6 @@ Template.balance.viewmodel({
   },
 });
 
-Template.test.viewmodel({
-  create(event) {
-    Session.set('bidMessage', 'Just placed a bid')
-  }
-});
-
 Template.auction.viewmodel({
   auction() {
     var singleAuction = Auctions.findAuction()
@@ -85,11 +79,8 @@ Template.auctionlet.viewmodel({
   },
   create(event) {
     event.preventDefault();
-    console.log(this.bid())
-    //TODO Set this via template instead of directly on the DOM
     Session.set('bidMessage', null)
     let auctionletBid = web3.toWei(this.bid())
-    console.log('auctionletBid:', auctionletBid.toString(10))
     let auction = Auctions.findAuction();
     let auctionlet = Auctionlets.findAuctionlet()
     

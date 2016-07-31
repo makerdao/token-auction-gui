@@ -61,10 +61,10 @@ Auctions.watchNewAuction = function() {
 Auctions.watchNewAuctionTransactions = function() {
   Transactions.observeRemoved('auction', function (document) {
       if (document.receipt.logs.length === 0) {
-        console.log('creating auction went wrong')
+        console.log('Creating auction went wrong')
         Session.set('newAuctionMessage', 'Error creating new auction')                
       } else {
-        console.log('creating auction is succesful')
+        console.log('Creating auction is succesful')
         Session.set('newAuctionMessage', 'New Auction successfully created')        
       }
   })
