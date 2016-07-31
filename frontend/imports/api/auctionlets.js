@@ -102,10 +102,11 @@ Auctionlets.doClaim = function(auctionletId) {
   TokenAuction.objects.auction.claim(auctionletId, {gas: 1500000 }, function (error, result) {
     if(!error) {
       Transactions.add('claim', result, { auctionletId: auctionletId })      
-      console.log(result)
+      Session.set('claimMessage', 'Claiming your tokens')              
     }
     else {
       console.log("error: ", error);
+      Session.set('claimMessage', 'Error claiming tokens: ' + error.toString())                    
     }
   })
 }
@@ -113,11 +114,11 @@ Auctionlets.doClaim = function(auctionletId) {
 Auctionlets.watchClaimTransactions = function() {
   Transactions.observeRemoved('claim', function (document) {
       if (document.receipt.logs.length === 0) {
-        //Show error in User interface
         console.log('claim went wrong')
+        Session.set('claimMessage', 'Error claiming tokens')   
       } else {
-        //TODO Show claim is succesful in UI
         console.log('claim is succesful')
+        Session.set('claimMessage', 'Tokens successfully claimed')                      
         Auctionlets.getAuctionlet()
       }
   })

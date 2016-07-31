@@ -113,10 +113,12 @@ Template.auctionlet.viewmodel({
     let auctionlet = Auctionlets.findAuctionlet()
     return this.expired() && auctionlet != undefined && Session.get('address') == auctionlet.last_bidder && auctionlet.unclaimed
   },
+  claimMessage() {
+    return Session.get('claimMessage')
+  },
   claim(event) {
     event.preventDefault();
     let auctionlet = Auctionlets.findAuctionlet()
-    console.log('expired', this.expired())
     if(auctionlet.unclaimed && this.expired()) {
       Auctionlets.doClaim(Meteor.settings.public.auctionletId)
     }

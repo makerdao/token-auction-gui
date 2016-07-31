@@ -139,6 +139,9 @@
       {{#if auctionlet.unclaimed}}
         <span>You made the highest bid. Click to receive the tokens</span>
         <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
+        {{#if claimMessage}}
+          <span id='spnClaimMessage'>{{ claimMessage }}</span>
+        {{/if}}
       {{else}}
         <span>You have claimed the tokens</span>
       {{/if}}
