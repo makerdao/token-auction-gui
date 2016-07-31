@@ -38,10 +38,9 @@
   </div>
 </body>
 
-<template name="claimbid">
-  <h2>Claim bid</h2>
-  <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
-    <span id="spnPlacingBid" style="display:none">Bid is being placed</span>
+<template name="test">
+  <h2>Test</h2>
+  <button class="btn btn-primary" {{b "click: create"}}>Test</button>
 </template>
 
 <template name="balance">
@@ -129,9 +128,9 @@
     <label for="inputBid">Enter a bid for the auctionlet</label>
     <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
     <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
-    <span id="spnPlacingBid" style="display:none">Bid is being placed</span>
-    <span id="spnBalanceInsufficient" style="display:none">Your balance is insufficient</span>
-    <span id="spnBidInsufficient" style="display:none">Your bid is not high enough</span>
+    {{#if bidMessage}}
+      <span id='spnBidMessage'>{{ bidMessage }}</span>
+    {{/if}}
   </div>
   {{else}}
   <div class="form-group">

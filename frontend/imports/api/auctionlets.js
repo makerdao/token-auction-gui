@@ -72,8 +72,6 @@ Auctionlets.bidOnAuctionlet = function(auctionletId, bidAmount, quantity) {
 
 Auctionlets.watchBid = function() {
   TokenAuction.objects.auction.Bid(function (error, result) {
-    //TODO Set this via session and template
-    //document.getElementById("spnPlacingBid").style.display = "none";
     if(!error) {
       console.log('bid is set');
       Auctionlets.getAuctionlet();
@@ -89,11 +87,13 @@ Auctionlets.watchBidTransactions = function() {
       if (document.receipt.logs.length === 0) {
         //Show error in User interface
         console.log('bid went wrong')
+        Session.set('bidMessage', 'Error placing bid')
       } else {
         //Show bid is succesful
         console.log('bid is succesful')
         console.log('auctionletId', document.object.auctionletId);
         console.log('bid', document.object.bid);
+        Session.set('bidMessage', 'Bid placed succesfully')        
       }
   })
 }

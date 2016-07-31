@@ -85,11 +85,12 @@ Tokens.setEthAllowance = function(amount) {
     ETH.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
       if(!error) {
         console.log('eth approve transaction adding')
+        Session.set('bidMessage', 'Setting allowance for bid')
         Transactions.add('ethallowance', result, { value: amount.toString(10) })
       }
       else {
-        //TODO Show error in UI
         console.log('setEthAllowance error:', error)
+        Session.set('bidMessage', 'Error setting allowance for bid')
       }
     });
 }
@@ -117,11 +118,12 @@ Tokens.watchMkrApproval = function() {
 Tokens.watchEthAllowanceTransactions = function() {
   Transactions.observeRemoved('ethallowance', function (document) {
       if (document.receipt.logs.length === 0) {
-        //TODO Show error in User interface
         console.log('setting ETH allowance went wrong')
+        Session.set('bidMessage', 'Error setting allowance for bid')
       } else {
         console.log('ETH allowance is set')
         let auction = Auctions.findAuction();
+        Session.set('bidMessage', 'Allowance set, placing bid')
         console.log('Document value', document.object.value)
         Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, document.object.value, auction.sell_amount);
       }

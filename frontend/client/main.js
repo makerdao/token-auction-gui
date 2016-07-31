@@ -55,7 +55,7 @@ Template.balance.viewmodel({
 
 Template.test.viewmodel({
   create(event) {
-    console.log('test')
+    Session.set('bidMessage', 'Just placed a bid')
   }
 });
 
@@ -74,21 +74,20 @@ Template.auctionlet.viewmodel({
     var singleAuctionlet = Auctionlets.findAuctionlet()
     var singleAuction = Auctions.findAuction()
     if(singleAuctionlet != undefined && singleAuction != undefined) {
-      //console.log('buy amount:', web3.toBigNumber(singleAuctionlet.buy_amount).toString(10), ' min_increase:', singleAuction.min_increase)
       var requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase)
-      //console.log('required bid in eth', web3.fromWei(requiredBid.toString(10)))
-      //console.log('required bid in wei', requiredBid.toString(10))
       this.bid(web3.fromWei(requiredBid))
     }
     return singleAuctionlet
   },
   bid: 0,
+  bidMessage() {
+    return Session.get('bidMessage')
+  },
   create(event) {
     event.preventDefault();
     console.log(this.bid())
     //TODO Set this via template instead of directly on the DOM
-    document.getElementById("spnBidInsufficient").style.display = "none";
-    document.getElementById("spnBalanceInsufficient").style.display = "none";
+    Session.set('bidMessage', null)
     let auctionletBid = web3.toWei(this.bid())
     console.log('auctionletBid:', auctionletBid.toString(10))
     let auction = Auctions.findAuction();
@@ -96,15 +95,14 @@ Template.auctionlet.viewmodel({
     
     if(auction != undefined && Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
       if(auctionlet != undefined && auctionletBid >= Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase)) {
-        document.getElementById("spnPlacingBid").style.display = "block";
         Auctionlets.doBid(auctionletBid);
       }
       else {
-        document.getElementById("spnBidInsufficient").style.display = "block";
+        Session.set('bidMessage', 'Bid is not high enough')
       }
     }
     else {
-      document.getElementById("spnBalanceInsufficient").style.display = "block";
+      Session.set('bidMessage', 'Your balance is insufficient for your current bid')
     }
   },
   expired() {
