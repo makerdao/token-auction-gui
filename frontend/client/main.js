@@ -24,6 +24,7 @@ Template.body.onCreated(function() {
     Tokens.watchMkrAllowanceTransactions();
     Auctionlets.watchBidTransactions();
     Auctions.watchNewAuctionTransactions();
+    Auctionlets.watchClaimTransactions();
 })
 
 Template.balance.viewmodel({
@@ -52,9 +53,9 @@ Template.balance.viewmodel({
   },
 });
 
-Template.claimbid.viewmodel({
+Template.test.viewmodel({
   create(event) {
-    getAuctionlet()
+    console.log('test')
   }
 });
 
@@ -117,7 +118,8 @@ Template.auctionlet.viewmodel({
   claim(event) {
     event.preventDefault();
     let auctionlet = Auctionlets.findAuctionlet()
-    if(auctionlet.unclaimed && !this.expired()) {
+    console.log('expired', this.expired())
+    if(auctionlet.unclaimed && this.expired()) {
       Auctionlets.doClaim(Meteor.settings.public.auctionletId)
     }
   }

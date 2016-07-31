@@ -116,9 +116,9 @@ Auctionlets.watchClaimTransactions = function() {
         //Show error in User interface
         console.log('claim went wrong')
       } else {
-        //Show bid is succesful
+        //TODO Show claim is succesful in UI
         console.log('claim is succesful')
-        console.log('auctionletId', document.object.auctionletId);
+        Auctionlets.getAuctionlet()
       }
   })
 }
