@@ -34,11 +34,11 @@ Auctions.createAuction = function(sellAmount) {
 }
 
 Auctions.newAuction = function(account, selling, buying, sellAmount, startBid, minIncrease, duration) {
-    TokenAuction.objects.auction.newAuction(account, selling, 
-    buying, sellAmount, startBid, minIncrease, duration, 
-    {gas: 4700000 }, function (error, result) {
+    TokenAuction.objects.auction.newAuction(account, selling, buying, sellAmount, startBid,
+    minIncrease, duration, {gas: 4700000 }, function (error, result) {
       if(!error) {
-          console.log('New auction transaction started')
+        console.log('New auction transaction started')
+        Transactions.add('auction', result, { selling: selling, sellAmount: sellAmount })
       }
       else {
           console.log(error);
@@ -61,12 +61,11 @@ Auctions.watchNewAuction = function() {
 Auctions.watchNewAuctionTransactions = function() {
   Transactions.observeRemoved('auction', function (document) {
       if (document.receipt.logs.length === 0) {
-        //Show error in User interface
         console.log('creating auction went wrong')
+        Session.set('newAuctionMessage', 'Error creating new auction')                
       } else {
-        //Show bid is succesful
         console.log('creating auction is succesful')
-        console.log('auctionletId', document.object.auctionId);
+        Session.set('newAuctionMessage', 'New Auction successfully created')        
       }
   })
 }

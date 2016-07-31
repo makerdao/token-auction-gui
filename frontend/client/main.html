@@ -172,6 +172,11 @@
       <tr>
         <td><button {{b "click: create"}}>Create auction</button></td>
       </tr>
+      {{#if newAuctionMessage}}
+        <tr>
+          <td><span id='newAuctionMessage'>{{newAuctionMessage}}</span></td>
+        </tr>
+      {{/if}}
     </tfoot>
   </table>
 </template>

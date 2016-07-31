@@ -72,11 +72,12 @@ Tokens.isBalanceSufficient = function(bid, tokenAddress) {
 Tokens.setMkrAllowance = function(amount) {
     MKR.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
       if(!error) {
-        console.log('mkr approve transaction adding')        
+        console.log('mkr approve transaction adding')
+        Session.set('newAuctionMessage', 'Setting allowance for new auction')   
         Transactions.add('mkrallowance', result, { value: amount.toString(10) })
       }
       else {
-        //TODO Show error in UI
+        Session.set('newAuctionMessage', 'Error setting allowance for new auction: ' + error.toString())
       }
     });
 }
@@ -90,7 +91,7 @@ Tokens.setEthAllowance = function(amount) {
       }
       else {
         console.log('setEthAllowance error:', error)
-        Session.set('bidMessage', 'Error setting allowance for bid')
+        Session.set('bidMessage', 'Error setting allowance for bid: ' + error.toString())
       }
     });
 }
@@ -99,10 +100,6 @@ Tokens.watchEthApproval = function() {
   ETH.Approval({owner:Session.get('address'), spender: TokenAuction.objects.auction.address},function(error, result) {
       if(!error) {
         console.log('Approved, placing bid')
-        //let auction = Auctions.findOne({});
-        //TODO Remove bidding on auctionlet
-        //Transactions.add('allowance', result.transactionHash, { id: idx, status: Status.PENDING })
-        //Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, result.args.value.toString(10), auction.sell_amount);
       }
     });
 }
@@ -133,8 +130,8 @@ Tokens.watchEthAllowanceTransactions = function() {
   Tokens.watchMkrAllowanceTransactions = function() {
     Transactions.observeRemoved('mkrallowance', function (document) {
       if (document.receipt.logs.length === 0) {
-        //TODO Show error in User interface
         console.log('setting MKR allowance went wrong')
+        Session.set('newAuctionMessage', 'Error setting allowance for new auction: ' + error.toString())
       } else {
         console.log('MKR allowance is set')
         let newAuction = Session.get('newAuction')
@@ -143,6 +140,7 @@ Tokens.watchEthAllowanceTransactions = function() {
         Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
                             Meteor.settings.public.ETH.address, newAuction.sellamount.toString(10), newAuction.startbid.toString(10), 
                             newAuction.min_increase, newAuction.duration.toString(10))
+        Session.set('newAuctionMessage', 'Allowance set, creating new auction')        
       }
   })
 

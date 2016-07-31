@@ -128,6 +128,9 @@ Template.newauction.viewmodel({
   startbid: 0,
   minimumincrease: 0,
   duration: 0,
+  newAuctionMessage() {
+    return Session.get('newAuctionMessage')
+  },
   create(event) {
     event.preventDefault();
     let weiSellAmount = web3.toWei(this.sellamount())
