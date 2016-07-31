@@ -46,9 +46,9 @@ Tokens.sync = function () {
         })
       }
     } else {
-      for(token_id in ALL_TOKENS){
+      for(token_id in allTokens){
         console.log('NETWORK IS PRIVATE')
-        Tokens.upsert(ALL_TOKENS[token_id], { $set: { balance: '0', allowance: '0' } })
+        Tokens.upsert(allTokens[token_id], { $set: { balance: '0', allowance: '0' } })
       }
     }
   }
