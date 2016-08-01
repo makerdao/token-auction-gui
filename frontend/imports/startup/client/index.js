@@ -13,7 +13,8 @@ Session.set('isConnected', false)
 Session.set('latestBlock', 0)
 
 Meteor.startup(function() {
-  
+  checkNetwork()
+
   web3.eth.filter('latest', function () {
     Tokens.sync()
     Transactions.sync()
@@ -44,7 +45,7 @@ Meteor.startup(function() {
     }
   })
 
-  //Meteor.setInterval(checkNetwork, 2503)
+  Meteor.setInterval(checkNetwork, 2503)
   //Meteor.setInterval(web3.checkAccounts, 10657)
 })
 
@@ -90,10 +91,10 @@ function checkNetwork () {
           var network = false
           if (!e) {
             switch (res.hash) {
-              case '0x49a392153fb11a3446cd6953333f24a2e295312f':
+              case '0x0cd786a2425d16f152c658316c423e6ce1181e15c3295826d7c9904cba9ce303':
                 network = 'test'
                 break
-              case '0x49a392153fb11a3446cd6953333f24a2e295312f':
+              case '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3':
                 network = 'main'
                 break
               default:
