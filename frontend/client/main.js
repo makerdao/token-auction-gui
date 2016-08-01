@@ -14,19 +14,19 @@ import '/imports/helpers.js';
 Template.body.onCreated(function() {
   console.log('On body created');
   this.autorun(() => {
-      Auctionlets.watchBid();
-      let ownerAddress = Session.get('address')
-      console.log("Address",ownerAddress)
-      Tokens.watchEthApproval()
-      Tokens.watchMkrApproval();
-      Auctions.watchNewAuction();
-    });
+    Auctionlets.watchBid();
+    let ownerAddress = Session.get('address')
+    console.log("Address", ownerAddress)
+    Tokens.watchEthApproval()
+    Tokens.watchMkrApproval();
+  });
 
-    Tokens.watchEthAllowanceTransactions();
-    Tokens.watchMkrAllowanceTransactions();
-    Auctionlets.watchBidTransactions();
-    Auctions.watchNewAuctionTransactions();
-    Auctionlets.watchClaimTransactions();
+  Tokens.watchEthAllowanceTransactions();
+  Tokens.watchMkrAllowanceTransactions();
+  Auctionlets.watchBidTransactions();
+  Auctions.watchNewAuction();
+  Auctions.watchNewAuctionTransactions();
+  Auctionlets.watchClaimTransactions();
 })
 
 Template.balance.viewmodel({
