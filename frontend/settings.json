@@ -1,6 +1,5 @@
 {
     "public": {
-        "auctionFromBlock": 1187633,
         "ETH": {
             "name": "ETH",
             "address": "0x52fe88b987c7829e5d5a61c98f67c9c14e6a7a90"

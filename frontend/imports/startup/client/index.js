@@ -6,7 +6,6 @@ import { Transactions } from '../../lib/_transactions.js';
 
 TokenAuction.init('morden')
 Session.set('network', false)
-Session.set('loading', false)
 Session.set('outOfSync', false)
 Session.set('syncing', false)
 Session.set('isConnected', false)

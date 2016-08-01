@@ -6,9 +6,6 @@ Template.networkStatus.helpers({
   network: function() {
     return Session.get('network')
   },
-  loading: function() {
-    return Session.get('loading')
-  },
   syncing: function() {
     return Session.get('syncing')
   },

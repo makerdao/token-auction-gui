@@ -36,7 +36,7 @@ Transactions.sync = function () {
           })
         }
         else {
-          console.log(error, result)
+          console.log('transaction receipt', error, result)
         }
         // Sync next transaction
         syncTransaction(index + 1)
