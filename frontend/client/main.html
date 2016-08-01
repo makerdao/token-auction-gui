@@ -21,6 +21,11 @@
         {{> auctionlet}}
       </div>
     </div>
+    <div class="row">
+      <div class="col-cs-12">
+        {{> newauction}}
+      </div>
+    </div>
   </div>
 </body>
 
@@ -47,7 +52,7 @@
   <table class="table table-condensed">
     <tr>
       <td>Contract address</td>
-      <td><a href="http://testnet.etherscan.io/address/0xa1bff93e4c672727e6001528e25bbb5568c81a6d" target="_blank">{{contractaddress}}</a></td>
+      <td><a href="http://testnet.etherscan.io/address/{{contractaddress}}" target="_blank">{{contractaddress}}</a></td>
     </tr>
     <tr>
       <td>Auction id</td>
@@ -55,7 +60,7 @@
     </tr>
     <tr>
       <td>Creator</td>
-      <td><a href="http://testnet.etherscan.io/address/0xa1bff93e4c672727e6001528e25bbb5568c81a6d" target="_blank">{{auction.creator}}</a></td>
+      <td><a href="http://testnet.etherscan.io/address/{{auction.creator}}" target="_blank">{{auction.creator}}</a></td>
     </tr>
     <tr>
       <td>Selling</td>
@@ -89,7 +94,7 @@
     </tr>
     <tr>
       <td>Last bidder</td>
-      <td><a href="http://testnet.etherscan.io/address/0xa1bff93e4c672727e6001528e25bbb5568c81a6d">{{auctionlet.last_bidder}}</a></td>
+      <td><a href="http://testnet.etherscan.io/address/{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
     </tr>
     <tr>
       <td>Last bid time</td>
