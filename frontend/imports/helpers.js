@@ -1,3 +1,5 @@
+import { Tokens } from './api/tokens.js';
+
 Template.registerHelper('fromWei', function(s) {
     return web3.fromWei(s);
 })
@@ -18,4 +20,14 @@ Template.registerHelper('json', function(a) {
     } catch(e) {
         return a
     }
+})
+
+Template.registerHelper('ETHToken', () => {
+    let token = Tokens.findOne({"name": Meteor.settings.public.ETH.name});
+    return token;
+})
+
+Template.registerHelper('MKRToken', () => {
+    let token = Tokens.findOne({"name": Meteor.settings.public.MKR.name});
+    return token;
 })

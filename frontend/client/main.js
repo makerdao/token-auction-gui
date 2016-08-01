@@ -32,27 +32,7 @@ Template.body.onCreated(function() {
 Template.balance.viewmodel({
   account() {
     return Session.get("address")
-  },
-  mkrName() {
-    return Meteor.settings.public.MKR.name;
-  },
-  mkrAddress() {
-    return Meteor.settings.public.MKR.address;
-  },
-  mkrToken() {
-    let token = Tokens.findOne({"_id": Meteor.settings.public.MKR.name});
-    return token;
-  },
-  ethName() {
-    return Meteor.settings.public.ETH.name;
-  },
-  ethAddress() {
-    return Meteor.settings.public.ETH.address;
-  },
-  ethToken() {
-    let token = Tokens.findOne({"_id": Meteor.settings.public.ETH.name});
-    return token;
-  },
+  }
 });
 
 Template.auction.viewmodel({

@@ -37,12 +37,12 @@
       <td><a href="http://testnet.etherscan.io/address/{{mkrAddress}}">{{account}}</a></td>
     </tr>
     <tr>
-      <td><a href="http://testnet.etherscan.io/address/{{mkrAddress}}">{{mkrName}}</a></td>
-      <td>{{formatBalance (fromWei mkrToken.balance)}}</td>
+      <td><a href="http://testnet.etherscan.io/address/{{MKRToken.address}}">{{MKRToken.name}}</a></td>
+      <td>{{formatBalance (fromWei MKRToken.balance)}}</td>
     </tr>
     <tr>
-      <td><a href="http://testnet.etherscan.io/address/{{ethAddress}}">{{ethName}}</a></td>
-      <td>{{formatBalance (fromWei ethToken.balance)}}</td>
+      <td><a href="http://testnet.etherscan.io/address/{{ETHToken.address}}">{{ETHToken.name}}</a></td>
+      <td>{{formatBalance (fromWei ETHToken.balance)}}</td>
     </tr>
   </table>
 </template>
@@ -189,7 +189,7 @@
     </th>
     {{#each tokens}}
     <tr>
-      <td>{{_id}}</td>
+      <td>{{name}}</td>
       <td>{{balance}}</td>
       <td>{{allowance}} </td>
     </tr>

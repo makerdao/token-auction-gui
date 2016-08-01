@@ -36,12 +36,12 @@ Tokens.sync = function () {
         // XXX EIP20
         allTokens[token_id].balanceOf(address, function (error, balance) {
           if (!error) {
-            Tokens.upsert({ _id: token_id, address: allTokens[token_id].address}, { $set: { balance: balance.toString(10) } })
+            Tokens.upsert({ name: token_id, address: allTokens[token_id].address}, { $set: { balance: balance.toString(10) } })
           }
         })
         allTokens[token_id].allowance(address, contract_address, function (error, allowance) {
           if (!error) {
-            Tokens.upsert({ _id: token_id, address: allTokens[token_id].address}, { $set: { allowance: allowance.toString(10) } })
+            Tokens.upsert({ name: token_id, address: allTokens[token_id].address}, { $set: { allowance: allowance.toString(10) } })
           }
         })
       }
