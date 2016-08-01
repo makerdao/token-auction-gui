@@ -5,7 +5,9 @@ import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Tokens, ETH, MKR } from '/imports/api/tokens.js';
 import { Transactions } from '/imports/lib/_transactions.js';
+
 import './main.html';
+import '/imports/client/network-status.js';
 import '/imports/startup/client/index.js';
 import '/imports/helpers.js';
 
@@ -83,7 +85,7 @@ Template.auctionlet.viewmodel({
     let auctionletBid = web3.toWei(this.bid())
     let auction = Auctions.findAuction();
     let auctionlet = Auctionlets.findAuctionlet()
-    
+
     if(auction != undefined && Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
       if(auctionlet != undefined && auctionletBid >= Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase)) {
         Auctionlets.doBid(auctionletBid);
@@ -128,10 +130,10 @@ Template.newauction.viewmodel({
     event.preventDefault();
     let weiSellAmount = web3.toWei(this.sellamount())
     let weiStartBid = web3.toWei(this.startbid())
-    
+
     let newAuction = {
-                      sellamount: weiSellAmount, 
-                      startbid: weiStartBid, 
+                      sellamount: weiSellAmount,
+                      startbid: weiStartBid,
                       min_increase: this.minimumincrease(),
                       duration: this.duration()
                     }

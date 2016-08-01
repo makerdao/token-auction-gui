@@ -7,6 +7,7 @@
     <div class="row">
       <div class="col-cs-12">
         <h1>Token Auction</h1>
+        {{> networkStatus}}
         {{> balance}}
       </div>
     </div>
@@ -180,7 +181,7 @@
         <td>Token id</td>
         <td>Balance</td>
         <td>Allowance</td>
-    </th>    
+    </th>
     {{#each tokens}}
     <tr>
       <td>{{_id}}</td>
