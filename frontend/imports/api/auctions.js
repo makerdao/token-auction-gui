@@ -1,16 +1,16 @@
 import { Mongo } from 'meteor/mongo';
 import { Tokens } from './tokens.js';
 import { Transactions } from '../lib/_transactions.js';
-import { AUCTIONID, AUCTIONLETID } from '/imports/startup/client/routes.js';
+import { currentAuctionId, currentAuctionletId } from '/imports/startup/client/routes.js';
 
 const Auctions = new Mongo.Collection(null);
 
 Auctions.getAuction = function() {
-    TokenAuction.objects.auction.getAuctionInfo(AUCTIONID, function (error, result) {
+    TokenAuction.objects.auction.getAuctionInfo(currentAuctionId, function (error, result) {
       if(!error) {
         Auctions.remove({});
         var auction = {
-          auctionId: AUCTIONLETID,
+          auctionId: currentAuctionId,
           creator: result[0],
           selling: result[1],
           buying: result[2],
@@ -72,7 +72,7 @@ Auctions.watchNewAuctionTransactions = function() {
 }
 
 Auctions.findAuction = function() {
-  return Auctions.findOne({"auctionId": AUCTIONLETID});
+  return Auctions.findOne({"auctionId": currentAuctionId});
 }
 
 export { Auctions }
