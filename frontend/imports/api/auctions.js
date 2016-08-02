@@ -1,16 +1,16 @@
 import { Mongo } from 'meteor/mongo';
 import { Tokens } from './tokens.js';
 import { Transactions } from '../lib/_transactions.js';
-import { currentAuctionId, currentAuctionletId, AUCTIONPATH } from '/imports/startup/client/routes.js';
+import { getCurrentAuctionId } from '/imports/startup/client/routes.js';
 
 const Auctions = new Mongo.Collection(null);
 
 Auctions.getAuction = function() {
-    TokenAuction.objects.auction.getAuctionInfo(currentAuctionId, function (error, result) {
+    TokenAuction.objects.auction.getAuctionInfo(getCurrentAuctionId(), function (error, result) {
       if(!error) {
         Auctions.remove({});
         var auction = {
-          auctionId: currentAuctionId,
+          auctionId: getCurrentAuctionId,
           creator: result[0],
           selling: result[1],
           buying: result[2],
@@ -52,7 +52,7 @@ Auctions.watchNewAuction = function() {
       if(!error) {
         console.log("AuctionId: ", result.args.id.toNumber());
         console.log("BaseId: ", result.args.base_id.toNumber());
-        let auctionUrl = Meteor.settings.public.host + AUCTIONPATH + result.args.id.toNumber();
+        let auctionUrl = Meteor.settings.public.host + '#' + result.args.id.toNumber();
         Session.set('newAuctionUrl', auctionUrl)
       }
       else {
@@ -74,7 +74,7 @@ Auctions.watchNewAuctionTransactions = function() {
 }
 
 Auctions.findAuction = function() {
-  return Auctions.findOne({"auctionId": currentAuctionId});
+  return Auctions.findOne({"auctionId": getCurrentAuctionId});
 }
 
 export { Auctions }
