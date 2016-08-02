@@ -4,7 +4,7 @@ currentAuctionId = Meteor.settings.public.currentAuctionId;
 currentAuctionletId = Meteor.settings.public.auctionletId;
 const AUCTIONPATH = 'auction/'
 
-FlowRouter.route('/' + AUCTIONPATH + ':_id', {
+FlowRouter.route(Meteor.settings.public.path + AUCTIONPATH + ':_id', {
     action(params, queryParams) {
         let id = parseInt(params._id)
         if(id != undefined && id > 0) {
@@ -15,7 +15,7 @@ FlowRouter.route('/' + AUCTIONPATH + ':_id', {
     }
 })
 
-FlowRouter.route('/', {
+FlowRouter.route(Meteor.settings.public.path, {
     action() {
         console.log('Dit is de default auction')
         currentAuctionId = Meteor.settings.public.auctionId

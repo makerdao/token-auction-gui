@@ -10,6 +10,7 @@
         },
         "auctionId": 5,
         "auctionletId": 5,
-        "host": "http://makerdao.github.io/weekly-mkr-auction/"
+        "host": "http://makerdao.github.io/weekly-mkr-auction/",
+        "path": "/weekly-mkr-auction/"
     }
 }
