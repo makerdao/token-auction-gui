@@ -5,6 +5,7 @@ import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Tokens, ETH, MKR } from '/imports/api/tokens.js';
 import { Transactions } from '/imports/lib/_transactions.js';
+import { AUCTIONID, AUCTIONLETID } from '/imports/startup/client/routes.js';
 
 import './main.html';
 import '/imports/client/network-status.js';
@@ -27,6 +28,8 @@ Template.body.onCreated(function() {
   Auctions.watchNewAuction();
   Auctions.watchNewAuctionTransactions();
   Auctionlets.watchClaimTransactions();
+
+  console.log('AuctionId:', AUCTIONID)
 })
 
 Template.balance.viewmodel({
@@ -97,7 +100,7 @@ Template.auctionlet.viewmodel({
     event.preventDefault();
     let auctionlet = Auctionlets.findAuctionlet()
     if(auctionlet.unclaimed && this.expired()) {
-      Auctionlets.doClaim(Meteor.settings.public.auctionletId)
+      Auctionlets.doClaim(AUCTIONLETID)
     }
   }
 });

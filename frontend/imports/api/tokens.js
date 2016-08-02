@@ -2,6 +2,7 @@ import { Mongo } from 'meteor/mongo';
 import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Transactions } from '../lib/_transactions.js';
+import { AUCTIONID, AUCTIONLETID } from '/imports/startup/client/routes.js';
 
 const Tokens = new Mongo.Collection(null);
 ERC20.init('morden');
@@ -121,7 +122,7 @@ Tokens.watchEthAllowanceTransactions = function() {
         console.log('ETH allowance is set')
         let auction = Auctions.findAuction();
         Session.set('bidMessage', 'Allowance set, placing bid')
-        Auctionlets.bidOnAuctionlet(Meteor.settings.public.auctionletId, document.object.value, auction.sell_amount);
+        Auctionlets.bidOnAuctionlet(AUCTIONLETID, document.object.value, auction.sell_amount);
       }
   })
 }
