@@ -6,7 +6,7 @@ import { AUCTIONID, AUCTIONLETID } from '/imports/startup/client/routes.js';
 const Auctions = new Mongo.Collection(null);
 
 Auctions.getAuction = function() {
-    TokenAuction.objects.auction.getAuctionInfo(AUCTIONLETID, function (error, result) {
+    TokenAuction.objects.auction.getAuctionInfo(AUCTIONID, function (error, result) {
       if(!error) {
         Auctions.remove({});
         var auction = {
