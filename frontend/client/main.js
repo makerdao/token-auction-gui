@@ -5,7 +5,7 @@ import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Tokens, ETH, MKR } from '/imports/api/tokens.js';
 import { Transactions } from '/imports/lib/_transactions.js';
-import { AUCTIONID, AUCTIONLETID } from '/imports/startup/client/routes.js';
+import { currentAuctionId, currentAuctionletId } from '/imports/startup/client/routes.js';
 
 import './main.html';
 import '/imports/client/network-status.js';
@@ -16,8 +16,6 @@ Template.body.onCreated(function() {
   console.log('On body created');
   this.autorun(() => {
     Auctionlets.watchBid();
-    let ownerAddress = Session.get('address')
-    console.log("Address", ownerAddress)
     Tokens.watchEthApproval()
     Tokens.watchMkrApproval();
   });
@@ -29,7 +27,7 @@ Template.body.onCreated(function() {
   Auctions.watchNewAuctionTransactions();
   Auctionlets.watchClaimTransactions();
 
-  console.log('AuctionId:', AUCTIONID)
+  console.log('AuctionId:', currentAuctionId)
 })
 
 Template.balance.viewmodel({
@@ -100,7 +98,7 @@ Template.auctionlet.viewmodel({
     event.preventDefault();
     let auctionlet = Auctionlets.findAuctionlet()
     if(auctionlet.unclaimed && this.expired()) {
-      Auctionlets.doClaim(AUCTIONLETID)
+      Auctionlets.doClaim(currentAuctionletId)
     }
   }
 });
@@ -112,6 +110,9 @@ Template.newauction.viewmodel({
   duration: 0,
   newAuctionMessage() {
     return Session.get('newAuctionMessage')
+  },
+  newAuctionUrl() {
+    return Session.get('newAuctionUrl')
   },
   create(event) {
     event.preventDefault();

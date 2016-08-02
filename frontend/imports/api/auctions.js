@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { Tokens } from './tokens.js';
 import { Transactions } from '../lib/_transactions.js';
-import { currentAuctionId, currentAuctionletId } from '/imports/startup/client/routes.js';
+import { currentAuctionId, currentAuctionletId, AUCTIONPATH } from '/imports/startup/client/routes.js';
 
 const Auctions = new Mongo.Collection(null);
 
@@ -52,6 +52,8 @@ Auctions.watchNewAuction = function() {
       if(!error) {
         console.log("AuctionId: ", result.args.id.toNumber());
         console.log("BaseId: ", result.args.base_id.toNumber());
+        let auctionUrl = Meteor.settings.public.host + AUCTIONPATH + result.args.id.toNumber();
+        Session.set('newAuctionUrl', auctionUrl)
       }
       else {
         console.log("error: ", error);

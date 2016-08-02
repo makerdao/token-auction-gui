@@ -2,8 +2,9 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 
 currentAuctionId = Meteor.settings.public.currentAuctionId;
 currentAuctionletId = Meteor.settings.public.auctionletId;
+const AUCTIONPATH = 'auction/'
 
-FlowRouter.route('/auction/:_id', {
+FlowRouter.route('/' + AUCTIONPATH + ':_id', {
     action(params, queryParams) {
         let id = parseInt(params._id)
         if(id != undefined && id > 0) {
@@ -22,4 +23,4 @@ FlowRouter.route('/', {
     }
 })
 
-export { currentAuctionId, currentAuctionletId }
+export { currentAuctionId, currentAuctionletId, AUCTIONPATH }

@@ -1,20 +1,20 @@
 import { Mongo } from 'meteor/mongo';
 import { Tokens } from './tokens.js';
 import { Transactions } from '../lib/_transactions.js';
-import { AUCTIONID, AUCTIONLETID } from '/imports/startup/client/routes.js';
+import { currentAuctionId, currentAuctionletId } from '/imports/startup/client/routes.js';
 
 const Auctionlets = new Mongo.Collection(null);
 
 Auctionlets.findAuctionlet = function() {
-  return Auctionlets.findOne({"auctionletId": AUCTIONLETID});
+  return Auctionlets.findOne({"auctionletId": currentAuctionletId});
 }
 
 Auctionlets.getAuctionlet = function() {
-    TokenAuction.objects.auction.getAuctionletInfo(AUCTIONLETID, function (error, result) {
+    TokenAuction.objects.auction.getAuctionletInfo(currentAuctionletId, function (error, result) {
       if(!error) {
         Auctionlets.remove({});
         var auctionlet = {
-          auctionletId: AUCTIONLETID,
+          auctionletId: currentAuctionletId,
           auction_id: result[0].toString(10),
           last_bidder: result[1],
           last_bid_time: new Date(result[2].toNumber()*1000),
@@ -35,10 +35,10 @@ Auctionlets.getAuctionlet = function() {
 
 //Check whether an auctionlet is expired and if so update the auctionlet
 Auctionlets.syncExpired = function() {
-  TokenAuction.objects.auction.isExpired(AUCTIONLETID, function (error, result) {
+  TokenAuction.objects.auction.isExpired(currentAuctionletId, function (error, result) {
     if(!error) {
         if(result) {
-          Auctionlets.update({ auctionletId: AUCTIONLETID }, { $set: { isExpired: result } })
+          Auctionlets.update({ auctionletId: currentAuctionletId }, { $set: { isExpired: result } })
         }
     }
     else {

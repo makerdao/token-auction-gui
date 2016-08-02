@@ -179,6 +179,11 @@
         <tr>
           <td><span id='newAuctionMessage'>{{newAuctionMessage}}</span></td>
         </tr>
+        {{#if newAuctionUrl}}
+          <tr>
+            <td><a href="{{newAuctionUrl}}">Your new auction can be found here</a></td>
+          </tr>
+        {{/if}}
       {{/if}}
     </tfoot>
   </table>
