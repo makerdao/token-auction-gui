@@ -49,6 +49,7 @@
 
 <template name="auction">
   <h2>Auction</h2>
+  {{#unless auctionNotFound}}
   <table class="table table-condensed">
     <tr>
       <td>Contract address</td>
@@ -79,66 +80,73 @@
       <td>{{auction.duration}} seconds</td>
     </tr>
   </table>
+  {{else}}
+ <span>Auction was not found</span>
+ {{/unless}}
 </template>
 
 <template name="auctionlet">
   <h2>Auctionlet</h2>
-  <table class="table">
-    <tr>
-      <td>Auctionlet id</td>
-      <td>{{auctionlet.auctionletId}}</td>
-    </tr>
-    {{#if unclaimed}}
-    <tr>
-      <td>Selling</td>
-      <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <a href="http://testnet.etherscan.io/address/{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
-    </tr>
-    <tr>
-      <td>Last bidder</td>
-      <td><a href="http://testnet.etherscan.io/address/{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
-    </tr>
-    {{#unless auctionlet.base}}
+  {{#unless auctionNotFound}}
+    <table class="table">
       <tr>
-        <td>Last bid time</td>
-        <td>{{auctionlet.last_bid_time}}</td>
+        <td>Auctionlet id</td>
+        <td>{{auctionlet.auctionletId}}</td>
       </tr>
-    {{/unless}}
-    <tr>
-      {{#if auctionlet.base}}
-        <td>Initial bid</td>
-      {{else}}
-        <td>Highest bid</td>
+      {{#if unclaimed}}
+      <tr>
+        <td>Selling</td>
+        <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <a href="http://testnet.etherscan.io/address/{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
+      </tr>
+      {{#unless auctionlet.base}}
+        <tr>
+          <td>Last bidder</td>
+          <td><a href="http://testnet.etherscan.io/address/{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
+        </tr>
+        <tr>
+          <td>Last bid time</td>
+          <td>{{auctionlet.last_bid_time}}</td>
+        </tr>
+      {{/unless}}
+      <tr>
+        {{#if auctionlet.base}}
+          <td>Initial bid</td>
+        {{else}}
+          <td>Highest bid</td>
+        {{/if}}
+        <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a href="http://testnet.etherscan.io/address/{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
+      </tr>
       {{/if}}
-      <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a href="http://testnet.etherscan.io/address/{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
-    </tr>
-    {{/if}}
-  </table>
-  {{#unless expired}}
-  <div class="form-group">
-    <label for="inputBid">Enter a bid for the auctionlet</label>
-    <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
-    <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
-    {{#if bidMessage}}
-      <span id='spnBidMessage'>{{ bidMessage }}</span>
-    {{/if}}
-  </div>
-  {{else}}
-  <div class="form-group">
-    <span>Auctionlet has expired.</span>
-    {{#unless unclaimed}}
-      <br/>
-      <span>The tokens have been claimed by the auctionlet winner</span>
-    {{/unless}}    
-    {{#if auctionwinner}}
-      {{#if auctionlet.unclaimed}}
-        <span>You made the highest bid. Click to receive the tokens</span>
-        <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
-        {{#if claimMessage}}
-          <span id='spnClaimMessage'>{{ claimMessage }}</span>
+    </table>
+    {{#unless expired}}
+    <div class="form-group">
+      <label for="inputBid">Enter a bid for the auctionlet</label>
+      <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
+      <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
+      {{#if bidMessage}}
+        <span id='spnBidMessage'>{{ bidMessage }}</span>
+      {{/if}}
+    </div>
+    {{else}}
+    <div class="form-group">
+      <span>Auctionlet has expired.</span>
+      {{#unless unclaimed}}
+        <br/>
+        <span>The tokens have been claimed by the auctionlet winner</span>
+      {{/unless}}    
+      {{#if auctionwinner}}
+        {{#if auctionlet.unclaimed}}
+          <span>You made the highest bid. Click to receive the tokens</span>
+          <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
+          {{#if claimMessage}}
+            <span id='spnClaimMessage'>{{ claimMessage }}</span>
+          {{/if}}
         {{/if}}
       {{/if}}
-    {{/if}}
-  </div>
+    </div>
+    {{/unless}}
+  {{else}}
+    <span>Auctionlet was not found</span>
   {{/unless}}
 </template>
 

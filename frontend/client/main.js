@@ -40,7 +40,7 @@ Template.balance.viewmodel({
 
 Template.auction.viewmodel({
   auction() {
-    var singleAuction = Auctions.findAuction()
+    let singleAuction = Auctions.findAuction()
     return singleAuction;
   },
   contractaddress() {
@@ -50,10 +50,10 @@ Template.auction.viewmodel({
 
 Template.auctionlet.viewmodel({
   auctionlet() {
-    var singleAuctionlet = Auctionlets.findAuctionlet()
-    var singleAuction = Auctions.findAuction()
+    let singleAuctionlet = Auctionlets.findAuctionlet()
+    let singleAuction = Auctions.findAuction()
     if(singleAuctionlet != undefined && singleAuction != undefined) {
-      var requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase)
+      let requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase)
       this.bid(web3.fromWei(requiredBid))
     }
     return singleAuctionlet

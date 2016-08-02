@@ -1,4 +1,5 @@
 import { Tokens } from './api/tokens.js';
+import { Auctions } from '/imports/api/auctions.js';
 
 Template.registerHelper('fromWei', function(s) {
     return web3.fromWei(s);
@@ -30,4 +31,9 @@ Template.registerHelper('ETHToken', () => {
 Template.registerHelper('MKRToken', () => {
     let token = Tokens.findOne({"name": Meteor.settings.public.MKR.name});
     return token;
+})
+
+Template.registerHelper('auctionNotFound', () => {
+    let auction = Auctions.findAuction()
+    return auction == undefined || auction.creator === "0x0000000000000000000000000000000000000000"
 })
