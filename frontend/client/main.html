@@ -88,6 +88,7 @@
       <td>Auctionlet id</td>
       <td>{{auctionlet.auctionletId}}</td>
     </tr>
+    {{#if unclaimed}}
     <tr>
       <td>Selling</td>
       <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <a href="http://testnet.etherscan.io/address/{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
@@ -96,14 +97,21 @@
       <td>Last bidder</td>
       <td><a href="http://testnet.etherscan.io/address/{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
     </tr>
+    {{#unless auctionlet.base}}
+      <tr>
+        <td>Last bid time</td>
+        <td>{{auctionlet.last_bid_time}}</td>
+      </tr>
+    {{/unless}}
     <tr>
-      <td>Last bid time</td>
-      <td>{{auctionlet.last_bid_time}}</td>
-    </tr>
-    <tr>
-      <td>Highest bid</td>
+      {{#if auctionlet.base}}
+        <td>Initial bid</td>
+      {{else}}
+        <td>Highest bid</td>
+      {{/if}}
       <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a href="http://testnet.etherscan.io/address/{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
     </tr>
+    {{/if}}
   </table>
   {{#unless expired}}
   <div class="form-group">
@@ -116,7 +124,11 @@
   </div>
   {{else}}
   <div class="form-group">
-    <span>Auctionlet has expired</span>
+    <span>Auctionlet has expired.</span>
+    {{#unless unclaimed}}
+      <br/>
+      <span>The tokens have been claimed by the auctionlet winner</span>
+    {{/unless}}    
     {{#if auctionwinner}}
       {{#if auctionlet.unclaimed}}
         <span>You made the highest bid. Click to receive the tokens</span>
@@ -124,8 +136,6 @@
         {{#if claimMessage}}
           <span id='spnClaimMessage'>{{ claimMessage }}</span>
         {{/if}}
-      {{else}}
-        <span>You have claimed the tokens</span>
       {{/if}}
     {{/if}}
   </div>

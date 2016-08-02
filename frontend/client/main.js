@@ -82,6 +82,10 @@ Template.auctionlet.viewmodel({
     let auctionlet = Auctionlets.findAuctionlet()
     return auctionlet != undefined && auctionlet.isExpired
   },
+  unclaimed() {
+    let auctionlet = Auctionlets.findAuctionlet()
+    return auctionlet != undefined && auctionlet.auction_id != "0" && auctionlet.unclaimed
+  },
   auctionwinner() {
     let auctionlet = Auctionlets.findAuctionlet()
     return this.expired() && auctionlet != undefined && Session.get('address') == auctionlet.last_bidder && auctionlet.unclaimed
