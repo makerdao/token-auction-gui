@@ -1,4 +1,3 @@
-import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Mongo } from 'meteor/mongo';
 import { Tokens } from './tokens.js';
 import { Transactions } from '../lib/_transactions.js';
@@ -53,7 +52,7 @@ Auctions.watchNewAuction = function() {
       if(!error) {
         let auctionId = result.args.id.toNumber()
         console.log("AuctionId: ", auctionId)
-        let auctionUrl = Meteor.absoluteUrl() + "#!/auction/" + auctionId
+        let auctionUrl = Meteor.absoluteUrl() + "#/auction/" + auctionId
         Session.set('newAuctionUrl', auctionUrl)
       }
       else {

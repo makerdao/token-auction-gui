@@ -3,7 +3,7 @@ import { Auctionlets } from '../../api/auctionlets.js';
 import { Tokens } from '../../api/tokens.js';
 import { Tracker } from 'meteor/tracker';
 import { Transactions } from '../../lib/_transactions.js';
-import './routes.js';
+import '../routes.js';
 
 TokenAuction.init('morden')
 Session.set('network', false)
