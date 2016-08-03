@@ -9,8 +9,6 @@
             "address": "0xffb1c99b389ba527a9194b1606b3565a07da3eef"
         },
         "auctionId": 5,
-        "auctionletId": 5,
-        "host": "http://makerdao.github.io/weekly-mkr-auction/",
-        "path": "/weekly-mkr-auction/"
+        "auctionletId": 5
     }
 }

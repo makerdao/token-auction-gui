@@ -133,7 +133,7 @@
       {{#unless unclaimed}}
         <br/>
         <span>The tokens have been claimed by the auctionlet winner</span>
-      {{/unless}}    
+      {{/unless}}
       {{#if auctionwinner}}
         {{#if auctionlet.unclaimed}}
           <span>You made the highest bid. Click to receive the tokens</span>
@@ -181,7 +181,7 @@
         </tr>
         {{#if newAuctionUrl}}
           <tr>
-            <td><a href="{{newAuctionUrl}}">Your new auction can be found here</a></td>
+            <td>Your new auction can be found on <a href="{{newAuctionUrl}}">{{newAuctionUrl}}</a></td>
           </tr>
         {{/if}}
       {{/if}}

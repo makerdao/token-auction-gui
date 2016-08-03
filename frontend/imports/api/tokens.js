@@ -2,7 +2,6 @@ import { Mongo } from 'meteor/mongo';
 import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Transactions } from '../lib/_transactions.js';
-import { getCurrentAuctionletId } from '/imports/startup/client/routes.js';
 
 const Tokens = new Mongo.Collection(null);
 ERC20.init('morden');
@@ -74,7 +73,7 @@ Tokens.setMkrAllowance = function(amount) {
     MKR.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
       if(!error) {
         console.log('Mkr approve transaction adding')
-        Session.set('newAuctionMessage', 'Setting allowance for new auction')   
+        Session.set('newAuctionMessage', 'Setting allowance for new auction')
         Transactions.add('mkrallowance', result, { value: amount.toString(10) })
       }
       else {
@@ -122,7 +121,7 @@ Tokens.watchEthAllowanceTransactions = function() {
         console.log('ETH allowance is set')
         let auction = Auctions.findAuction();
         Session.set('bidMessage', 'Allowance set, placing bid')
-        Auctionlets.bidOnAuctionlet(getCurrentAuctionletId(), document.object.value, auction.sell_amount);
+        Auctionlets.bidOnAuctionlet(Session.get('currentAuctionletId'), document.object.value, auction.sell_amount);
       }
   })
 }
@@ -137,10 +136,10 @@ Tokens.watchEthAllowanceTransactions = function() {
         let newAuction = Session.get('newAuction')
         console.log('account:', Session.get('address'), newAuction.sellamount, newAuction.startbid,
         newAuction.min_increase, newAuction.duration)
-        Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address, 
-                            Meteor.settings.public.ETH.address, newAuction.sellamount.toString(10), newAuction.startbid.toString(10), 
+        Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address,
+                            Meteor.settings.public.ETH.address, newAuction.sellamount.toString(10), newAuction.startbid.toString(10),
                             newAuction.min_increase, newAuction.duration.toString(10))
-        Session.set('newAuctionMessage', 'Allowance set, creating new auction')        
+        Session.set('newAuctionMessage', 'Allowance set, creating new auction')
       }
   })
 

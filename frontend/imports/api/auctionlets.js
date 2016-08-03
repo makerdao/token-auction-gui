@@ -1,44 +1,45 @@
 import { Mongo } from 'meteor/mongo';
 import { Tokens } from './tokens.js';
 import { Transactions } from '../lib/_transactions.js';
-import { getCurrentAuctionletId } from '/imports/startup/client/routes.js';
 
 const Auctionlets = new Mongo.Collection(null);
 
 Auctionlets.findAuctionlet = function() {
-  return Auctionlets.findOne({"auctionletId": getCurrentAuctionletId});
+  return Auctionlets.findOne({"auctionletId": Session.get('currentAuctionletId')});
 }
 
 Auctionlets.getAuctionlet = function() {
-    TokenAuction.objects.auction.getAuctionletInfo(getCurrentAuctionletId(), function (error, result) {
-      if(!error) {
-        Auctionlets.remove({});
-        var auctionlet = {
-          auctionletId: getCurrentAuctionletId,
-          auction_id: result[0].toString(10),
-          last_bidder: result[1],
-          last_bid_time: new Date(result[2].toNumber()*1000),
-          buy_amount: result[3].toString(10),
-          sell_amount: result[4].toString(10),
-          unclaimed: result[5],
-          base: result[6],
-          isExpired: false
-        };
-        Auctionlets.insert(auctionlet);
-        Auctionlets.syncExpired();
-      }
-      else {
-        console.log("auctionlet info error: ", error);
-      }
-    })
+  let currentAuctionletId = Session.get('currentAuctionletId')
+  TokenAuction.objects.auction.getAuctionletInfo(currentAuctionletId, function (error, result) {
+    if(!error) {
+      Auctionlets.remove({});
+      var auctionlet = {
+        auctionletId: currentAuctionletId,
+        auction_id: result[0].toString(10),
+        last_bidder: result[1],
+        last_bid_time: new Date(result[2].toNumber()*1000),
+        buy_amount: result[3].toString(10),
+        sell_amount: result[4].toString(10),
+        unclaimed: result[5],
+        base: result[6],
+        isExpired: false
+      };
+      Auctionlets.insert(auctionlet);
+      Auctionlets.syncExpired();
+    }
+    else {
+      console.log("auctionlet info error: ", error);
+    }
+  })
 }
 
 //Check whether an auctionlet is expired and if so update the auctionlet
 Auctionlets.syncExpired = function() {
-  TokenAuction.objects.auction.isExpired(getCurrentAuctionletId(), function (error, result) {
+  let currentAuctionletId = Session.get('currentAuctionletId')
+  TokenAuction.objects.auction.isExpired(currentAuctionletId, function (error, result) {
     if(!error) {
         if(result) {
-          Auctionlets.update({ auctionletId: getCurrentAuctionletId }, { $set: { isExpired: result } })
+          Auctionlets.update({ auctionletId: currentAuctionletId }, { $set: { isExpired: result } })
         }
     }
     else {
@@ -87,7 +88,7 @@ Auctionlets.watchBidTransactions = function() {
         Session.set('bidMessage', 'Error placing bid')
       } else {
         console.log('bid', document.object.bid);
-        Session.set('bidMessage', 'Bid placed succesfully')        
+        Session.set('bidMessage', 'Bid placed succesfully')
       }
   })
 }
@@ -95,12 +96,12 @@ Auctionlets.watchBidTransactions = function() {
 Auctionlets.doClaim = function(auctionletId) {
   TokenAuction.objects.auction.claim(auctionletId, {gas: 1500000 }, function (error, result) {
     if(!error) {
-      Transactions.add('claim', result, { auctionletId: auctionletId })      
-      Session.set('claimMessage', 'Claiming your tokens')              
+      Transactions.add('claim', result, { auctionletId: auctionletId })
+      Session.set('claimMessage', 'Claiming your tokens')
     }
     else {
       console.log("Claim error: ", error);
-      Session.set('claimMessage', 'Error claiming tokens: ' + error.toString())                    
+      Session.set('claimMessage', 'Error claiming tokens: ' + error.toString())
     }
   })
 }
@@ -109,10 +110,10 @@ Auctionlets.watchClaimTransactions = function() {
   Transactions.observeRemoved('claim', function (document) {
       if (document.receipt.logs.length === 0) {
         console.log('Claim went wrong')
-        Session.set('claimMessage', 'Error claiming tokens')   
+        Session.set('claimMessage', 'Error claiming tokens')
       } else {
         console.log('Claim is succesful')
-        Session.set('claimMessage', 'Tokens successfully claimed')                      
+        Session.set('claimMessage', 'Tokens successfully claimed')
         Auctionlets.getAuctionlet()
       }
   })

@@ -5,7 +5,6 @@ import { Auctions } from '/imports/api/auctions.js';
 import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Tokens, ETH, MKR } from '/imports/api/tokens.js';
 import { Transactions } from '/imports/lib/_transactions.js';
-import { getCurrentAuctionId, getCurrentAuctionletId } from '/imports/startup/client/routes.js';
 
 import './main.html';
 import '/imports/client/network-status.js';
@@ -13,7 +12,6 @@ import '/imports/startup/client/index.js';
 import '/imports/helpers.js';
 
 Template.body.onCreated(function() {
-  console.log('On body created');
   this.autorun(() => {
     Auctionlets.watchBid();
     Tokens.watchEthApproval()
@@ -26,8 +24,6 @@ Template.body.onCreated(function() {
   Auctions.watchNewAuction();
   Auctions.watchNewAuctionTransactions();
   Auctionlets.watchClaimTransactions();
-
-  console.log('AuctionId:', getCurrentAuctionId())
 })
 
 Template.balance.viewmodel({
@@ -98,7 +94,7 @@ Template.auctionlet.viewmodel({
     event.preventDefault();
     let auctionlet = Auctionlets.findAuctionlet()
     if(auctionlet.unclaimed && this.expired()) {
-      Auctionlets.doClaim(getCurrentAuctionletId())
+      Auctionlets.doClaim(Session.get('currentAuctionletId'))
     }
   }
 });
