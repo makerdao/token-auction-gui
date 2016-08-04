@@ -47,7 +47,7 @@ gulp.task('copy-dapple-erc20', ['build-dapple-erc20'], function (){
 
 // meteor-build-client ../build
 gulp.task('build-meteor', function (cb) {
-  exec('meteor-build-client ../dist --path "" -s settings.json -u http://makerdao.github.io/weekly-mkr-auction', {cwd: 'frontend'}, function (err, res, failed) {
+  exec('meteor-build-client ../dist --path "" -s settings.json', {cwd: 'frontend'}, function (err, res, failed) {
     if (err) {
       console.log(err)
     } else if (failed) {
