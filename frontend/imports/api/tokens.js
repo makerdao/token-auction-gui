@@ -4,6 +4,7 @@ import { Auctionlets } from '/imports/api/auctionlets.js';
 import { Transactions } from '../lib/_transactions.js';
 
 const Tokens = new Mongo.Collection(null);
+const APPROVE_GAS = 1000000
 
 var tokens = {
   'morden': {
@@ -30,7 +31,7 @@ Tokens.getTokenAddress = function (network, symbol) {
 Tokens.getToken = function(symbol, callback) {
   let network = Session.get('network')
   if (!(network in tokens)) {
-    console.log('unknown environment')
+    console.log('unknown environment: ', network)
     callback('Unknown environment', null)
     return
   }
@@ -61,7 +62,7 @@ Tokens.getToken = function(symbol, callback) {
 Tokens.sync = function () {
   var network = Session.get('network')
   var address = Session.get('address')
-  if (address) {
+  if (address && network) {
     web3.eth.getBalance(address, function (error, balance) {
       var newETHBalance = balance.toString(10)
       if (!error && !Session.equals('ETHBalance', newETHBalance)) {
@@ -119,7 +120,7 @@ Tokens.isBalanceSufficient = function(bid, tokenAddress) {
 Tokens.setMkrAllowance = function(amount) {
   Tokens.getToken('MKR', function(error, token) {
     if(!error) {
-      token.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
+      token.approve(TokenAuction.objects.auction.address, amount, {gas: APPROVE_GAS }, function(error, result) {
         if(!error) {
           console.log('Mkr approve transaction adding')
           Session.set('newAuctionMessage', 'Setting allowance for new auction')
@@ -136,7 +137,7 @@ Tokens.setMkrAllowance = function(amount) {
 Tokens.setEthAllowance = function(amount) {
   Tokens.getToken('ETH', function(error, token) {
     if(!error) {
-      token.approve(TokenAuction.objects.auction.address, amount, {gas: 500000 }, function(error, result) {
+      token.approve(TokenAuction.objects.auction.address, amount, {gas: APPROVE_GAS }, function(error, result) {
         if(!error) {
           console.log('Eth approve transaction adding')
           Session.set('bidMessage', 'Setting allowance for bid')

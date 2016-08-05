@@ -3,6 +3,8 @@ import { Tokens } from './tokens.js';
 import { Transactions } from '../lib/_transactions.js';
 
 const Auctionlets = new Mongo.Collection(null);
+const BID_GAS = 1000000
+const CLAIM_GAS = 1000000
 
 Auctionlets.findAuctionlet = function() {
   return Auctionlets.findOne({"auctionletId": Session.get('currentAuctionletId')});
@@ -59,7 +61,7 @@ Auctionlets.doBid = function(bidAmount) {
 }
 
 Auctionlets.bidOnAuctionlet = function(auctionletId, bidAmount, quantity) {
-  TokenAuction.objects.auction.bid['uint256,uint256,uint256'](auctionletId, bidAmount, quantity, {gas: 1500000 }, function (error, result) {
+  TokenAuction.objects.auction.bid['uint256,uint256,uint256'](auctionletId, bidAmount, quantity, {gas: BID_GAS }, function (error, result) {
     if(!error) {
       console.log(result)
       Transactions.add('bid', result, { auctionletId: auctionletId, bid: bidAmount.toString(10) })
@@ -94,7 +96,7 @@ Auctionlets.watchBidTransactions = function() {
 }
 
 Auctionlets.doClaim = function(auctionletId) {
-  TokenAuction.objects.auction.claim(auctionletId, {gas: 1500000 }, function (error, result) {
+  TokenAuction.objects.auction.claim(auctionletId, {gas: CLAIM_GAS }, function (error, result) {
     if(!error) {
       Transactions.add('claim', result, { auctionletId: auctionletId })
       Session.set('claimMessage', 'Claiming your tokens')

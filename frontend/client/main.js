@@ -13,9 +13,13 @@ import '/imports/helpers.js';
 
 Template.body.onCreated(function() {
   this.autorun(() => {
-    Auctionlets.watchBid();
-    Tokens.watchEthApproval()
-    Tokens.watchMkrApproval();
+    let network = Session.get('network')
+    let address = Session.get('address')
+    if (network && address) {
+      Auctionlets.watchBid();
+      Tokens.watchEthApproval()
+      Tokens.watchMkrApproval();
+    }
   });
 
   Tokens.watchEthAllowanceTransactions();

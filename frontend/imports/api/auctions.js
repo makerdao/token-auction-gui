@@ -4,6 +4,7 @@ import { Transactions } from '../lib/_transactions.js';
 import { auctionPath } from '/imports/startup/routes.js';
 
 const Auctions = new Mongo.Collection(null);
+const AUCTION_GAS = 1000000
 
 Auctions.getAuction = function() {
   let currentAuctionId = Session.get('currentAuctionId')
@@ -37,7 +38,7 @@ Auctions.createAuction = function(sellAmount) {
 
 Auctions.newAuction = function(account, selling, buying, sellAmount, startBid, minIncrease, duration) {
     TokenAuction.objects.auction.newAuction(account, selling, buying, sellAmount, startBid,
-    minIncrease, duration, {gas: 4700000 }, function (error, result) {
+    minIncrease, duration, {gas: AUCTION_GAS }, function (error, result) {
       if(!error) {
         console.log('New auction transaction started')
         Transactions.add('auction', result, { selling: selling, sellAmount: sellAmount })
