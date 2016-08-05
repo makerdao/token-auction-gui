@@ -35,7 +35,7 @@ Template.registerHelper('MKRToken', () => {
 
 Template.registerHelper('auctionNotFound', () => {
     let auction = Auctions.findAuction()
-    return auction == undefined || auction.creator === "0x0000000000000000000000000000000000000000"
+    return auction == undefined || auction.creator === "0x0000000000000000000000000000000000000000" || auction.creator === '0x'
 })
 
 Template.registerHelper('etherscanHref', function () {
