@@ -11,6 +11,23 @@ import '/imports/client/network-status.js';
 import '/imports/startup/client/index.js';
 import '/imports/helpers.js';
 
+var timeRemaining = new ReactiveVar(0)
+
+function doCountdown() {
+  let singleAuctionlet = Auctionlets.findAuctionlet()
+  let singleAuction = Auctions.findAuction()
+  let currentTime = (new Date).getTime()
+  console.log('current time', currentTime)
+  console.log(singleAuction.duration)
+  if(singleAuction != undefined && singleAuctionlet != undefined) {
+    let countdown = (singleAuction.duration * 1000 - (currentTime - singleAuctionlet.last_bid_time.getTime())) / 1000
+    console.log(countdown)
+    if(countdown >= 0) {
+      timeRemaining.set(Math.round(countdown))
+    }
+  }
+}
+
 Template.body.onCreated(function() {
   this.autorun(() => {
     let network = Session.get('network')
@@ -28,6 +45,7 @@ Template.body.onCreated(function() {
   Auctions.watchNewAuction();
   Auctions.watchNewAuctionTransactions();
   Auctionlets.watchClaimTransactions();
+  Meteor.setInterval(doCountdown, 1000)
 })
 
 Template.balance.viewmodel({
@@ -59,6 +77,9 @@ Template.auctionlet.viewmodel({
   bid: 0,
   bidMessage() {
     return Session.get('bidMessage')
+  },
+  countdown() {
+    return timeRemaining.get()
   },
   create(event) {
     event.preventDefault();
