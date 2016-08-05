@@ -47,7 +47,8 @@ gulp.task('copy-dapple-erc20', ['build-dapple-erc20'], function (){
 
 // meteor-build-client ../build
 gulp.task('build-meteor', function (cb) {
-  exec('meteor-build-client ../dist --path "" -s settings.json', {cwd: 'frontend'}, function (err, res, failed) {
+  // setting ROOT_URL with --url so that we can use Meteor.absoluteUrl() from within the app
+  exec('meteor-build-client ../dist --path "" --url "https://makerdao.github.io/weekly-mkr-auction/" -s settings.json', {cwd: 'frontend'}, function (err, res, failed) {
     if (err) {
       console.log(err)
     } else if (failed) {
