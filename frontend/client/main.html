@@ -34,14 +34,14 @@
   <table class="table table-condensed">
     <tr>
       <td>Account</td>
-      <td><a href="http://testnet.etherscan.io/address/{{mkrAddress}}">{{account}}</a></td>
+      <td><a href="{{etherscanHref}}{{account}}">{{account}}</a></td>
     </tr>
     <tr>
-      <td><a href="http://testnet.etherscan.io/address/{{MKRToken.address}}">{{MKRToken.name}}</a></td>
+      <td><a href="{{etherscanHref}}{{MKRToken.address}}">{{MKRToken.name}}</a></td>
       <td>{{formatBalance (fromWei MKRToken.balance)}}</td>
     </tr>
     <tr>
-      <td><a href="http://testnet.etherscan.io/address/{{ETHToken.address}}">{{ETHToken.name}}</a></td>
+      <td><a href="{{etherscanHref}}{{ETHToken.address}}">{{ETHToken.name}}</a></td>
       <td>{{formatBalance (fromWei ETHToken.balance)}}</td>
     </tr>
   </table>
@@ -53,7 +53,7 @@
   <table class="table table-condensed">
     <tr>
       <td>Contract address</td>
-      <td><a href="http://testnet.etherscan.io/address/{{contractaddress}}" target="_blank">{{contractaddress}}</a></td>
+      <td><a href="{{etherscanHref}}{{contractaddress}}" target="_blank">{{contractaddress}}</a></td>
     </tr>
     <tr>
       <td>Auction id</td>
@@ -61,15 +61,15 @@
     </tr>
     <tr>
       <td>Creator</td>
-      <td><a href="http://testnet.etherscan.io/address/{{auction.creator}}" target="_blank">{{auction.creator}}</a></td>
+      <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank">{{auction.creator}}</a></td>
     </tr>
     <tr>
       <td>Selling</td>
-      <td>{{formatBalance (fromWei auction.sell_amount)}} <a href="http://testnet.etherscan.io/address/{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
+      <td>{{formatBalance (fromWei auction.sell_amount)}} <a href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
     </tr>
     <tr>
       <td>Start bid</td>
-      <td>{{formatBalance (fromWei auction.start_bid)}} <a href="http://testnet.etherscan.io/address/{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
+      <td>{{formatBalance (fromWei auction.start_bid)}} <a href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
     </tr>
     <tr>
       <td>Minimum increase</td>
@@ -96,12 +96,12 @@
       {{#if unclaimed}}
       <tr>
         <td>Selling</td>
-        <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <a href="http://testnet.etherscan.io/address/{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
+        <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <a href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
       </tr>
       {{#unless auctionlet.base}}
         <tr>
           <td>Last bidder</td>
-          <td><a href="http://testnet.etherscan.io/address/{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
+          <td><a href="{{etherscanHref}}{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
         </tr>
         <tr>
           <td>Last bid time</td>
@@ -114,7 +114,7 @@
         {{else}}
           <td>Highest bid</td>
         {{/if}}
-        <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a href="http://testnet.etherscan.io/address/{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
+        <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
       </tr>
       {{/if}}
     </table>
@@ -156,11 +156,11 @@
     <tbody>
       <tr>
         <td>Sell amount</td>
-        <td><input type="number" min="0" {{b "value: sellamount"}}> <a href="http://testnet.etherscan.io/address/{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
+        <td><input type="number" min="0" {{b "value: sellamount"}}> <a href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
       </tr>
       <tr>
         <td>Start bid</td>
-        <td><input type="number" min="0" {{b "value: startbid"}}> <a href="http://testnet.etherscan.io/address/{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
+        <td><input type="number" min="0" {{b "value: startbid"}}> <a href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
       </tr>
       <tr>
         <td>Minimum increase</td>
