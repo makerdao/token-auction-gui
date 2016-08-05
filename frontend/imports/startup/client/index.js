@@ -47,7 +47,7 @@ Meteor.startup(function() {
   })
 
   Meteor.setInterval(checkNetwork, 2503)
-  //Meteor.setInterval(web3.checkAccounts, 10657)
+  Meteor.setInterval(web3.checkAccounts, 1571)
 })
 
 Tracker.autorun(function() {
