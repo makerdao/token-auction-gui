@@ -118,15 +118,21 @@ Template.newauction.viewmodel({
     event.preventDefault();
     let weiSellAmount = web3.toWei(this.sellamount())
     let weiStartBid = web3.toWei(this.startbid())
-
-    let newAuction = {
-                      sellamount: weiSellAmount,
-                      startbid: weiStartBid,
-                      min_increase: this.minimumincrease(),
-                      duration: this.duration()
-                    }
-    Session.set("newAuction", newAuction)
-    Auctions.createAuction(web3.toWei(this.sellamount()));
+    let network = Session.get('network')
+    let address = Tokens.getTokenAddress(network, 'MKR')
+    if(Tokens.isBalanceSufficient(weiSellAmount, address)) {
+      let newAuction = {
+                        sellamount: weiSellAmount,
+                        startbid: weiStartBid,
+                        min_increase: this.minimumincrease(),
+                        duration: this.duration()
+                      }
+      Session.set("newAuction", newAuction)
+      Auctions.createAuction(web3.toWei(this.sellamount()));
+    }
+    else {
+      Session.set('newAuctionMessage', 'Error creating new auction, MKR balance insufficient')
+    }
   }
 });
 
