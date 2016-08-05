@@ -5,6 +5,7 @@ import { Tracker } from 'meteor/tracker';
 import { Transactions } from '../../lib/_transactions.js';
 import '../routes.js';
 
+Meteor.disconnect()
 TokenAuction.init('morden')
 Session.set('network', false)
 Session.set('outOfSync', false)
