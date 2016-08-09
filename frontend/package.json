@@ -22,8 +22,25 @@
       "import/resolver": "meteor"
     },
     "rules": {
-      "meteor/no-session": 0
-    }
+      "meteor/no-session": 0,
+      "max-len": [2,120, 2]
+    },
+    "globals": {
+      "Meteor": true,
+      "Session": true,
+      "Dapple": true,
+      "web3": true,
+      "localStorage": true,
+      "_": true,
+      "Package": true,
+      "Web3": true,
+      "window": true,
+      "TokenAuction": true,
+      "ERC20": true
+    },
+    "ignore": [
+      "/server/**"
+    ]
   },
   "dependencies": {
     "meteor-node-stubs": "~0.2.0"

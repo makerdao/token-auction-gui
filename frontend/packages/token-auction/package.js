@@ -3,17 +3,17 @@ Package.describe({
   version: '0.0.1',
   summary: 'Dapple related code for Token auction',
   git: '',
-  documentation: 'README.md'
-})
+  documentation: 'README.md',
+});
 
-Package.onUse(function (api) {
-  api.versionsFrom('1.2.1')
+Package.onUse((api) => {
+  api.versionsFrom('1.2.1');
 
-  api.use('web3:dapple', 'client')
-  api.use('session', 'client')
+  api.use('web3:dapple', 'client');
+  api.use('session', 'client');
 
-  api.addFiles(['build/meteor.js'], 'client')
-  api.addFiles(['package-post-init.js'], 'client')
+  api.addFiles(['build/meteor.js'], 'client');
+  api.addFiles(['package-post-init.js'], 'client');
 
-  api.export('TokenAuction', 'client')
-})
+  api.export('TokenAuction', 'client');
+});
