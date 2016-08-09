@@ -2,9 +2,38 @@
   "name": "frontend",
   "private": true,
   "scripts": {
-    "start": "meteor --settings settings.json"
+    "start": "meteor --settings settings.json",
+    "lint": "eslint .",
+    "pretest": "npm run lint --silent"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "allowImportExportEverywhere": true
+    },
+    "plugins": [
+      "meteor"
+    ],
+    "extends": [
+      "airbnb-base",
+      "plugin:meteor/recommended"
+    ],
+    "settings": {
+      "import/resolver": "meteor"
+    },
+    "rules": {
+      "meteor/no-session": 0
+    }
   },
   "dependencies": {
     "meteor-node-stubs": "~0.2.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^6.1.2",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb-base": "^5.0.1",
+    "eslint-import-resolver-meteor": "^0.3.1",
+    "eslint-plugin-import": "^1.12.0",
+    "eslint-plugin-meteor": "^4.0.0"
   }
 }

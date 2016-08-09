@@ -6,12 +6,12 @@ import { auctionPath } from '/imports/startup/routes.js';
 const Auctions = new Mongo.Collection(null);
 const AUCTION_GAS = 1000000
 
-Auctions.getAuction = function() {
+Auctions.getAuction = function () {
   let currentAuctionId = Session.get('currentAuctionId')
   TokenAuction.objects.auction.getAuctionInfo(currentAuctionId, function (error, result) {
-    if(!error) {
+    if (!error) {
       Auctions.remove({});
-      var auction = {
+      let auction = {
         auctionId: currentAuctionId,
         creator: result[0],
         selling: result[1],
@@ -27,43 +27,43 @@ Auctions.getAuction = function() {
       Auctions.insert(auction);
     }
     else {
-      console.log("error: ", error);
+      console.log('error: ', error);
     }
   })
-}
+};
 
-Auctions.createAuction = function(sellAmount) {
+Auctions.createAuction = function (sellAmount) {
     Tokens.setMkrAllowance(sellAmount);
-}
+};
 
-Auctions.newAuction = function(account, selling, buying, sellAmount, startBid, minIncrease, duration) {
+Auctions.newAuction = function (account, selling, buying, sellAmount, startBid, minIncrease, duration) {
     TokenAuction.objects.auction.newAuction(account, selling, buying, sellAmount, startBid,
     minIncrease, duration, {gas: AUCTION_GAS }, function (error, result) {
-      if(!error) {
-        console.log('New auction transaction started')
-        Transactions.add('auction', result, { selling: selling, sellAmount: sellAmount })
+      if (!error) {
+        console.log('New auction transaction started');
+        Transactions.add('auction', result, { selling: selling, sellAmount: sellAmount });
       }
       else {
           console.log(error);
       }
     });
-}
+};
 
-Auctions.watchNewAuction = function() {
+Auctions.watchNewAuction = function () {
       TokenAuction.objects.auction.NewAuction(function (error, result) {
-      if(!error) {
-        let auctionId = result.args.id.toNumber()
-        console.log("AuctionId: ", auctionId)
-        let auctionUrl = Meteor.absoluteUrl() + '#' + auctionPath + auctionId
-        Session.set('newAuctionUrl', auctionUrl)
+      if (!error) {
+        let auctionId = result.args.id.toNumber();
+        console.log('AuctionId: ', auctionId);
+        let auctionUrl = Meteor.absoluteUrl() + '#' + auctionPath + auctionId;
+        Session.set('newAuctionUrl', auctionUrl);
       }
       else {
-        console.log("error: ", error);
+        console.log('error: ', error);
       }
     });
-}
+};
 
-Auctions.watchNewAuctionTransactions = function() {
+Auctions.watchNewAuctionTransactions = function () {
   Transactions.observeRemoved('auction', function (document) {
       if (document.receipt.logs.length === 0) {
         console.log('Creating auction went wrong')
@@ -73,10 +73,10 @@ Auctions.watchNewAuctionTransactions = function() {
         Session.set('newAuctionMessage', 'New Auction successfully created')
       }
   })
-}
+};
 
-Auctions.findAuction = function() {
-  return Auctions.findOne({"auctionId": Session.get('currentAuctionId')})
-}
+Auctions.findAuction = function () {
+  return Auctions.findOne({ 'auctionId': Session.get('currentAuctionId') })
+};
 
 export { Auctions }
