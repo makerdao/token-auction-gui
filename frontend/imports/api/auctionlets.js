@@ -101,7 +101,7 @@ Auctionlets.doClaim = function doClaim(auctionletId) {
       Session.set('claimMessage', 'Claiming your tokens');
     } else {
       console.log('Claim error: ', error);
-      Session.set('claimMessage', 'Error claiming tokens: ${error.toString()}');
+      Session.set('claimMessage', `Error claiming tokens: ${error.toString()}`);
     }
   });
 };

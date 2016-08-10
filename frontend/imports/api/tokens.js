@@ -37,7 +37,7 @@ Tokens.getToken = function getToken(symbol, callback) {
   }
   if (!(symbol in tokens[network])) {
     console.log('unknown token');
-    callback('Unknown token "${symbol}"', null);
+    callback(`Unknown token "${symbol}"`, null);
     return;
   }
 
@@ -62,7 +62,6 @@ Tokens.getToken = function getToken(symbol, callback) {
 Tokens.sync = function sync() {
   const network = Session.get('network');
   const address = Session.get('address');
-  console.log('sync function started with:', network, address);
   if (address && network) {
     web3.eth.getBalance(address, (error, balance) => {
       const newETHBalance = balance.toString(10);
@@ -79,7 +78,6 @@ Tokens.sync = function sync() {
       // Sync token balances and allowances asynchronously
       // for(let token_id in allTokens) {
       allTokens.forEach((tokenId) => {
-        console.log('token id:', tokenId);
         // XXX EIP20
         Tokens.getToken(tokenId, (error, token) => {
           if (!error) {
@@ -129,7 +127,7 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
           Session.set('newAuctionMessage', 'Setting allowance for new auction');
           Transactions.add('mkrallowance', result, { value: amount.toString(10) });
         } else {
-          Session.set('newAuctionMessage', 'Error setting allowance for new auction: ${error.toString()}');
+          Session.set('newAuctionMessage', `Error setting allowance for new auction: ${error.toString()}`);
         }
       });
     }
@@ -145,8 +143,8 @@ Tokens.setEthAllowance = function setEthAllowance(amount) {
           Session.set('bidMessage', 'Setting allowance for bid');
           Transactions.add('ethallowance', result, { value: amount.toString(10) });
         } else {
-          console.log('SetEthAllowance error:', error);
-          Session.set('bidMessage', 'Error setting allowance for bid: ${error.toString()}');
+          console.log('SetEthAllowance error:', approveError);
+          Session.set('bidMessage', `Error setting allowance for bid: ${approveError.toString()}`);
         }
       });
     }
@@ -201,7 +199,7 @@ Tokens.watchMkrAllowanceTransactions = function watchMkrAllowanceTransactions() 
   Transactions.observeRemoved('mkrallowance', (document) => {
     if (document.receipt.logs.length === 0) {
       console.log('Setting MKR allowance went wrong');
-      Session.set('newAuctionMessage', 'Error setting allowance for new auction: ${error.toString()}');
+      Session.set('newAuctionMessage', 'Error setting allowance for new auction:');
     } else {
       console.log('MKR allowance is set');
       const newAuction = Session.get('newAuction');
