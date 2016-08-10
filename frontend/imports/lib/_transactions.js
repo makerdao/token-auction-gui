@@ -1,52 +1,48 @@
 import { Mongo } from 'meteor/mongo';
 
-const Transactions = new Meteor.Collection(null)
+const Transactions = new Mongo.Collection(null);
 
-Transactions.add = function (type, transaction_hash, object) {
-  console.log('tx', type, transaction_hash, object);
-  Transactions.insert({ type: type, tx: transaction_hash, object: object });
-}
+Transactions.add = function add(type, transactionHash, object) {
+  console.log('tx', type, transactionHash, object);
+  Transactions.insert({ type, tx: transactionHash, object });
+};
 
-Transactions.findType = function (type) {
-  return Transactions.find({ type: type }).map(function (value) {
-    return value.object;
-  })
-}
+Transactions.findType = function findType(type) {
+  return Transactions.find({ type }).map((value) => value.object);
+};
 
-Transactions.observeRemoved = function (type, callback) {
-  return Transactions.find({ type: type }).observe({ removed: callback });
-}
+Transactions.observeRemoved = function observeRemoved(type, callback) {
+  return Transactions.find({ type }).observe({ removed: callback });
+};
 
-Transactions.sync = function () {
-  var open = Transactions.find().fetch();
-  //console.log('transactions sync called and open.length = ', open.length)
+Transactions.sync = function sync() {
+  const open = Transactions.find().fetch();
+  // console.log('transactions sync called and open.length = ', open.length)
   // Sync all open transactions non-blocking and asynchronously
-  var syncTransaction = function (index) {
+  const syncTransaction = function syncTransaction(index) {
     if (index >= 0 && index < open.length) {
-      var document = open[index];
-      web3.eth.getTransactionReceipt(document.tx, function (error, result) {
+      const document = open[index];
+      web3.eth.getTransactionReceipt(document.tx, (error, result) => {
         if (!error && result != null) {
           if (result.logs.length > 0) {
             console.log('tx_success', document.tx, result.gasUsed);
           } else {
             console.error('tx_oog', document.tx, result.gasUsed);
           }
-          Transactions.update({ tx: document.tx }, { $set: { receipt: result } }, function () {
+          Transactions.update({ tx: document.tx }, { $set: { receipt: result } }, () => {
             Transactions.remove({ tx: document.tx });
-          })
-        }
-        else {
+          });
+        } else {
           console.log('transaction receipt', error, result);
         }
         // Sync next transaction
         syncTransaction(index + 1);
-      })
+      });
+    } else {
+      // console.log('Index', index, ' and open.length', open.length)
     }
-    else {
-      //console.log('Index', index, ' and open.length', open.length)
-    }
-  }
+  };
   syncTransaction(0);
-}
+};
 
-export { Transactions }
+export default Transactions;

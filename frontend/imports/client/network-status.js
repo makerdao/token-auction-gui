@@ -1,21 +1,10 @@
-import { Template } from 'meteor/templating'
-
-import './network-status.html'
+import { Template } from 'meteor/templating';
+import './network-status.html';
 
 Template.networkStatus.helpers({
-  network: function () {
-    return Session.get('network');
-  },
-  syncing: function () {
-    return Session.get('syncing');
-  },
-  outOfSync: function () {
-    return Session.get('outOfSync');
-  },
-  isConnected: function () {
-    return Session.get('isConnected');
-  },
-  latestBlock: function () {
-    return Session.get('latestBlock');
-  }
-})
+  network: () => Session.get('network'),
+  syncing: () => Session.get('syncing'),
+  outOfSync: () => Session.get('outOfSync'),
+  isConnected: () => Session.get('isConnected'),
+  latestBlock: () => Session.get('latestBlock'),
+});

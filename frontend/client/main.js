@@ -1,10 +1,10 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Meteor } from 'meteor/meteor';
-import { Auctions } from '/imports/api/auctions.js';
-import { Auctionlets } from '/imports/api/auctionlets.js';
-import { Tokens } from '/imports/api/tokens.js';
-import { Transactions } from '/imports/lib/_transactions.js';
+import Auctions from '/imports/api/auctions.js';
+import Auctionlets from '/imports/api/auctionlets.js';
+import Tokens from '/imports/api/tokens.js';
+import Transactions from '/imports/lib/_transactions.js';
 
 import '/imports/client/network-status.js';
 import '/imports/startup/client/index.js';
@@ -18,9 +18,9 @@ function doCountdown() {
   const singleAuction = Auctions.findAuction();
   const currentTime = (new Date()).getTime();
   console.log('current time', currentTime);
-  console.log(singleAuction.duration);
   if (singleAuction !== undefined && singleAuctionlet !== undefined) {
-    const countdown = Math.round(((singleAuction.duration * 1000) - (currentTime - singleAuctionlet.last_bid_time.getTime())) / 1000);
+    const countdown = Math.round(((singleAuction.duration * 1000) -
+                      (currentTime - singleAuctionlet.last_bid_time.getTime())) / 1000);
     console.log(countdown);
     if (countdown >= 0) {
       timeRemaining.set(countdown);
@@ -28,7 +28,7 @@ function doCountdown() {
   }
 }
 
-Template.body.onCreated(function () {
+Template.body.onCreated(function created() {
   this.autorun(() => {
     const network = Session.get('network');
     const address = Session.get('address');
@@ -51,7 +51,7 @@ Template.body.onCreated(function () {
 Template.balance.viewmodel({
   account() {
     return Session.get('address');
-  }
+  },
 });
 
 Template.auction.viewmodel({
@@ -61,7 +61,7 @@ Template.auction.viewmodel({
   },
   contractaddress() {
     return TokenAuction.objects.auction.address;
-  }
+  },
 });
 
 Template.auctionlet.viewmodel({
@@ -89,14 +89,13 @@ Template.auctionlet.viewmodel({
     const auctionlet = Auctionlets.findAuctionlet();
 
     if (auction !== undefined && Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
-      if (auctionlet !== undefined && auctionletBid >= Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase)) {
+      if (auctionlet !== undefined && auctionletBid >= Auctionlets.calculateRequiredBid(auctionlet.buy_amount,
+      auction.min_increase)) {
         Auctionlets.doBid(auctionletBid);
-      }
-      else {
+      } else {
         Session.set('bidMessage', 'Bid is not high enough');
       }
-    }
-    else {
+    } else {
       Session.set('bidMessage', 'Your balance is insufficient for your current bid');
     }
   },
@@ -110,7 +109,8 @@ Template.auctionlet.viewmodel({
   },
   auctionwinner() {
     const auctionlet = Auctionlets.findAuctionlet();
-    return this.expired() && auctionlet !== undefined && Session.get('address') === auctionlet.last_bidder && auctionlet.unclaimed;
+    return this.expired() && auctionlet !== undefined && Session.get('address') === auctionlet.last_bidder
+    && auctionlet.unclaimed;
   },
   claimMessage() {
     return Session.get('claimMessage');
@@ -121,7 +121,7 @@ Template.auctionlet.viewmodel({
     if (auctionlet.unclaimed && this.expired()) {
       Auctionlets.doClaim(Session.get('currentAuctionletId'));
     }
-  }
+  },
 });
 
 Template.newauction.viewmodel({
@@ -143,28 +143,27 @@ Template.newauction.viewmodel({
     const address = Tokens.getTokenAddress(network, 'MKR');
     if (Tokens.isBalanceSufficient(weiSellAmount, address)) {
       const newAuction = {
-                        sellamount: weiSellAmount,
-                        startbid: weiStartBid,
-                        min_increase: this.minimumincrease(),
-                        duration: this.duration()
-                      };
+        sellamount: weiSellAmount,
+        startbid: weiStartBid,
+        min_increase: this.minimumincrease(),
+        duration: this.duration(),
+      };
       Session.set('newAuction', newAuction);
       Auctions.createAuction(web3.toWei(this.sellamount()));
-    }
-    else {
+    } else {
       Session.set('newAuctionMessage', 'Error creating new auction, MKR balance insufficient');
     }
-  }
+  },
 });
 
 Template.transactions.viewmodel({
   transactions() {
     return Transactions.find({});
-  }
+  },
 });
 
 Template.tokens.viewmodel({
   tokens() {
     return Tokens.find({});
-  }
+  },
 });

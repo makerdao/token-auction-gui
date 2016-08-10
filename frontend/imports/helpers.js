@@ -1,44 +1,42 @@
-import { Tokens } from './api/tokens.js';
-import { Auctions } from '/imports/api/auctions.js';
+import Tokens from '/imports/api/tokens.js';
+import Auctions from '/imports/api/auctions.js';
 
-Template.registerHelper('fromWei', function (s) {
-    return web3.fromWei(s);
-})
+Template.registerHelper('fromWei', (s) => web3.fromWei(s));
 
-Template.registerHelper('toWei', function (s) {
-    return web3.toWei(s)
-})
+Template.registerHelper('toWei', (s) => web3.toWei(s));
 
-Template.registerHelper('formatBalance', function (wei) {
-    format = '0,0.00[000]'
+Template.registerHelper('formatBalance', (wei) => {
+  const format = '0,0.00[000]';
+  return numeral(wei).format(format);
+});
 
-    return numeral(wei).format(format);
-})
-
-Template.registerHelper('json', function (a) {
-    try {
-        return JSON.stringify(a)
-    } catch(e) {
-        return a
-    }
-})
+Template.registerHelper('json', (a) => {
+  try {
+    return JSON.stringify(a);
+  } catch (e) {
+    return a;
+  }
+});
 
 Template.registerHelper('ETHToken', () => {
-    let token = Tokens.findOne({ 'name': Meteor.settings.public.ETH.name });
-    return token;
-})
+  const token = Tokens.findOne({ name: Meteor.settings.public.ETH.name });
+  return token;
+});
 
 Template.registerHelper('MKRToken', () => {
-    let token = Tokens.findOne({ 'name': Meteor.settings.public.MKR.name });
-    return token;
-})
+  const token = Tokens.findOne({ name: Meteor.settings.public.MKR.name });
+  return token;
+});
 
 Template.registerHelper('auctionNotFound', () => {
-    let auction = Auctions.findAuction()
-    return auction == undefined || auction.creator === '0x0000000000000000000000000000000000000000' || auction.creator === '0x'
-})
+  const auction = Auctions.findAuction();
+  return auction === undefined || auction.creator === '0x0000000000000000000000000000000000000000'
+  || auction.creator === '0x';
+});
 
-Template.registerHelper('etherscanHref', function () {
-  var network = Session.get('network')
-  return 'https://' + (network === 'morden' ? 'testnet.' : '') + 'etherscan.io/address/'
-})
+Template.registerHelper('etherscanHref', () => {
+  const network = Session.get('network');
+  /* eslint-disable prefer-template */
+  return 'https://' + (network === 'morden' ? 'testnet.' : '') + 'etherscan.io/address/';
+  /* eslint-enable prefer-template */
+});
