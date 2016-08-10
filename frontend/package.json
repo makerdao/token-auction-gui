@@ -23,7 +23,8 @@
     },
     "rules": {
       "meteor/no-session": 0,
-      "max-len": [2,120, 2]
+      "max-len": [2,120, 2, {"ignoreComments": true}],
+      "import/no-extraneous-dependencies": 0
     },
     "globals": {
       "Meteor": true,
@@ -36,7 +37,10 @@
       "Web3": true,
       "window": true,
       "TokenAuction": true,
-      "ERC20": true
+      "ERC20": true,
+      "auctionPath": true,
+      "Template": true,
+      "numeral": true
     },
     "ignore": [
       "/server/**"
