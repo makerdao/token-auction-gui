@@ -17,11 +17,12 @@ function doCountdown() {
   const singleAuctionlet = Auctionlets.findAuctionlet();
   const singleAuction = Auctions.findAuction();
   const currentTime = (new Date()).getTime();
-  console.log('current time', currentTime);
+  // console.log('current time', currentTime);
   if (singleAuction !== undefined && singleAuctionlet !== undefined) {
+    // console.log('single auction:', singleAuction, ' and singleAuctionlet:', singleAuctionlet);
     const countdown = Math.round(((singleAuction.duration * 1000) -
                       (currentTime - singleAuctionlet.last_bid_time.getTime())) / 1000);
-    console.log(countdown);
+    // console.log(countdown);
     if (countdown >= 0) {
       timeRemaining.set(countdown);
     }

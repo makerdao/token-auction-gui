@@ -62,6 +62,7 @@ Tokens.getToken = function getToken(symbol, callback) {
 Tokens.sync = function sync() {
   const network = Session.get('network');
   const address = Session.get('address');
+  console.log('sync function started with:', network, address);
   if (address && network) {
     web3.eth.getBalance(address, (error, balance) => {
       const newETHBalance = balance.toString(10);
@@ -80,17 +81,17 @@ Tokens.sync = function sync() {
       allTokens.forEach((tokenId) => {
         console.log('token id:', tokenId);
         // XXX EIP20
-        Tokens.getToken(allTokens[tokenId], (error, token) => {
+        Tokens.getToken(tokenId, (error, token) => {
           if (!error) {
             token.balanceOf(address, (balanceError, balance) => {
               if (!balanceError) {
-                Tokens.upsert({ name: allTokens[tokenId], address: token.address },
+                Tokens.upsert({ name: tokenId, address: token.address },
                 { $set: { balance: balance.toString(10) } });
               }
             });
             token.allowance(address, contractAddress, (allowanceError, allowance) => {
               if (!allowanceError) {
-                Tokens.upsert({ name: allTokens[tokenId], address: token.address },
+                Tokens.upsert({ name: tokenId, address: token.address },
                 { $set: { allowance: allowance.toString(10) } });
               }
             });
