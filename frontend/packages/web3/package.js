@@ -8,7 +8,7 @@ Package.describe({
 
 Package.onUse((api) => {
   api.versionsFrom('1.2.1');
-
+  api.use('ecmascript', 'client');
   api.use('ethereum:web3', 'client');
 
   api.addFiles(['package-pre-init.js'], 'client');
