@@ -1,12 +1,26 @@
 <template name="networkStatus">
-<h3>Network Status</h3>
-
-<ul>
-  <li>Network: {{ network}}</li>
-  <li>isConnected: {{ isConnected}}</li>
-  <li>latestBlock: {{ latestBlock}}</li>
-  <li>Syncing: {{ syncing}}</li>
-  <li>outOfSync: {{ outOfSync}}</li>
-</ul>
-
+  <div id="networkStatusDiv">
+    <ul>
+      <li>{{ network}}</li>
+      <li>
+        {{#if isConnected}}
+          <span>Connected</span>
+        {{else}}
+          <span>Not connected!</span>
+        {{/if}}
+        </li>
+      <li>Latest block {{ latestBlock}}</li>
+      {{#if syncing}}
+        <li>Syncing {{ syncing}}</li>
+      {{/if}}
+      {{#if outOfSync}}
+        <li>outOfSync {{ outOfSync}}</li>
+      {{/if}}
+    </ul>
+  </div>
+  <div id="accountDiv">
+    <span>Account <a href="{{etherscanHref}}{{account}}" target="_blank">{{account}}</a></span>
+    <br>
+    <span>Contract <a href="{{etherscanHref}}{{contract}}" target="_blank">{{contract}}</a></span>
+  </div>
 </template>

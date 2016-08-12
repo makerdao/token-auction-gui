@@ -7,4 +7,6 @@ Template.networkStatus.helpers({
   outOfSync: () => Session.get('outOfSync'),
   isConnected: () => Session.get('isConnected'),
   latestBlock: () => Session.get('latestBlock'),
+  account: () => Session.get('address'),
+  contract: () => TokenAuction.objects.auction.address,
 });
