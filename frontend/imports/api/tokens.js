@@ -120,6 +120,7 @@ Tokens.isBalanceSufficient = function isBalanceSufficient(bid, tokenAddress) {
 
 Tokens.setMkrAllowance = function setMkrAllowance(amount) {
   Tokens.getToken('MKR', (error, token) => {
+    console.log('get token error', error);
     if (!error) {
       token.approve(TokenAuction.objects.auction.address, amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
@@ -127,9 +128,11 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
           Session.set('newAuctionMessage', 'Setting allowance for new auction');
           Transactions.add('mkrallowance', result, { value: amount.toString(10) });
         } else {
-          Session.set('newAuctionMessage', `Error setting allowance for new auction: ${error.toString()}`);
+          Session.set('newAuctionMessage', `Error setting allowance for new auction: ${approveError.toString()}`);
         }
       });
+    } else {
+      Session.set('newAuctionMessage', `Error setting allowance for new auction: ${error.toString()}`);
     }
   });
 };
@@ -140,13 +143,15 @@ Tokens.setEthAllowance = function setEthAllowance(amount) {
       token.approve(TokenAuction.objects.auction.address, amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Eth approve transaction adding');
-          Session.set('bidMessage', 'Setting allowance for bid');
+          Session.set('bidMessage', 'Setting allowance for bid (this could take a while)');
           Transactions.add('ethallowance', result, { value: amount.toString(10) });
         } else {
           console.log('SetEthAllowance error:', approveError);
           Session.set('bidMessage', `Error setting allowance for bid: ${approveError.toString()}`);
         }
       });
+    } else {
+      Session.set('bidMessage', `Error setting allowance for bid: ${error.toString()}`);
     }
   });
 };
@@ -189,7 +194,7 @@ Tokens.watchEthAllowanceTransactions = function watchEthAllowanceTransactions() 
     } else {
       console.log('ETH allowance is set');
       const auction = Auctions.findAuction();
-      Session.set('bidMessage', 'Allowance set, placing bid');
+      Session.set('bidMessage', 'Allowance set, placing bid (this could take a while)');
       Auctionlets.bidOnAuctionlet(Session.get('currentAuctionletId'), document.object.value, auction.sell_amount);
     }
   });

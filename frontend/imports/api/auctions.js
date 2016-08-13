@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import Tokens from '/imports/api/tokens.js';
 import Transactions from '/imports/lib/_transactions.js';
-import { auctionPath } from '/imports/startup/routes.js';
+import auctionPath from '/imports/startup/routes.js';
 
 const Auctions = new Mongo.Collection(null);
 const AUCTION_GAS = 1000000;

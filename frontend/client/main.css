@@ -1,4 +1,73 @@
 /* CSS declarations go here */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #F8F7F5;    
+}
+
+h1 {
+    text-align: center;
+    color: #CACBCD;
+}
+
+td {
+  padding: 0px 20px 5px 0px;
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+#inner {
+    width: 70%;
+    margin: 0 auto; 
+}
+
+#networkStatusDiv, #accountDiv {
+    display: inline-block;
+    width: 49%;
+}
+
+#networkStatusDiv ul {
+    list-style: none;
+}
+
+#networkStatusDiv li {
+    margin-bottom: 3px;
+}
+
+#balanceDiv {
+    font-size: 24px;
+    text-align: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+#balanceDiv .balanceSpan {
+    color: #CACBCD;
+}
+
+#balanceDiv span {
+    margin-right: 40px;
+}
+
+.boxDiv {
+    background-color: white;
+    box-shadow: 2px 2px 5px #E0DFDF;
+    padding: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border: 1px solid #E0DFDF;
+    padding: 10px 20px 10px 20px;
+}
+
+.ETH, a.ETH {
+    color: #82DACA;
+}
+
+.MKR, a.MKR {
+    color: #8E87C4;
+}
+
 #inputBid {
     margin-bottom: 10px;
     width: 200px;
@@ -6,4 +75,21 @@
 
 .table {
     max-width: 600px;
+}
+
+div.box {
+    background-color: white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 1px 1px 5px #E0DFDF;
+
+    margin: 0 auto;
+}
+
+div.row {
+    width: 500px;
+}
+
+.message {
+    color: #D0D0D0;
 }

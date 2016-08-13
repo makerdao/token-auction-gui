@@ -1,170 +1,154 @@
 <head>
   <title>Token auction</title>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 </head>
-
 <body>
-  <div class="container">
-    <div class="row">
-      <div class="col-cs-12">
-        <h1>Token Auction</h1>
-        {{> networkStatus}}
-        {{> balance}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-cs-12">
-        {{> auction}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-cs-12">
-        {{> auctionlet}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-cs-12">
-        {{> newauction}}
-      </div>
+  <div id="outer" class="container">
+    <div id="inner">
+      <h1>Weekly MKR Auction</h1>
+      {{> networkStatus}}
+      {{> balance}}
+      {{> auction}}
+      {{> auctionlet}}
+      {{> newauction}}
     </div>
   </div>
 </body>
 
 <template name="balance">
-  <h2>Balance</h2>
-  <table class="table table-condensed">
-    <tr>
-      <td>Account</td>
-      <td><a href="{{etherscanHref}}{{account}}">{{account}}</a></td>
-    </tr>
-    <tr>
-      <td><a href="{{etherscanHref}}{{MKRToken.address}}">{{MKRToken.name}}</a></td>
-      <td>{{formatBalance (fromWei MKRToken.balance)}}</td>
-    </tr>
-    <tr>
-      <td><a href="{{etherscanHref}}{{ETHToken.address}}">{{ETHToken.name}}</a></td>
-      <td>{{formatBalance (fromWei ETHToken.balance)}}</td>
-    </tr>
-  </table>
+    <div id="balanceDiv">
+      <span class="balanceSpan">
+        Balance
+      </span>
+      <span class="MKR">
+        {{formatBalance (fromWei MKRToken.balance)}} <a href="{{etherscanHref}}{{MKRToken.address}}" class="MKR">{{MKRToken.name}}</a>
+      </span>
+      <span class="ETH">
+        {{formatBalance (fromWei ETHToken.balance)}} <a href="{{etherscanHref}}{{ETHToken.address}}" class="ETH">{{ETHToken.name}}</a>
+      </span>
+    </div>    
 </template>
 
 <template name="auction">
-  <h2>Auction</h2>
-  {{#unless auctionNotFound}}
-  <table class="table table-condensed">
-    <tr>
-      <td>Contract address</td>
-      <td><a href="{{etherscanHref}}{{contractaddress}}" target="_blank">{{contractaddress}}</a></td>
-    </tr>
-    <tr>
-      <td>Auction id</td>
-      <td>{{auction.auctionId}}</td>
-    </tr>
-    <tr>
-      <td>Creator</td>
-      <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank">{{auction.creator}}</a></td>
-    </tr>
-    <tr>
-      <td>Selling</td>
-      <td>{{formatBalance (fromWei auction.sell_amount)}} <a href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
-    </tr>
-    <tr>
-      <td>Start bid</td>
-      <td>{{formatBalance (fromWei auction.start_bid)}} <a href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
-    </tr>
-    <tr>
-      <td>Minimum increase</td>
-      <td>{{auction.min_increase}}%</td>
-    </tr>
-    <tr>
-      <td>Duration</td>
-      <td>{{auction.duration}} seconds</td>
-    </tr>
-  </table>
-  {{else}}
- <span>Auction was not found</span>
- {{/unless}}
+  <div class="boxDiv">
+    <h2>Auction</h2>
+    {{#unless auctionNotFound}}
+    <table class="table table-condensed">
+      <tr>
+        <td>Auction id</td>
+        <td>{{auction.auctionId}}</td>
+      </tr>
+      <tr>
+        <td>Creator</td>
+        <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank">{{auction.creator}}</a></td>
+      </tr>
+      <tr>
+        <td>Selling</td>
+        <td>{{formatBalance (fromWei auction.sell_amount)}} <a class="MKR" href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
+      </tr>
+      <tr>
+        <td>Start bid</td>
+        <td>{{formatBalance (fromWei auction.start_bid)}} <a class="ETH" href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
+      </tr>
+      <tr>
+        <td>Minimum increase</td>
+        <td>{{auction.min_increase}}%</td>
+      </tr>
+      <tr>
+        <td>Duration</td>
+        <td>{{auction.duration}} seconds</td>
+      </tr>
+    </table>
+    {{else}}
+  <span>Auction was not found</span>
+  {{/unless}}
+ </div>
 </template>
 
 <template name="auctionlet">
-  <h2>Auctionlet</h2>
-  {{#unless auctionNotFound}}
-    <table class="table">
-      <tr>
-        <td>Auctionlet id</td>
-        <td>{{auctionlet.auctionletId}}</td>
-      </tr>
-      {{#if unclaimed}}
-      <tr>
-        <td>Selling</td>
-        <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <a href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
-      </tr>
-      {{#unless auctionlet.base}}
+  <div class="boxDiv">
+    <h2>Auctionlet</h2>
+    {{#unless auctionNotFound}}
+      <table class="table">
         <tr>
-          <td>Last bidder</td>
-          <td><a href="{{etherscanHref}}{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
+          <td>Auctionlet id</td>
+          <td>{{auctionlet.auctionletId}}</td>
         </tr>
+        {{#if unclaimed}}
         <tr>
-          <td>Last bid time</td>
-          <td>{{auctionlet.last_bid_time}}</td>
+          <td>Selling</td>
+          <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <a class="MKR" href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
         </tr>
+        {{#unless auctionlet.base}}
+          <tr>
+            <td>Last bidder</td>
+            <td><a href="{{etherscanHref}}{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
+          </tr>
+          <tr>
+            <td>Last bid time</td>
+            <td>{{auctionlet.last_bid_time}}</td>
+          </tr>
+          <tr>
+            <td>Time remaining</td>
+            <td>{{countdown}} seconds</td>
+          </tr>
+        {{/unless}}
         <tr>
-          <td>Time remaining</td>
-          <td>{{countdown}} seconds</td>
+          {{#if auctionlet.base}}
+            <td>Initial bid</td>
+          {{else}}
+            <td>Highest bid</td>
+          {{/if}}
+          <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a class="ETH" href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
         </tr>
-      {{/unless}}
-      <tr>
-        {{#if auctionlet.base}}
-          <td>Initial bid</td>
-        {{else}}
-          <td>Highest bid</td>
         {{/if}}
-        <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
-      </tr>
-      {{/if}}
-    </table>
-    {{#unless expired}}
-    <div class="form-group">
-      <label for="inputBid">Enter a bid for the auctionlet</label>
-      <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
-      <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
-      {{#if bidMessage}}
-        <span id='spnBidMessage'>{{ bidMessage }}</span>
-      {{/if}}
-    </div>
-    {{else}}
-    <div class="form-group">
-      <span>Auctionlet has expired.</span>
-      {{#unless unclaimed}}
-        <br/>
-        <span>The tokens have been claimed by the auctionlet winner</span>
-      {{/unless}}
-      {{#if auctionwinner}}
-        {{#if auctionlet.unclaimed}}
-          <span>You made the highest bid. Click to receive the tokens</span>
-          <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
-          {{#if claimMessage}}
-            <span id='spnClaimMessage'>{{ claimMessage }}</span>
+      </table>
+      {{#unless expired}}
+      <div class="form-group">
+        <label for="inputBid">Enter a bid for the auctionlet</label>
+        <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
+        <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
+        {{#if bidMessage}}
+          <span id='spnBidMessage'>{{ bidMessage }}</span>
+        {{/if}}
+      </div>
+      {{else}}
+      <div class="form-group">
+        <span>Auctionlet has expired.</span>
+        {{#unless unclaimed}}
+          <br/>
+          <span>The tokens have been claimed by the auctionlet winner</span>
+        {{/unless}}
+        {{#if auctionwinner}}
+          {{#if auctionlet.unclaimed}}
+          <br>
+            <span>You made the highest bid. Click to receive the tokens</span>
+            <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
+            {{#if claimMessage}}
+              <span id='spnClaimMessage'>{{ claimMessage }}</span>
+            {{/if}}
           {{/if}}
         {{/if}}
-      {{/if}}
-    </div>
+      </div>
+      {{/unless}}
+    {{else}}
+      <span class="message">Auctionlet was not found</span>
     {{/unless}}
-  {{else}}
-    <span>Auctionlet was not found</span>
-  {{/unless}}
+  </div>
 </template>
 
 <template name="newauction">
+  <div class="boxDiv">
   <h2>New auction</h2>
   <table>
     <tbody>
       <tr>
         <td>Sell amount</td>
-        <td><input type="number" min="0" {{b "value: sellamount"}}> <a href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
+        <td><input type="number" min="0" {{b "value: sellamount"}}> <a class="MKR" href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
       </tr>
       <tr>
         <td>Start bid</td>
-        <td><input type="number" min="0" {{b "value: startbid"}}> <a href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
+        <td><input type="number" min="0" {{b "value: startbid"}}> <a class="ETH" href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
       </tr>
       <tr>
         <td>Minimum increase</td>
@@ -191,6 +175,7 @@
       {{/if}}
     </tfoot>
   </table>
+  </div>
 </template>
 
 <template name="transactions">

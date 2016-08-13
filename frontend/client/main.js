@@ -50,9 +50,6 @@ Template.body.onCreated(function created() {
 });
 
 Template.balance.viewmodel({
-  account() {
-    return Session.get('address');
-  },
 });
 
 Template.auction.viewmodel({
@@ -143,15 +140,21 @@ Template.newauction.viewmodel({
     const network = Session.get('network');
     const address = Tokens.getTokenAddress(network, 'MKR');
     if (Tokens.isBalanceSufficient(weiSellAmount, address)) {
-      const newAuction = {
-        sellamount: weiSellAmount,
-        startbid: weiStartBid,
-        min_increase: this.minimumincrease(),
-        duration: this.duration(),
-      };
-      Session.set('newAuction', newAuction);
-      Auctions.createAuction(web3.toWei(this.sellamount()));
+      if (weiSellAmount > 0) {
+        console.log('balance sufficient');
+        const newAuction = {
+          sellamount: weiSellAmount,
+          startbid: weiStartBid,
+          min_increase: this.minimumincrease(),
+          duration: this.duration(),
+        };
+        Session.set('newAuction', newAuction);
+        Auctions.createAuction(web3.toWei(this.sellamount()));
+      } else {
+        Session.set('newAuctionMessage', 'Error creating new auction, MKR sell amount insufficient');
+      }
     } else {
+      console.log('balance insufficient');
       Session.set('newAuctionMessage', 'Error creating new auction, MKR balance insufficient');
     }
   },
