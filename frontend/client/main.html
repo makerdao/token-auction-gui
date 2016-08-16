@@ -15,56 +15,6 @@
   </div>
 </body>
 
-<template name="balance">
-    <div id="balanceDiv">
-      <span class="balanceSpan">
-        Balance
-      </span>
-      <span class="MKR">
-        {{formatBalance (fromWei MKRToken.balance)}} <a href="{{etherscanHref}}{{MKRToken.address}}" class="MKR">{{MKRToken.name}}</a>
-      </span>
-      <span class="ETH">
-        {{formatBalance (fromWei ETHToken.balance)}} <a href="{{etherscanHref}}{{ETHToken.address}}" class="ETH">{{ETHToken.name}}</a>
-      </span>
-    </div>    
-</template>
-
-<template name="auction">
-  <div class="boxDiv">
-    <h2>Auction</h2>
-    {{#unless auctionNotFound}}
-    <table class="table table-condensed">
-      <tr>
-        <td>Auction id</td>
-        <td>{{auction.auctionId}}</td>
-      </tr>
-      <tr>
-        <td>Creator</td>
-        <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank">{{auction.creator}}</a></td>
-      </tr>
-      <tr>
-        <td>Selling</td>
-        <td>{{formatBalance (fromWei auction.sell_amount)}} <a class="MKR" href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
-      </tr>
-      <tr>
-        <td>Start bid</td>
-        <td>{{formatBalance (fromWei auction.start_bid)}} <a class="ETH" href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
-      </tr>
-      <tr>
-        <td>Minimum increase</td>
-        <td>{{auction.min_increase}}%</td>
-      </tr>
-      <tr>
-        <td>Duration</td>
-        <td>{{auction.duration}} seconds</td>
-      </tr>
-    </table>
-    {{else}}
-  <span>Auction was not found</span>
-  {{/unless}}
- </div>
-</template>
-
 <template name="auctionlet">
   <div class="boxDiv">
     <h2>Auctionlet</h2>
@@ -109,12 +59,12 @@
         <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
         <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
         {{#if bidMessage}}
-          <span id='spnBidMessage'>{{ bidMessage }}</span>
+          <span id='spnBidMessage' class="messageSpan alert {{bidMessageType}}">{{ bidMessage }}</span>
         {{/if}}
       </div>
       {{else}}
       <div class="form-group">
-        <span>Auctionlet has expired.</span>
+        <span class="alert alert-info">Auctionlet has expired.</span>
         {{#unless unclaimed}}
           <br/>
           <span>The tokens have been claimed by the auctionlet winner</span>
@@ -125,86 +75,14 @@
             <span>You made the highest bid. Click to receive the tokens</span>
             <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
             {{#if claimMessage}}
-              <span id='spnClaimMessage'>{{ claimMessage }}</span>
+              <span id='spnClaimMessage' class="messageSpan alert {{claimMessageType}}">{{ claimMessage }}</span>
             {{/if}}
           {{/if}}
         {{/if}}
       </div>
       {{/unless}}
     {{else}}
-      <span class="message">Auctionlet was not found</span>
+      <span>Auctionlet was not found</span>
     {{/unless}}
   </div>
-</template>
-
-<template name="newauction">
-  <div class="boxDiv">
-  <h2>New auction</h2>
-  <table>
-    <tbody>
-      <tr>
-        <td>Sell amount</td>
-        <td><input type="number" min="0" {{b "value: sellamount"}}> <a class="MKR" href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
-      </tr>
-      <tr>
-        <td>Start bid</td>
-        <td><input type="number" min="0" {{b "value: startbid"}}> <a class="ETH" href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
-      </tr>
-      <tr>
-        <td>Minimum increase</td>
-        <td><input type="number" min="1" step="1" {{b "value: minimumincrease"}}> %</td>
-      </tr>
-      <tr>
-        <td>Duration</td>
-        <td><input type="number" min="0" {{b "value: duration"}}> seconds</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td><button class="btn btn-primary" {{b "click: create"}}>Create auction</button></td>
-      </tr>
-      {{#if newAuctionMessage}}
-        <tr>
-          <td><span id='newAuctionMessage'>{{newAuctionMessage}}</span></td>
-        </tr>
-        {{#if newAuctionUrl}}
-          <tr>
-            <td>Your new auction can be found on <a href="{{newAuctionUrl}}">{{newAuctionUrl}}</a></td>
-          </tr>
-        {{/if}}
-      {{/if}}
-    </tfoot>
-  </table>
-  </div>
-</template>
-
-<template name="transactions">
-  <h2>Transactions</h2>
-  <table class="table table-condensed">
-    {{#each transactions}}
-    <tr>
-      <td>{{type}}</td>
-      <td>{{tx}}</td>
-      <td>{{json object}} </td>
-    </tr>
-    {{/each}}
-  </table>
-</template>
-
-<template name="tokens">
-  <h2>Tokens</h2>
-  <table class="table table-condensed">
-    <th>
-        <td>Token id</td>
-        <td>Balance</td>
-        <td>Allowance</td>
-    </th>
-    {{#each tokens}}
-    <tr>
-      <td>{{name}}</td>
-      <td>{{balance}}</td>
-      <td>{{allowance}} </td>
-    </tr>
-    {{/each}}
-  </table>
 </template>

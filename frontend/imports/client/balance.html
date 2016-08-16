@@ -1,0 +1,17 @@
+<template name="balance">
+    <div id="balanceDiv">
+      <span class="balanceSpan">
+        Balance
+      </span>
+      <span class="MKR balanceSpan">
+        {{formatBalance (fromWei MKRToken.balance)}} <a href="{{etherscanHref}}{{MKRToken.address}}" class="MKR">{{MKRToken.name}}</a>
+      </span>
+      <span class="ETH balanceSpan">
+        {{formatBalance (fromWei ETHToken.balance)}} <a href="{{etherscanHref}}{{ETHToken.address}}" class="ETH">{{ETHToken.name}}</a>
+      </span>
+      {{#unless hasETHTokens}}
+        <br>
+        <span class="alert alert-warning ethTokensSpan">You currently have 0 ETH tokens, you can exchange ETH for ETH tokens <a href="https://mkr.market/" target="_blank">here</a></span>
+      {{/unless}}
+    </div>    
+</template>

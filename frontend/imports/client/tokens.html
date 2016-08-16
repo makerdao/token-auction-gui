@@ -1,0 +1,17 @@
+<template name="tokens">
+  <h2>Tokens</h2>
+  <table class="table table-condensed">
+    <th>
+        <td>Token id</td>
+        <td>Balance</td>
+        <td>Allowance</td>
+    </th>
+    {{#each tokens}}
+    <tr>
+      <td>{{name}}</td>
+      <td>{{balance}}</td>
+      <td>{{allowance}} </td>
+    </tr>
+    {{/each}}
+  </table>
+</template>

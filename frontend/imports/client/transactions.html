@@ -1,0 +1,12 @@
+<template name="transactions">
+  <h2>Transactions</h2>
+  <table class="table table-condensed">
+    {{#each transactions}}
+    <tr>
+      <td>{{type}}</td>
+      <td>{{tx}}</td>
+      <td>{{json object}} </td>
+    </tr>
+    {{/each}}
+  </table>
+</template>

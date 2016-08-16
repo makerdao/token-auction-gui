@@ -1,0 +1,40 @@
+<template name="newauction">
+  <div class="boxDiv">
+  <h2>New auction</h2>
+  <table>
+    <tbody>
+      <tr>
+        <td>Sell amount</td>
+        <td><input type="number" min="0" {{b "value: sellamount"}}> <a class="MKR" href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
+      </tr>
+      <tr>
+        <td>Start bid</td>
+        <td><input type="number" min="0" {{b "value: startbid"}}> <a class="ETH" href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
+      </tr>
+      <tr>
+        <td>Minimum increase</td>
+        <td><input type="number" min="1" step="1" {{b "value: minimumincrease"}}> %</td>
+      </tr>
+      <tr>
+        <td>Duration</td>
+        <td><input type="number" min="0" {{b "value: duration"}}> seconds</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td><button class="btn btn-primary" {{b "click: create"}}>Create auction</button></td>
+      </tr>
+      {{#if newAuctionMessage}}
+        <tr>
+          <td><span id='newAuctionMessage' class="messageSpan alert {{newAuctionMessageType}}">{{newAuctionMessage}}</span></td>
+        </tr>
+        {{#if newAuctionUrl}}
+          <tr>
+            <td>Your new auction can be found on <a href="{{newAuctionUrl}}">{{newAuctionUrl}}</a></td>
+          </tr>
+        {{/if}}
+      {{/if}}
+    </tfoot>
+  </table>
+  </div>
+</template>

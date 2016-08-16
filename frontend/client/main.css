@@ -43,11 +43,17 @@ a:hover {
 }
 
 #balanceDiv .balanceSpan {
-    color: #CACBCD;
+    margin-right: 40px;
 }
 
-#balanceDiv span {
-    margin-right: 40px;
+#balanceDiv .ethTokensSpan {
+    font-size: 14px;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.messageSpan {
+    display: inline-block;
 }
 
 .boxDiv {
@@ -55,7 +61,7 @@ a:hover {
     box-shadow: 2px 2px 5px #E0DFDF;
     padding: 10px;
     margin-bottom: 20px;
-    margin-top: 20px;
+    margin-top: 10px;
     border: 1px solid #E0DFDF;
     padding: 10px 20px 10px 20px;
 }
