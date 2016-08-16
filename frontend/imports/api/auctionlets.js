@@ -86,10 +86,10 @@ Auctionlets.watchBid = function watchBid() {
 Auctionlets.watchBidTransactions = function watchBidTransactions() {
   Transactions.observeRemoved('bid', (document) => {
     if (document.receipt.logs.length === 0) {
-      Session.set('bidMessage', 'Error placing bid');
+      Session.set('bidMessage', { message: 'Error placing bid', type: 'alert-danger' });
     } else {
       console.log('bid', document.object.bid);
-      Session.set('bidMessage', 'Bid placed succesfully');
+      Session.set('bidMessage', { message: 'Bid placed succesfully', type: 'alert-success' });
     }
   });
 };
@@ -98,10 +98,10 @@ Auctionlets.doClaim = function doClaim(auctionletId) {
   TokenAuction.objects.auction.claim(auctionletId, { gas: CLAIM_GAS }, (error, result) => {
     if (!error) {
       Transactions.add('claim', result, { auctionletId });
-      Session.set('claimMessage', 'Claiming your tokens');
+      Session.set('claimMessage', { message: 'Claiming your tokens', type: 'alert-info' });
     } else {
       console.log('Claim error: ', error);
-      Session.set('claimMessage', `Error claiming tokens: ${error.toString()}`);
+      Session.set('claimMessage', { message: `Error claiming tokens: ${error.toString()}`, type: 'alert-danger' });
     }
   });
 };
@@ -110,10 +110,10 @@ Auctionlets.watchClaimTransactions = function watchClaimTransactions() {
   Transactions.observeRemoved('claim', (document) => {
     if (document.receipt.logs.length === 0) {
       console.log('Claim went wrong');
-      Session.set('claimMessage', 'Error claiming tokens');
+      Session.set('claimMessage', { message: 'Error claiming tokens', type: 'alert-danger' });
     } else {
       console.log('Claim is succesful');
-      Session.set('claimMessage', 'Tokens successfully claimed');
+      Session.set('claimMessage', { message: 'Tokens successfully claimed', type: 'alert-success' });
       Auctionlets.getAuctionlet();
     }
   });

@@ -68,10 +68,10 @@ Auctions.watchNewAuctionTransactions = function watchNewAuctionTransactions() {
   Transactions.observeRemoved('auction', (document) => {
     if (document.receipt.logs.length === 0) {
       console.log('Creating auction went wrong');
-      Session.set('newAuctionMessage', 'Error creating new auction');
+      Session.set('newAuctionMessage', { message: 'Error creating new auction', type: 'alert-danger' });
     } else {
       console.log('Creating auction is succesful');
-      Session.set('newAuctionMessage', 'New Auction successfully created');
+      Session.set('newAuctionMessage', { message: 'New Auction successfully created', type: 'alert-success' });
     }
   });
 };
