@@ -1,7 +1,7 @@
 import { Template } from 'meteor/templating';
 import './network-status.html';
 
-Template.networkStatus.helpers({
+Template.networkStatus.viewmodel({
   network: () => Session.get('network'),
   syncing: () => Session.get('syncing'),
   outOfSync: () => Session.get('outOfSync'),
