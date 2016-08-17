@@ -5,7 +5,7 @@
 <body>
   <div id="outer" class="container">
     <div id="inner">
-      <h1>Weekly MKR Auction</h1>
+      <h1>WEEKLY MKR AUCTION</h1>
       {{> networkStatus}}
       {{> balance}}
       {{> auction}}
@@ -59,12 +59,13 @@
         <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
         <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
         {{#if bidMessage}}
+          <br>
           <span id='spnBidMessage' class="messageSpan alert {{bidMessageType}}">{{ bidMessage }}</span>
         {{/if}}
       </div>
       {{else}}
       <div class="form-group">
-        <span class="alert alert-info">Auctionlet has expired.</span>
+        <span>Auctionlet has expired.</span>
         {{#unless unclaimed}}
           <br/>
           <span>The tokens have been claimed by the auctionlet winner</span>
