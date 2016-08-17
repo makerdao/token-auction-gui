@@ -1,15 +1,15 @@
 <template name="networkStatus">
   <div id="networkStatusDiv">
     <ul>
-      <li>{{ network}}</li>
-      <li>
+      <li>Network: {{ network}}</li>
+      <li>Status: 
         {{#if isConnected}}
           <span>Connected</span>
         {{else}}
           <span>Not connected!</span>
         {{/if}}
         </li>
-      <li>Latest block {{ latestBlock}}</li>
+      <li>Latest block: {{ latestBlock}}</li>
       {{#if syncing}}
         <li>Syncing {{ syncing}}</li>
       {{/if}}
