@@ -19,6 +19,9 @@ Template.newauction.viewmodel({
   },
   create(event) {
     event.preventDefault();
+    Session.set('newAuctionMessage', null);
+    Session.set('newAuctionUrl', null);
+
     const weiSellAmount = web3.toWei(this.sellamount());
     const weiStartBid = web3.toWei(this.startbid());
     const network = Session.get('network');

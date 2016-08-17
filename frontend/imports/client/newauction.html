@@ -25,14 +25,16 @@
         <td><button class="btn btn-primary" {{b "click: create"}}>Create auction</button></td>
       </tr>
       {{#if newAuctionMessage}}
+        <div class="messageDiv alert {{newAuctionMessageType}}">
         <tr>
-          <td><span id='newAuctionMessage' class="messageSpan alert {{newAuctionMessageType}}">{{newAuctionMessage}}</span></td>
+          <td><span id='newAuctionMessage'>{{newAuctionMessage}}</span></td>
         </tr>
         {{#if newAuctionUrl}}
           <tr>
-            <td>Your new auction can be found on <a href="{{newAuctionUrl}}">{{newAuctionUrl}}</a></td>
+            <td><span>Your new auction can be found at <a href="{{newAuctionUrl}}">{{newAuctionUrl}}</a></span></td>
           </tr>
         {{/if}}
+        </div>
       {{/if}}
     </tfoot>
   </table>
