@@ -3,10 +3,10 @@
       <span class="balanceSpan">
         Balance
       </span>
-      <span class="MKR balanceSpan">
+      <span class="MKR balanceSpan verticalLine">
         {{formatBalance (fromWei MKRToken.balance)}} <a href="{{etherscanHref}}{{MKRToken.address}}" class="MKR">{{MKRToken.name}}</a>
       </span>
-      <span class="ETH balanceSpan">
+      <span class="ETH balanceSpan verticalLine">
         {{formatBalance (fromWei ETHToken.balance)}} <a href="{{etherscanHref}}{{ETHToken.address}}" class="ETH">{{ETHToken.name}}</a>
       </span>
       {{#unless hasETHTokens}}
