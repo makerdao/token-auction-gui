@@ -2,10 +2,19 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 
 auctionPath = '!/auction/';
 
+function clearSessionVariables() {
+  Session.set('bidMessage', null);
+  Session.set('newAuctionMessage', null);
+  Session.set('newAuctionUrl', null);
+  Session.set('claimMessage', null);
+}
+
 function auctionAction() {
   const hash = FlowRouter.current().context.hash;
   const auctionPart = hash != null && hash !== undefined ? hash.slice(auctionPath.length) : 0;
   const auctionId = parseInt(auctionPart, 10) || 0;
+  console.log('Time', (new Date()).getTime());
+  clearSessionVariables();
   if (auctionId > 0) {
     console.log('Showing auction with id:', auctionId);
     Session.set('currentAuctionletId', auctionId);
