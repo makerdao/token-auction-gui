@@ -1,23 +1,19 @@
 <template name="auction">
   <div class="boxDiv">
-    <h2>Auction</h2>
+    <h2>Auction#{{auction.auctionId}}</h2>
     {{#unless auctionNotFound}}
     <table class="table table-condensed">
-      <tr>
-        <td>Auction id</td>
-        <td>{{auction.auctionId}}</td>
-      </tr>
       <tr>
         <td>Creator</td>
         <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank">{{auction.creator}}</a></td>
       </tr>
       <tr>
         <td>Selling</td>
-        <td>{{formatBalance (fromWei auction.sell_amount)}} <a class="MKR" href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
+        <td>{{formatBalance (fromWei auction.sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
       </tr>
       <tr>
         <td>Start bid</td>
-        <td>{{formatBalance (fromWei auction.start_bid)}} <a class="ETH" href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
+        <td>{{formatBalance (fromWei auction.start_bid)}} <span class="ETH">{{ETHToken.name}}</span></td>
       </tr>
       <tr>
         <td>Minimum increase</td>
