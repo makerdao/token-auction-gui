@@ -9,7 +9,8 @@ Template.newauction.viewmodel({
   minimumincrease: 0,
   duration: 0,
   newAuctionMessage() {
-    return Session.get('newAuctionMessage').message;
+    return Session.get('newAuctionMessage') !== undefined ? Session.get('newAuctionMessage').message :
+            Session.get('newAuctionMessage');
   },
   newAuctionMessageType() {
     return Session.get('newAuctionMessage').type;
@@ -38,11 +39,13 @@ Template.newauction.viewmodel({
         Session.set('newAuction', newAuction);
         Auctions.createAuction(web3.toWei(this.sellamount()));
       } else {
-        Session.set('newAuctionMessage', { message: 'Error creating new auction, MKR sell amount insufficient', type: 'alert-danger' });
+        Session.set('newAuctionMessage', { message: 'Error creating new auction, MKR sell amount insufficient',
+        type: 'alert-danger' });
       }
     } else {
       console.log('balance insufficient');
-      Session.set('newAuctionMessage', { message: 'Error creating new auction, MKR balance insufficient', type: 'alert-danger' });
+      Session.set('newAuctionMessage', { message: 'Error creating new auction, MKR balance insufficient',
+      type: 'alert-danger' });
     }
   },
 });
