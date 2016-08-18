@@ -67,16 +67,15 @@ Template.auctionlet.viewmodel({
   },
   bid: 0,
   bidMessage() {
-    return Session.get('bidMessage').message;
+    return Session.get('bidMessage') !== null ? Session.get('bidMessage').message : Session.get('bidMessage');
   },
   bidMessageType() {
     return Session.get('bidMessage').type;
   },
   countdown() {
     if (timeRemaining.get() !== undefined) {
-      console.log('countdown called');
       const time = moment.duration(timeRemaining.get());
-      return `${time.days()}d:${time.hours()}h:${time.minutes()}m:${time.seconds()}s`;
+      return `${time.days()}d ${time.hours()}h ${time.minutes()}m ${time.seconds()}s`;
     }
     return timeRemaining.get();
   },
@@ -112,7 +111,7 @@ Template.auctionlet.viewmodel({
     && auctionlet.unclaimed;
   },
   claimMessage() {
-    return Session.get('claimMessage').message;
+    return Session.get('claimMessage') === null ? null : Session.get('claimMessage').message;
   },
   claimMessageType() {
     return Session.get('claimMessage').type;
