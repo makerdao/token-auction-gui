@@ -17,17 +17,13 @@
 
 <template name="auctionlet">
   <div class="boxDiv">
-    <h2>Auctionlet</h2>
+    <h2>Auctionlet#{{auctionlet.auctionletId}}</h2>
     {{#unless auctionNotFound}}
       <table class="table">
-        <tr>
-          <td>Auctionlet id</td>
-          <td>{{auctionlet.auctionletId}}</td>
-        </tr>
         {{#if unclaimed}}
         <tr>
           <td>Selling</td>
-          <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <a class="MKR" href="{{etherscanHref}}{{MKRToken.address}}" target="_blank">{{MKRToken.name}}</a></td>
+          <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
         </tr>
         {{#unless auctionlet.base}}
           <tr>
@@ -40,7 +36,7 @@
           </tr>
           <tr>
             <td>Time remaining</td>
-            <td>{{countdown}} seconds</td>
+            <td>{{countdown}}</td>
           </tr>
         {{/unless}}
         <tr>
@@ -49,19 +45,21 @@
           {{else}}
             <td>Highest bid</td>
           {{/if}}
-          <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <a class="ETH" href="{{etherscanHref}}{{ETHToken.address}}" target="_blank">{{ETHToken.name}}</a></td>
+          <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">{{ETHToken.name}}</span></td>
         </tr>
         {{/if}}
       </table>
       {{#unless expired}}
       <div class="form-group">
-        <label for="inputBid">Enter a bid for the auctionlet</label>
-        <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}>
-        <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
         {{#if bidMessage}}
-          <br>
           <span id='spnBidMessage' class="messageSpan alert {{bidMessageType}}">{{ bidMessage }}</span>
+          <br>
         {{/if}}
+        <label for="inputBid">Enter a bid for the auctionlet</label>
+        <br>
+        <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}> <span class="ETH">{{ETHToken.name}}</span>
+        <br>
+        <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
       </div>
       {{else}}
       <div class="form-group">

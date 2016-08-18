@@ -111,3 +111,7 @@ div.row {
 .message {
     color: #D0D0D0;
 }
+
+#inputBid {
+    display: inline-block;
+}

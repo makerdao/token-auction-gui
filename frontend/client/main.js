@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
+import { moment } from 'meteor/momentjs:moment';
 
 import '/imports/client/network-status.js';
 import '/imports/client/balance.js';
@@ -26,7 +27,7 @@ function doCountdown() {
   if (singleAuction !== undefined && singleAuctionlet !== undefined) {
     // console.log('single auction:', singleAuction, ' and singleAuctionlet:', singleAuctionlet);
     const countdown = Math.round(((singleAuction.duration * 1000) -
-                      (currentTime - singleAuctionlet.last_bid_time.getTime())) / 1000);
+                      (currentTime - singleAuctionlet.last_bid_time.getTime())));
     // console.log(countdown);
     if (countdown >= 0) {
       timeRemaining.set(countdown);
@@ -72,6 +73,11 @@ Template.auctionlet.viewmodel({
     return Session.get('bidMessage').type;
   },
   countdown() {
+    if (timeRemaining.get() !== undefined) {
+      console.log('countdown called');
+      const time = moment.duration(timeRemaining.get());
+      return `${time.days()}d:${time.hours()}h:${time.minutes()}m:${time.seconds()}s`;
+    }
     return timeRemaining.get();
   },
   create(event) {
