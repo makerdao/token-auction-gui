@@ -2,11 +2,11 @@
     "public": {
         "ETH": {
             "name": "ETH",
-            "address": "0xecf8f87f810ecf450940c9f60066b4a7a501d6a7"
+            "address": "0x52fe88b987c7829e5d5a61c98f67c9c14e6a7a90"
         },
         "MKR": {
             "name": "MKR",
-            "address": "0xc66ea802717bfb9833400264dd12c2bceaa34a6d"
+            "address": "0xffb1c99b389ba527a9194b1606b3565a07da3eef"
         },
         "auctionId": 1,
         "auctionletId": 1
