@@ -11,9 +11,15 @@
       </p>
       {{> networkStatus}}
       {{> balance}}
-      {{> auction}}
-      {{> auctionlet}}
-      {{> newauction}}
+      {{#if contractExists}}
+        {{> auction}}
+        {{> auctionlet}}
+        {{> newauction}}
+      {{else}}
+        <div class="alert alert-danger" role="alert">
+          Could not find the AuctionManager contract on your current blockchain environment.
+        </div>
+      {{/if}}
     </div>
   </div>
 </body>

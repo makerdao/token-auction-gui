@@ -1,3 +1,5 @@
+import { Session } from 'meteor/session';
+import { Template } from 'meteor/templating';
 import Tokens from '/imports/api/tokens.js';
 import Auctions from '/imports/api/auctions.js';
 
@@ -39,4 +41,11 @@ Template.registerHelper('etherscanHref', () => {
   /* eslint-disable prefer-template */
   return 'https://' + (network === 'morden' ? 'testnet.' : '') + 'etherscan.io/address/';
   /* eslint-enable prefer-template */
+});
+
+Template.registerHelper('contractExists', () => {
+  const network = Session.get('network');
+  const isConnected = Session.get('isConnected');
+  const exists = Session.get('contractExists');
+  return network !== false && isConnected === true && exists === true;
 });
