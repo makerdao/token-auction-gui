@@ -61,7 +61,7 @@ Template.auctionlet.viewmodel({
     const auctionlet = Auctionlets.findAuctionlet();
 
     if (auction !== undefined && Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
-      if (auctionlet !== undefined && auctionletBid >= Auctionlets.calculateRequiredBid(auctionlet.buy_amount,
+      if (auctionlet !== undefined && auctionletBid > Auctionlets.calculateRequiredBid(auctionlet.buy_amount,
       auction.min_increase)) {
         Auctionlets.doBid(auctionletBid);
       } else {
