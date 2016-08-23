@@ -22,8 +22,8 @@
       </tbody>
     </table>
     {{#if newAuctionMessage}}
-      <div class="messageDiv alert {{newAuctionMessageType}}">
-        <span id='newAuctionMessage'>{{newAuctionMessage}}</span>
+      <div class="messageDiv alert {{newAuctionMessage.type}}">
+        <span id='newAuctionMessage'>{{newAuctionMessage.message}}</span>
         {{#if newAuctionUrl}}
             <span>Your new auction can be found at <a href="{{newAuctionUrl}}">{{newAuctionUrl}}</a></span>
         {{/if}}

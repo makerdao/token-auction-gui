@@ -9,11 +9,7 @@ Template.newauction.viewmodel({
   minimumincrease: 0,
   duration: 0,
   newAuctionMessage() {
-    return Session.get('newAuctionMessage') !== undefined ? Session.get('newAuctionMessage').message :
-            Session.get('newAuctionMessage');
-  },
-  newAuctionMessageType() {
-    return Session.get('newAuctionMessage').type;
+    return Session.get('newAuctionMessage');
   },
   newAuctionUrl() {
     return Session.get('newAuctionUrl');
