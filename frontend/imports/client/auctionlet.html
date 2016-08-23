@@ -1,0 +1,70 @@
+<template name="auctionlet">
+  <div class="boxDiv">
+    <h2>Auctionlet #{{auctionlet.auctionletId}}</h2>
+    {{#unless auctionNotFound}}
+      <table class="table">
+        {{#if unclaimed}}
+        <tr>
+          <td>Selling</td>
+          <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
+        </tr>
+        {{#unless auctionlet.base}}
+          <tr>
+            <td>Last bidder</td>
+            <td><a href="{{etherscanHref}}{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
+          </tr>
+          <tr>
+            <td>Last bid time</td>
+            <td>{{auctionlet.last_bid_time}}</td>
+          </tr>
+          <tr>
+            <td>Time remaining</td>
+            <td>{{countdown}}</td>
+          </tr>
+        {{/unless}}
+        <tr>
+          {{#if auctionlet.base}}
+            <td>Initial bid</td>
+          {{else}}
+            <td>Highest bid</td>
+          {{/if}}
+          <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">{{ETHToken.name}}</span></td>
+        </tr>
+        {{/if}}
+      </table>
+      {{#unless expired}}
+      <div class="form-group">
+        {{#if bidMessage}}
+          <span id='spnBidMessage' class="messageSpan alert {{bidMessageType}}">{{ bidMessage }}</span>
+          <br>
+        {{/if}}
+        <label for="inputBid">Enter a bid for the auctionlet</label>
+        <br>
+        <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}> <span class="ETH">{{ETHToken.name}}</span>
+        <br>
+        <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
+      </div>
+      {{else}}
+      <div class="form-group">
+        <span>Auctionlet has expired.</span>
+        {{#unless unclaimed}}
+          <br/>
+          <span>The tokens have been claimed by the auctionlet winner</span>
+        {{/unless}}
+        {{#if auctionwinner}}
+          {{#if auctionlet.unclaimed}}
+          <br>
+            <span>You made the highest bid. Click to receive the tokens</span>
+            <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
+            {{#if claimMessage}}
+              <span id='spnClaimMessage' class="messageSpan alert {{claimMessageType}}">{{ claimMessage }}</span>
+            {{/if}}
+          {{/if}}
+        {{/if}}
+      </div>
+      {{/unless}}
+    {{else}}
+      <span>Auctionlet was not found</span>
+    {{/unless}}
+  </div>
+</template>
