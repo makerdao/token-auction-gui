@@ -108,10 +108,10 @@ Tokens.sync = function sync() {
 Tokens.isBalanceSufficient = function isBalanceSufficient(bid, tokenAddress) {
   const token = Tokens.findOne({ address: tokenAddress });
   if (token !== undefined && web3.toBigNumber(token.balance).gte(web3.toBigNumber(bid))) {
-    console.log('Success! Balance is', token.balance, 'and bid is', bid);
+    console.log('Success! Balance is', token.balance, 'and bid is', bid.toString(10));
     return true;
   } else if (token !== undefined) {
-    console.log('Insufficient! Balance is', token.balance, 'and bid is', bid);
+    console.log('Insufficient! Balance is', token.balance, 'and bid is', bid.toString(10));
     return false;
   }
   console.log('token is not found');
