@@ -12,6 +12,7 @@ Session.set('outOfSync', false);
 Session.set('syncing', false);
 Session.set('isConnected', false);
 Session.set('latestBlock', 0);
+Session.set('notification', null);
 
 // Initialize everything on new network
 function initNetwork(newNetwork) {
@@ -22,11 +23,44 @@ function initNetwork(newNetwork) {
   Tokens.initialize(newNetwork);
 }
 
+function checkNotifications() {
+  const notification = Session.get('notification');
+  if (typeof (notification) !== 'undefined' && notification !== null) {
+    const message = notification.message;
+    const type = notification.type ? notification.type : 'warning';
+    switch (type) {
+      case 'success':
+        toastr.success(message);
+        break;
+      case 'info':
+        toastr.info(message);
+        break;
+      case 'warning':
+        toastr.warning(message);
+        break;
+      case 'danger':
+        toastr.danger(message);
+        break;
+      default:
+        toastr.warning(message);
+        break;
+    }
+  }
+  if (Session.get('newBidMessage') !== null) {
+    Session.set('notification', Session.get('newBidMessage'));
+  }
+  if (Session.get('newAuctionMessage') !== null) {
+    Session.set('notification', Session.get('newAuctionMessage'));
+  }
+  if (Session.get('newTransactionMessage') !== null) {
+    Session.set('notification', Session.get('newTransactionMessage'));
+  }
+}
+
 // CHECK FOR NETWORK
 function checkNetwork() {
   web3.version.getNode((error) => {
     const isConnected = !error;
-
     // Check if we are synced
     if (isConnected) {
       web3.eth.getBlock('latest', (e, res) => {
@@ -112,6 +146,7 @@ Meteor.startup(() => {
 });
 
 Tracker.autorun(() => {
+  checkNotifications();
   web3.checkAccounts();
   Auctions.getAuction();
   Auctionlets.getAuctionlet();

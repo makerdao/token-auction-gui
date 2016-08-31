@@ -65,10 +65,10 @@ Template.auctionlet.viewmodel({
       auction.min_increase)) {
         Auctionlets.doBid(auctionletBid);
       } else {
-        Session.set('bidMessage', { message: 'Bid is not high enough', type: 'alert-danger' });
+        Session.set('bidMessage', { message: 'Bid is not high enough', type: 'danger' });
       }
     } else {
-      Session.set('bidMessage', { message: 'Your balance is insufficient for your current bid', type: 'alert-danger' });
+      Session.set('bidMessage', { message: 'Your balance is insufficient for your current bid', type: 'danger' });
     }
   },
   expired() {

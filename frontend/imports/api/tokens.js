@@ -125,14 +125,14 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
       token.approve(TokenAuction.objects.auction.address, amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Mkr approve transaction adding');
-          Session.set('newAuctionMessage', { message: 'Setting allowance for new auction', type: 'alert-info' });
+          Session.set('newAuctionMessage', { message: 'Setting allowance for new auction', type: 'info' });
           Transactions.add('mkrallowance', result, { value: amount.toString(10) });
         } else {
-          Session.set('newAuctionMessage', { message: `Error setting allowance for new auction: ${approveError.toString()}`, type: 'alert-danger' });
+          Session.set('newAuctionMessage', { message: `Error setting allowance for new auction: ${approveError.toString()}`, type: 'danger' });
         }
       });
     } else {
-      Session.set('newAuctionMessage', { message: `Error setting allowance for new auction: ${error.toString()}`, type: 'alert-danger' });
+      Session.set('newAuctionMessage', { message: `Error setting allowance for new auction: ${error.toString()}`, type: 'danger' });
     }
   });
 };
@@ -143,15 +143,15 @@ Tokens.setEthAllowance = function setEthAllowance(amount) {
       token.approve(TokenAuction.objects.auction.address, amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Eth approve transaction adding');
-          Session.set('bidMessage', { message: 'Setting allowance for bid (this could take a while)', type: 'alert-info' });
+          Session.set('bidMessage', { message: 'Setting allowance for bid (this could take a while)', type: 'info' });
           Transactions.add('ethallowance', result, { value: amount.toString(10) });
         } else {
           console.log('SetEthAllowance error:', approveError);
-          Session.set('bidMessage', { message: `Error setting allowance for bid: ${approveError.toString()}`, type: 'alert-danger' });
+          Session.set('bidMessage', { message: `Error setting allowance for bid: ${approveError.toString()}`, type: 'danger' });
         }
       });
     } else {
-      Session.set('bidMessage', { message: `Error setting allowance for bid: ${error.toString()}`, type: 'alert-danger' });
+      Session.set('bidMessage', { message: `Error setting allowance for bid: ${error.toString()}`, type: 'danger' });
     }
   });
 };
@@ -163,6 +163,7 @@ Tokens.watchEthApproval = function watchEthApproval() {
       token.Approval({ owner: Session.get('address'), spender: TokenAuction.objects.auction.address },
       (approvedError) => {
         if (!approvedError) {
+          Session.set('bidMessage', { message: 'Approved, placing bid', type: 'info' });
           console.log('Approved, placing bid');
         }
       });
@@ -178,6 +179,7 @@ Tokens.watchMkrApproval = function watchMkrApproval() {
       token.Approval({ owner: Session.get('address'), spender: TokenAuction.objects.auction.address },
       (approvalError) => {
         if (!approvalError) {
+           Session.set('bidMessage', { message: 'Approved, creating auction', type: 'info' });
           console.log('Approved, creating auction');
         }
       });
@@ -190,11 +192,11 @@ Tokens.watchEthAllowanceTransactions = function watchEthAllowanceTransactions() 
   Transactions.observeRemoved('ethallowance', (document) => {
     if (document.receipt.logs.length === 0) {
       console.log('Setting ETH allowance went wrong');
-      Session.set('bidMessage', { message: 'Error setting allowance for bid', type: 'alert-danger' });
+      Session.set('bidMessage', { message: 'Error setting allowance for bid', type: 'danger' });
     } else {
       console.log('ETH allowance is set');
       const auction = Auctions.findAuction();
-      Session.set('bidMessage', { message: 'Allowance set, placing bid (this could take a while)', type: 'alert-info' });
+      Session.set('bidMessage', { message: 'Allowance set, placing bid (this could take a while)', type: 'info' });
       Auctionlets.bidOnAuctionlet(Session.get('currentAuctionletId'), document.object.value, auction.sell_amount);
     }
   });
@@ -204,7 +206,7 @@ Tokens.watchMkrAllowanceTransactions = function watchMkrAllowanceTransactions() 
   Transactions.observeRemoved('mkrallowance', (document) => {
     if (document.receipt.logs.length === 0) {
       console.log('Setting MKR allowance went wrong');
-      Session.set('newAuctionMessage', { message: 'Error setting allowance for new auction:', type: 'alert-danger' });
+      Session.set('newAuctionMessage', { message: 'Error setting allowance for new auction:', type: 'danger' });
     } else {
       console.log('MKR allowance is set');
       const newAuction = Session.get('newAuction');
@@ -213,7 +215,7 @@ Tokens.watchMkrAllowanceTransactions = function watchMkrAllowanceTransactions() 
       Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address,
                           Meteor.settings.public.ETH.address, newAuction.sellamount.toString(10),
                           newAuction.startbid.toString(10), newAuction.min_increase, newAuction.duration.toString(10));
-      Session.set('newAuctionMessage', { message: 'Allowance set, creating new auction', type: 'alert-info' });
+      Session.set('newAuctionMessage', { message: 'Allowance set, creating new auction', type: 'info' });
     }
   });
 };

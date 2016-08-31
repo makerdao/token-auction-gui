@@ -14,6 +14,7 @@ caching-compiler@1.1.7
 caching-html-compiler@1.0.6
 callback-hook@1.0.9
 check@1.2.3
+chrismbeckett:toastr@2.1.2_1
 coffeescript@1.2.4
 cosmos:browserify@0.10.0
 ddp@1.2.5

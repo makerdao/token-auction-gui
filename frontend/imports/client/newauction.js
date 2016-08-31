@@ -36,12 +36,12 @@ Template.newauction.viewmodel({
         Auctions.createAuction(web3.toWei(this.sellamount()));
       } else {
         Session.set('newAuctionMessage', { message: 'Error creating new auction, MKR sell amount insufficient',
-        type: 'alert-danger' });
+        type: 'danger' });
       }
     } else {
       console.log('balance insufficient');
       Session.set('newAuctionMessage', { message: 'Error creating new auction, MKR balance insufficient',
-      type: 'alert-danger' });
+      type: 'danger' });
     }
   },
 });

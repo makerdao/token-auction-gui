@@ -29,3 +29,4 @@ kadira:flow-router
 underscore@1.0.9
 momentjs:moment
 shell-server
+chrismbeckett:toastr
