@@ -1,7 +1,8 @@
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import Auctions from '/imports/api/auctions.js';
-import Auctionlets from '/imports/api/auctionlets.js';
-import Transactions from '/imports/lib/_transactions.js';
+import Auctions from './auctions.js';
+import Auctionlets from './auctionlets.js';
+import Transactions from './transactions.js';
 
 const Tokens = new Mongo.Collection(null);
 const APPROVE_GAS = 1000000;
@@ -112,7 +113,7 @@ Tokens.isBalanceSufficient = function isBalanceSufficient(bid, tokenAddress) {
     console.log('Insufficient! Balance is', token.balance, 'and bid is', bid.toString(10));
     return false;
   }
-  console.log('token is not found');
+  console.log('token is not found', tokenAddress, token);
   return false;
 };
 
@@ -205,13 +206,19 @@ Tokens.watchMkrAllowanceTransactions = function watchMkrAllowanceTransactions() 
       Session.set('newAuctionMessage', { message: 'Error setting allowance for new auction:', type: 'alert-danger' });
     } else {
       console.log('MKR allowance is set');
-      const newAuction = Session.get('newAuction');
-      console.log('account:', Session.get('address'), newAuction.sellamount, newAuction.startbid,
-      newAuction.min_increase, newAuction.duration);
-      Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address,
-                          Meteor.settings.public.ETH.address, newAuction.sellamount.toString(10),
-                          newAuction.startbid.toString(10), newAuction.min_increase, newAuction.duration.toString(10));
-      Session.set('newAuctionMessage', { message: 'Allowance set, creating new auction', type: 'alert-info' });
+      const network = Session.get('network');
+      if (network) {
+        const newAuction = Session.get('newAuction');
+        const networkSettings = Meteor.settings.public[network];
+        console.log('account:', Session.get('address'), newAuction.sellamount, newAuction.startbid,
+          newAuction.min_increase, newAuction.duration);
+        Auctions.newAuction(Session.get('address'), networkSettings.MKR.address,
+                            networkSettings.ETH.address, newAuction.sellamount.toString(10),
+                            newAuction.startbid.toString(10), newAuction.min_increase, newAuction.duration.toString(10));
+        Session.set('newAuctionMessage', { message: 'Allowance set, creating new auction', type: 'alert-info' });
+      } else {
+        console.error('Network not initialized');
+      }
     }
   });
 };

@@ -1,13 +1,12 @@
 import { Mongo } from 'meteor/mongo';
-import Tokens from '/imports/api/tokens.js';
-import Transactions from '/imports/lib/_transactions.js';
-import auctionPath from '/imports/startup/routes.js';
+import Tokens from './tokens.js';
+import Transactions from './transactions.js';
+import auctionPath from '../startup/routes.js';
 
 const Auctions = new Mongo.Collection(null);
 const AUCTION_GAS = 1000000;
 
-Auctions.getAuction = function getAuction() {
-  const currentAuctionId = Session.get('currentAuctionId');
+Auctions.loadAuction = function loadAuction(currentAuctionId) {
   TokenAuction.objects.auction.getAuctionInfo(currentAuctionId, (error, result) => {
     if (!error) {
       Auctions.remove({});

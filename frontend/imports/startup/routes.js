@@ -20,9 +20,9 @@ function auctionAction() {
     Session.set('currentAuctionletId', auctionId);
     Session.set('currentAuctionId', auctionId);
   } else {
-    console.log('Setting default auction from settings:', Meteor.settings.public.auctionId);
-    Session.set('currentAuctionId', Meteor.settings.public.auctionId);
-    Session.set('currentAuctionletId', Meteor.settings.public.auctionletId);
+    console.log('Setting default auction');
+    Session.set('currentAuctionId', null);
+    Session.set('currentAuctionletId', null);
   }
 }
 

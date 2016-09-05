@@ -1,8 +1,9 @@
 import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
+import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
-import Transactions from '/imports/lib/_transactions.js';
+import Transactions from '/imports/api/transactions.js';
 
 Meteor.disconnect();
 TokenAuction.init('morden');
@@ -17,6 +18,17 @@ function initNetwork(newNetwork) {
   Session.set('network', newNetwork);
   Session.set('isConnected', true);
   Session.set('latestBlock', 0);
+  const networkSettings = Meteor.settings.public[newNetwork];
+  const currentAuctionId = Session.get('currentAuctionId');
+  if (!currentAuctionId) {
+    // setting default auction id for the current network
+    Session.set('currentAuctionId', networkSettings.auctionId);
+  }
+  const currentAuctionletId = Session.get('currentAuctionletId');
+  if (!currentAuctionletId) {
+    // setting default auction id for the current network
+    Session.set('currentAuctionletId', networkSettings.auctionletId);
+  }
   Tokens.sync();
   Tokens.initialize(newNetwork);
 }
@@ -112,7 +124,13 @@ Meteor.startup(() => {
 
 Tracker.autorun(() => {
   web3.checkAccounts();
-  Auctions.getAuction();
-  Auctionlets.getAuctionlet();
+  const currentAuctionId = Session.get('currentAuctionId');
+  if (currentAuctionId) {
+    Auctions.loadAuction(currentAuctionId);
+  }
+  const currentAuctionletId = Session.get('currentAuctionletId');
+  if (currentAuctionletId) {
+    Auctionlets.loadAuctionlet(currentAuctionletId);
+  }
   Tokens.sync();
 });

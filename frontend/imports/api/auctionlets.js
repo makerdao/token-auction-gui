@@ -1,6 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import Tokens from './tokens.js';
-import Transactions from '../lib/_transactions.js';
+import Transactions from './transactions.js';
 
 const Auctionlets = new Mongo.Collection(null);
 const BID_GAS = 1000000;
@@ -10,8 +10,7 @@ Auctionlets.findAuctionlet = function findAuctionlet() {
   return Auctionlets.findOne({ auctionletId: Session.get('currentAuctionletId') });
 };
 
-Auctionlets.getAuctionlet = function getAuctionlet() {
-  const currentAuctionletId = Session.get('currentAuctionletId');
+Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
   TokenAuction.objects.auction.getAuctionletInfo(currentAuctionletId, (error, result) => {
     if (!error) {
       Auctionlets.remove({});
@@ -75,7 +74,8 @@ Auctionlets.watchBid = function watchBid() {
   TokenAuction.objects.auction.Bid((error) => {
     if (!error) {
       console.log('Bid is set');
-      Auctionlets.getAuctionlet();
+      const currentAuctionletId = Session.get('currentAuctionletId');
+      Auctionlets.loadAuctionlet(currentAuctionletId);
     } else {
       console.log('error: ', error);
     }
@@ -114,7 +114,8 @@ Auctionlets.watchClaimTransactions = function watchClaimTransactions() {
     } else {
       console.log('Claim is succesful');
       Session.set('claimMessage', { message: 'Tokens successfully claimed', type: 'alert-success' });
-      Auctionlets.getAuctionlet();
+      const currentAuctionletId = Session.get('currentAuctionletId');
+      Auctionlets.loadAuctionlet(currentAuctionletId);
     }
   });
 };
