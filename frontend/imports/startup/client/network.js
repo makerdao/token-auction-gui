@@ -29,6 +29,7 @@ function initNetwork(newNetwork) {
     // setting default auction id for the current network
     Session.set('currentAuctionletId', networkSettings.auctionletId);
   }
+
   Tokens.sync();
   Tokens.initialize(newNetwork);
 }
@@ -86,6 +87,10 @@ function checkNetwork() {
 }
 
 function setupFilters() {
+  // log events need to be reset for each network
+  Auctions.watchNewAuction();
+  Auctionlets.watchBid();
+
   web3.eth.filter('latest', () => {
     Tokens.sync();
     Transactions.sync();

@@ -20,16 +20,16 @@ Template.body.onCreated(function created() {
     const network = Session.get('network');
     const address = Session.get('address');
     if (network && address) {
-      Auctionlets.watchBid();
+      // filters specific to the current address
       Tokens.watchEthApproval();
       Tokens.watchMkrApproval();
     }
   });
 
+  // observing collections, only required once
   Tokens.watchEthAllowanceTransactions();
   Tokens.watchMkrAllowanceTransactions();
   Auctionlets.watchBidTransactions();
-  Auctions.watchNewAuction();
   Auctions.watchNewAuctionTransactions();
   Auctionlets.watchClaimTransactions();
 });
