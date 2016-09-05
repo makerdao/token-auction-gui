@@ -8,5 +8,5 @@ Template.networkStatus.viewmodel({
   isConnected: () => Session.get('isConnected'),
   latestBlock: () => Session.get('latestBlock'),
   account: () => Session.get('address'),
-  contract: () => TokenAuction.objects.auction.address,
+  contract: () => Session.get('contractAddress'),
 });

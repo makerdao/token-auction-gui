@@ -73,8 +73,6 @@ Tokens.sync = function sync() {
     const allTokens = _.uniq([Session.get('buying'), Session.get('selling')]);
 
     if (network !== 'private') {
-      const contractAddress = TokenAuction.objects.auction.address;
-
       // Sync token balances and allowances asynchronously
       // for(let token_id in allTokens) {
       allTokens.forEach((tokenId) => {
@@ -87,7 +85,7 @@ Tokens.sync = function sync() {
                 { $set: { balance: balance.toString(10) } });
               }
             });
-            token.allowance(address, contractAddress, (allowanceError, allowance) => {
+            token.allowance(address, Session.get('contractAddress'), (allowanceError, allowance) => {
               if (!allowanceError) {
                 Tokens.upsert({ name: tokenId, address: token.address },
                 { $set: { allowance: allowance.toString(10) } });
@@ -122,7 +120,7 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
   Tokens.getToken('MKR', (error, token) => {
     console.log('get token error', error);
     if (!error) {
-      token.approve(TokenAuction.objects.auction.address, amount, { gas: APPROVE_GAS }, (approveError, result) => {
+      token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Mkr approve transaction adding');
           Session.set('newAuctionMessage', { message: 'Setting allowance for new auction', type: 'alert-info' });
@@ -140,7 +138,7 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
 Tokens.setEthAllowance = function setEthAllowance(amount) {
   Tokens.getToken('ETH', (error, token) => {
     if (!error) {
-      token.approve(TokenAuction.objects.auction.address, amount, { gas: APPROVE_GAS }, (approveError, result) => {
+      token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Eth approve transaction adding');
           Session.set('bidMessage', { message: 'Setting allowance for bid (this could take a while)', type: 'alert-info' });
@@ -160,7 +158,7 @@ Tokens.watchEthApproval = function watchEthApproval() {
   Tokens.getToken('ETH', (error, token) => {
     if (!error) {
       /* eslint-disable new-cap */
-      token.Approval({ owner: Session.get('address'), spender: TokenAuction.objects.auction.address },
+      token.Approval({ owner: Session.get('address'), spender: Session.get('contractAddress') },
       (approvedError) => {
         if (!approvedError) {
           console.log('Approved, placing bid');
@@ -175,7 +173,7 @@ Tokens.watchMkrApproval = function watchMkrApproval() {
   Tokens.getToken('ETH', (error, token) => {
     if (!error) {
       /* eslint-disable new-cap */
-      token.Approval({ owner: Session.get('address'), spender: TokenAuction.objects.auction.address },
+      token.Approval({ owner: Session.get('address'), spender: Session.get('contractAddress') },
       (approvalError) => {
         if (!approvalError) {
           console.log('Approved, creating auction');

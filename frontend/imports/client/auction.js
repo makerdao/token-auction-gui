@@ -7,7 +7,4 @@ Template.auction.viewmodel({
     const singleAuction = Auctions.findAuction();
     return singleAuction;
   },
-  contractaddress() {
-    return TokenAuction.objects.auction.address;
-  },
 });
