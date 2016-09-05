@@ -6,7 +6,6 @@ import { Tracker } from 'meteor/tracker';
 import Transactions from '/imports/api/transactions.js';
 
 Meteor.disconnect();
-TokenAuction.init('morden');
 Session.set('network', false);
 Session.set('outOfSync', false);
 Session.set('syncing', false);
@@ -30,6 +29,7 @@ function initNetwork(newNetwork) {
     Session.set('currentAuctionletId', networkSettings.auctionletId);
   }
 
+  TokenAuction.init(newNetwork);
   Tokens.sync();
   Tokens.initialize(newNetwork);
 }
@@ -88,8 +88,10 @@ function checkNetwork() {
 
 function setupFilters() {
   // log events need to be reset for each network
-  Auctions.watchNewAuction();
-  Auctionlets.watchBid();
+  if (Session.get('network')) {
+    Auctions.watchNewAuction();
+    Auctionlets.watchBid();
+  }
 
   web3.eth.filter('latest', () => {
     Tokens.sync();

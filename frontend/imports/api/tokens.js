@@ -113,7 +113,7 @@ Tokens.isBalanceSufficient = function isBalanceSufficient(bid, tokenAddress) {
     console.log('Insufficient! Balance is', token.balance, 'and bid is', bid.toString(10));
     return false;
   }
-  console.log('token is not found', tokenAddress, token);
+  console.log('token is not found', tokenAddress);
   return false;
 };
 
