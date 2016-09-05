@@ -1,7 +1,8 @@
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
-import Auctions from '/imports/api/auctions.js';
-import Auctionlets from '/imports/api/auctionlets.js';
-import Transactions from '/imports/lib/_transactions.js';
+import Auctions from './auctions.js';
+import Auctionlets from './auctionlets.js';
+import Transactions from './transactions.js';
 
 const Tokens = new Mongo.Collection(null);
 const APPROVE_GAS = 1000000;
@@ -73,8 +74,6 @@ Tokens.sync = function sync() {
     const allTokens = _.uniq([Session.get('buying'), Session.get('selling')]);
 
     if (network !== 'private') {
-      const contractAddress = TokenAuction.objects.auction.address;
-
       // Sync token balances and allowances asynchronously
       // for(let token_id in allTokens) {
       allTokens.forEach((tokenId) => {
@@ -87,7 +86,7 @@ Tokens.sync = function sync() {
                 { $set: { balance: balance.toString(10) } });
               }
             });
-            token.allowance(address, contractAddress, (allowanceError, allowance) => {
+            token.allowance(address, Session.get('contractAddress'), (allowanceError, allowance) => {
               if (!allowanceError) {
                 Tokens.upsert({ name: tokenId, address: token.address },
                 { $set: { allowance: allowance.toString(10) } });
@@ -114,7 +113,7 @@ Tokens.isBalanceSufficient = function isBalanceSufficient(bid, tokenAddress) {
     console.log('Insufficient! Balance is', token.balance, 'and bid is', bid.toString(10));
     return false;
   }
-  console.log('token is not found');
+  console.log('token is not found', tokenAddress);
   return false;
 };
 
@@ -122,7 +121,7 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
   Tokens.getToken('MKR', (error, token) => {
     console.log('get token error', error);
     if (!error) {
-      token.approve(TokenAuction.objects.auction.address, amount, { gas: APPROVE_GAS }, (approveError, result) => {
+      token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Mkr approve transaction adding');
           Session.set('newAuctionMessage', { message: 'Setting allowance for new auction', type: 'alert-info' });
@@ -140,7 +139,7 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
 Tokens.setEthAllowance = function setEthAllowance(amount) {
   Tokens.getToken('ETH', (error, token) => {
     if (!error) {
-      token.approve(TokenAuction.objects.auction.address, amount, { gas: APPROVE_GAS }, (approveError, result) => {
+      token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Eth approve transaction adding');
           Session.set('bidMessage', { message: 'Setting allowance for bid (this could take a while)', type: 'alert-info' });
@@ -160,7 +159,7 @@ Tokens.watchEthApproval = function watchEthApproval() {
   Tokens.getToken('ETH', (error, token) => {
     if (!error) {
       /* eslint-disable new-cap */
-      token.Approval({ owner: Session.get('address'), spender: TokenAuction.objects.auction.address },
+      token.Approval({ owner: Session.get('address'), spender: Session.get('contractAddress') },
       (approvedError) => {
         if (!approvedError) {
           console.log('Approved, placing bid');
@@ -175,7 +174,7 @@ Tokens.watchMkrApproval = function watchMkrApproval() {
   Tokens.getToken('ETH', (error, token) => {
     if (!error) {
       /* eslint-disable new-cap */
-      token.Approval({ owner: Session.get('address'), spender: TokenAuction.objects.auction.address },
+      token.Approval({ owner: Session.get('address'), spender: Session.get('contractAddress') },
       (approvalError) => {
         if (!approvalError) {
           console.log('Approved, creating auction');
@@ -207,13 +206,19 @@ Tokens.watchMkrAllowanceTransactions = function watchMkrAllowanceTransactions() 
       Session.set('newAuctionMessage', { message: 'Error setting allowance for new auction:', type: 'alert-danger' });
     } else {
       console.log('MKR allowance is set');
-      const newAuction = Session.get('newAuction');
-      console.log('account:', Session.get('address'), newAuction.sellamount, newAuction.startbid,
-      newAuction.min_increase, newAuction.duration);
-      Auctions.newAuction(Session.get('address'), Meteor.settings.public.MKR.address,
-                          Meteor.settings.public.ETH.address, newAuction.sellamount.toString(10),
-                          newAuction.startbid.toString(10), newAuction.min_increase, newAuction.duration.toString(10));
-      Session.set('newAuctionMessage', { message: 'Allowance set, creating new auction', type: 'alert-info' });
+      const network = Session.get('network');
+      if (network) {
+        const newAuction = Session.get('newAuction');
+        const networkSettings = Meteor.settings.public[network];
+        console.log('account:', Session.get('address'), newAuction.sellamount, newAuction.startbid,
+          newAuction.min_increase, newAuction.duration);
+        Auctions.newAuction(Session.get('address'), networkSettings.MKR.address,
+                            networkSettings.ETH.address, newAuction.sellamount.toString(10),
+                            newAuction.startbid.toString(10), newAuction.min_increase, newAuction.duration.toString(10));
+        Session.set('newAuctionMessage', { message: 'Allowance set, creating new auction', type: 'alert-info' });
+      } else {
+        console.error('Network not initialized');
+      }
     }
   });
 };
