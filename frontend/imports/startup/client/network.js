@@ -12,6 +12,20 @@ Session.set('syncing', false);
 Session.set('isConnected', false);
 Session.set('latestBlock', 0);
 
+function setupFilters() {
+  // log events need to be reset for each network
+  if (Session.get('network')) {
+    Auctions.watchNewAuction();
+    Auctionlets.watchBid();
+  }
+
+  web3.eth.filter('latest', () => {
+    Tokens.sync();
+    Transactions.sync();
+    Auctionlets.syncExpired();
+  });
+}
+
 // Initialize everything on new network
 function initNetwork(newNetwork) {
   Session.set('network', newNetwork);
@@ -32,6 +46,9 @@ function initNetwork(newNetwork) {
   TokenAuction.init(newNetwork);
   Tokens.sync();
   Tokens.initialize(newNetwork);
+
+  // filters need to be (re)registered after network switch.
+  setupFilters();
 }
 
 // CHECK FOR NETWORK
@@ -86,23 +103,8 @@ function checkNetwork() {
   });
 }
 
-function setupFilters() {
-  // log events need to be reset for each network
-  if (Session.get('network')) {
-    Auctions.watchNewAuction();
-    Auctionlets.watchBid();
-  }
-
-  web3.eth.filter('latest', () => {
-    Tokens.sync();
-    Transactions.sync();
-    Auctionlets.syncExpired();
-  });
-}
-
 Meteor.startup(() => {
   checkNetwork();
-  setupFilters();
 
   web3.eth.isSyncing((error, sync) => {
     if (!error) {
@@ -120,7 +122,6 @@ Meteor.startup(() => {
         Session.set('highestBlock', sync.highestBlock);
       } else {
         Session.set('outOfSync', false);
-        setupFilters();
       }
     }
   });
