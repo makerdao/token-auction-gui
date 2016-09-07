@@ -6,8 +6,6 @@ import Tokens from '/imports/api/tokens.js';
 import '/imports/client/network-status.js';
 import '/imports/client/balance.js';
 import '/imports/client/newauction.js';
-import '/imports/client/tokens.js';
-import '/imports/client/transactions.js';
 import '/imports/client/auction.js';
 import '/imports/client/auctionlet.js';
 
