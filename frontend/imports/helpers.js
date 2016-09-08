@@ -20,6 +20,11 @@ Template.registerHelper('json', (a) => {
   }
 });
 
+Template.registerHelper('ETHBalance', () => {
+  const balance = Session.get('ETHBalance');
+  return balance;
+});
+
 Template.registerHelper('ETHToken', () => {
   const token = Tokens.findOne({ name: 'ETH' });
   return token;

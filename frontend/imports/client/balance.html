@@ -1,6 +1,14 @@
 <template name="balance">
     <div id="balanceDiv">
       <span class="balanceSpan">
+        Currency
+      </span>
+      <span class="balanceSpan verticalLine">
+        {{formatBalance (fromWei ETHBalance)}} ETH
+      </span>
+    </div>
+    <div id="balanceDiv">
+      <span class="balanceSpan">
         Tokens
       </span>
       <span class="MKR balanceSpan verticalLine">
