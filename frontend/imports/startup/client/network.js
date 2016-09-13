@@ -16,7 +16,9 @@ Session.set('newBidMessage', null);
 Session.set('newAuctionMessage', null);
 Session.set('newTransactionMessage', null);
 Session.set('claimMessage', null);
-Session.set('lastNotification', null);
+Session.set('lastMessages', []);
+
+let lastMessages = [];
 
 function setupFilters() {
   // log events need to be reset for each network
@@ -59,30 +61,33 @@ function initNetwork(newNetwork) {
 
 // Check if there are notifications to route through toastr
 function showNotification(notification) {
-  const lastNotification = Session.get('lastNotification');
   const syncing = Session.set('syncing');
   if (!syncing) {
-    if (typeof (notification) !== 'undefined' && notification !== null
-     && (typeof (lastNotification) === 'undefined' || lastNotification === null
-      || notification.message !== lastNotification.message)) {
+    if (typeof (notification) !== 'undefined' && notification !== null) {
       const message = notification.message;
       const type = notification.type ? notification.type : 'warning';
-      switch (type) {
-        case 'success':
-          toastr.success(message);
-          break;
-        case 'info':
-          toastr.info(message);
-          break;
-        case 'warning':
-          toastr.warning(message);
-          break;
-        case 'danger':
-          toastr.error(message);
-          break;
-        default:
-          toastr.warning(message);
-          break;
+      if (lastMessages.indexOf(message) === -1) {
+        switch (type) {
+          case 'success':
+            toastr.success(message);
+            break;
+          case 'info':
+            toastr.info(message);
+            break;
+          case 'warning':
+            toastr.warning(message);
+            break;
+          case 'danger':
+            toastr.error(message);
+            break;
+          default:
+            toastr.warning(message);
+            break;
+        }
+        lastMessages.unshift(message);
+        if (lastMessages.length > 3) {
+          lastMessages = lastMessages.splice(0, 3);
+        }
       }
     }
   }
@@ -94,7 +99,6 @@ function showNotification(notification) {
       Session.set('notification', Session.get('claimMessage'));
     }
   }*/
-  Session.set('lastNotification', notification);
 }
 
 function checkBidNotifications() {
@@ -169,6 +173,14 @@ function checkNetwork() {
 
 Meteor.startup(() => {
   checkNetwork();
+
+  toastr.options = {
+    'closeButton': false,
+    'preventDuplicates': true,
+    'showDuration': '300',
+    'hideDuration': '1000',
+    'timeOut': '5000',
+  }
 
   web3.eth.isSyncing((error, sync) => {
     if (!error) {
