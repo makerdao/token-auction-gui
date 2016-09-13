@@ -36,7 +36,6 @@ Template.auctionlet.viewmodel({
     if (singleAuctionlet !== undefined && singleAuction !== undefined) {
       const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
       this.bid(web3.fromWei(requiredBid));
-      console.log(singleAuctionlet.buy_amount / singleAuctionlet.sell_amount);
       singleAuctionlet.unitPrice = singleAuctionlet.buy_amount / singleAuctionlet.sell_amount;
     }
     return singleAuctionlet;
