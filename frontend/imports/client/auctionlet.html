@@ -35,7 +35,7 @@
       {{#unless expired}}
       <div class="form-group">
         {{#if bidMessage}}
-          <span id='spnBidMessage' class="messageSpan alert {{bidMessageType}}">{{ bidMessage }}</span>
+          <span id='spnBidMessage' class="messageSpan alert alert-{{bidMessageType}}">{{{ bidMessage }}}</span>
           <br>
         {{/if}}
         <label for="inputBid">Enter a bid for the auctionlet</label>

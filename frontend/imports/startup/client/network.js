@@ -12,6 +12,12 @@ Session.set('syncing', false);
 Session.set('isConnected', false);
 Session.set('latestBlock', 0);
 
+Session.set('newBidMessage', null);
+Session.set('newAuctionMessage', null);
+Session.set('newTransactionMessage', null);
+Session.set('claimMessage', null);
+Session.set('lastNotification', null);
+
 function setupFilters() {
   // log events need to be reset for each network
   if (Session.get('network')) {
@@ -49,6 +55,64 @@ function initNetwork(newNetwork) {
 
   // filters need to be (re)registered after network switch.
   setupFilters();
+}
+
+// Check if there are notifications to route through toastr
+function showNotification(notification) {
+  const lastNotification = Session.get('lastNotification');
+  const syncing = Session.set('syncing');
+  if (!syncing) {
+    if (typeof (notification) !== 'undefined' && notification !== null
+     && (typeof (lastNotification) === 'undefined' || lastNotification === null
+      || notification.message !== lastNotification.message)) {
+      const message = notification.message;
+      const type = notification.type ? notification.type : 'warning';
+      switch (type) {
+        case 'success':
+          toastr.success(message);
+          break;
+        case 'info':
+          toastr.info(message);
+          break;
+        case 'warning':
+          toastr.warning(message);
+          break;
+        case 'danger':
+          toastr.error(message);
+          break;
+        default:
+          toastr.warning(message);
+          break;
+      }
+    }
+  }
+  /**
+  if (Session.get('claimMessage') !== null) {
+    const claimMessage = Session.get('claimMessage');
+    if (notification === null || claimMessage.message !== notification.message) {
+      console.log(claimMessage);
+      Session.set('notification', Session.get('claimMessage'));
+    }
+  }*/
+  Session.set('lastNotification', notification);
+}
+
+function checkBidNotifications() {
+  if (Session.get('newBidMessage') !== null) {
+    showNotification(Session.get('newBidMessage'));
+  }
+}
+
+function checkAuctionNotifications() {
+  if (Session.get('newAuctionMessage') !== null) {
+    showNotification(Session.get('newAuctionMessage'));
+  }
+}
+
+function checkTransactionNotifications() {
+  if (Session.get('newTransactionMessage') !== null) {
+    showNotification(Session.get('newTransactionMessage'));
+  }
 }
 
 // CHECK FOR NETWORK
@@ -131,6 +195,9 @@ Meteor.startup(() => {
 });
 
 Tracker.autorun(() => {
+  checkBidNotifications();
+  checkAuctionNotifications();
+  checkTransactionNotifications();
   web3.checkAccounts();
   const currentAuctionId = Session.get('currentAuctionId');
   if (currentAuctionId) {

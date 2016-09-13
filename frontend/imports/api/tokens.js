@@ -124,7 +124,7 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
       token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Mkr approve transaction adding');
-          Session.set('newAuctionMessage', { message: 'Setting allowance for new auction', type: 'info' });
+          Session.set('newAuctionMessage', { message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for new auction', type: 'info' });
           Transactions.add('mkrallowance', result, { value: amount.toString(10) });
         } else {
           Session.set('newAuctionMessage', {
@@ -146,19 +146,19 @@ Tokens.setEthAllowance = function setEthAllowance(amount) {
       token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Eth approve transaction adding');
-          Session.set('bidMessage', {
-            message: 'Setting allowance for bid (this could take a while)',
+          Session.set('newBidMessage', {
+            message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for bid (this could take a while)',
             type: 'info' });
           Transactions.add('ethallowance', result, { value: amount.toString(10) });
         } else {
           console.log('SetEthAllowance error:', approveError);
-          Session.set('bidMessage', {
+          Session.set('newBidMessage', {
             message: `Error setting allowance for bid: ${approveError.toString()}`,
             type: 'danger' });
         }
       });
     } else {
-      Session.set('bidMessage', {
+      Session.set('newBidMessage', {
         message: `Error setting allowance for bid: ${error.toString()}`,
         type: 'danger' });
     }
@@ -199,12 +199,12 @@ Tokens.watchEthAllowanceTransactions = function watchEthAllowanceTransactions() 
   Transactions.observeRemoved('ethallowance', (document) => {
     if (document.receipt.logs.length === 0) {
       console.log('Setting ETH allowance went wrong');
-      Session.set('bidMessage', { message: 'Error setting allowance for bid', type: 'danger' });
+      Session.set('newBidMessage', { message: 'Error setting allowance for bid', type: 'danger' });
     } else {
       console.log('ETH allowance is set');
       const auction = Auctions.findAuction();
-      Session.set('bidMessage', {
-        message: 'Allowance set, placing bid (this could take a while)',
+      Session.set('newBidMessage', {
+        message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, placing bid (this could take a while)',
         type: 'info' });
       Auctionlets.bidOnAuctionlet(Session.get('currentAuctionletId'), document.object.value, auction.sell_amount);
     }
@@ -228,7 +228,7 @@ Tokens.watchMkrAllowanceTransactions = function watchMkrAllowanceTransactions() 
                             networkSettings.ETH.address, newAuction.sellamount.toString(10),
                             newAuction.startbid.toString(10), newAuction.min_increase,
                             newAuction.duration.toString(10));
-        Session.set('newAuctionMessage', { message: 'Allowance set, creating new auction', type: 'alert-info' });
+        Session.set('newAuctionMessage', { message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, creating new auction', type: 'info' });
       } else {
         console.error('Network not initialized');
       }
