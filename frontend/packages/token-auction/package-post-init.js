@@ -8,7 +8,9 @@ Dapple['token-auction'].init = function init(env) {
   }
   Dapple['token-auction'].class(web3, Dapple['token-auction'].environments[Dapple.env]);
   // Check if contract exists on new environment
-  web3.eth.getCode(Dapple['token-auction'].objects.auction.address, (error, code) => {
+  const contractAddress = Dapple['token-auction'].objects.auction.address;
+  web3.eth.getCode(contractAddress, (error, code) => {
+    Session.set('contractAddress', contractAddress);
     Session.set('contractExists', !error && typeof code === 'string' && code !== '' && code !== '0x');
   });
 };
