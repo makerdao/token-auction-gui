@@ -57,7 +57,7 @@
             <span>You made the highest bid. Click to receive the tokens</span>
             <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
             {{#if claimMessage}}
-              <span id='spnClaimMessage' class="messageSpan alert alert-{{claimMessageType}}">{{ claimMessage }}</span>
+              <span id='spnClaimMessage' class="messageSpan alert alert-{{claimMessageType}}">{{{ claimMessage }}}</span>
             {{/if}}
           {{/if}}
         {{/if}}

@@ -91,15 +91,6 @@ function showNotification(notification) {
       }
     }
   }
-  /**
-  if (Session.get('claimMessage') !== null) {
-    const claimMessage = Session.get('claimMessage');
-    if (notification === null || claimMessage.message !== notification.message) {
-      console.log(claimMessage);
-      Session.set('notification', Session.get('claimMessage'));
-    }
-  }*/
-}
 
 function checkBidNotifications() {
   if (Session.get('newBidMessage') !== null) {
@@ -116,6 +107,12 @@ function checkAuctionNotifications() {
 function checkTransactionNotifications() {
   if (Session.get('newTransactionMessage') !== null) {
     showNotification(Session.get('newTransactionMessage'));
+  }
+}
+
+function checkClaimNotifications() {
+  if (Session.get('claimMessage') !== null) {
+      showNotification(Session.get('claimMessage'));
   }
 }
 
@@ -210,6 +207,7 @@ Tracker.autorun(() => {
   checkBidNotifications();
   checkAuctionNotifications();
   checkTransactionNotifications();
+  checkClaimNotifications();
   web3.checkAccounts();
   const currentAuctionId = Session.get('currentAuctionId');
   if (currentAuctionId) {
