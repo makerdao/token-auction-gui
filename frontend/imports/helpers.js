@@ -56,3 +56,5 @@ Template.registerHelper('contractExists', () => {
   const exists = Session.get('contractExists');
   return network !== false && isConnected === true && exists === true;
 });
+
+Template.registerHelper('equals', (a, b) => a === b);
