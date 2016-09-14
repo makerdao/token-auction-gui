@@ -113,7 +113,7 @@ function checkTransactionNotifications() {
 
 function checkClaimNotifications() {
   if (Session.get('claimMessage') !== null) {
-      showNotification(Session.get('claimMessage'));
+    showNotification(Session.get('claimMessage'));
   }
 }
 
@@ -173,12 +173,12 @@ Meteor.startup(() => {
   checkNetwork();
 
   toastr.options = {
-    'closeButton': false,
-    'preventDuplicates': true,
-    'showDuration': '300',
-    'hideDuration': '1000',
-    'timeOut': '5000',
-  }
+    closeButton: false,
+    preventDuplicates: true,
+    showDuration: '300',
+    hideDuration: '1000',
+    timeOut: '5000',
+  };
 
   web3.eth.isSyncing((error, sync) => {
     if (!error) {

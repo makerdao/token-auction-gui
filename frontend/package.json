@@ -40,7 +40,8 @@
       "ERC20": true,
       "auctionPath": true,
       "Template": true,
-      "numeral": true
+      "numeral": true,
+      "toastr": true
     },
     "ignore": [
       "/server/**"
