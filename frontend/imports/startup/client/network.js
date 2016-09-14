@@ -12,6 +12,14 @@ Session.set('syncing', false);
 Session.set('isConnected', false);
 Session.set('latestBlock', 0);
 
+Session.set('newBidMessage', null);
+Session.set('newAuctionMessage', null);
+Session.set('newTransactionMessage', null);
+Session.set('claimMessage', null);
+Session.set('lastMessages', []);
+
+let lastMessages = [];
+
 function setupFilters() {
   // log events need to be reset for each network
   if (Session.get('network')) {
@@ -49,6 +57,64 @@ function initNetwork(newNetwork) {
 
   // filters need to be (re)registered after network switch.
   setupFilters();
+}
+
+// Check if there are notifications to route through toastr
+function showNotification(notification) {
+  const syncing = Session.set('syncing');
+  if (!syncing) {
+    if (typeof (notification) !== 'undefined' && notification !== null) {
+      const message = notification.message;
+      const type = notification.type ? notification.type : 'warning';
+      if (lastMessages.indexOf(message) === -1) {
+        switch (type) {
+          case 'success':
+            toastr.success(message);
+            break;
+          case 'info':
+            toastr.info(message);
+            break;
+          case 'warning':
+            toastr.warning(message);
+            break;
+          case 'danger':
+            toastr.error(message);
+            break;
+          default:
+            toastr.warning(message);
+            break;
+        }
+        lastMessages.unshift(message);
+        if (lastMessages.length > 3) {
+          lastMessages = lastMessages.splice(0, 3);
+        }
+      }
+    }
+  }
+}
+
+function checkBidNotifications() {
+  if (Session.get('newBidMessage') !== null) {
+    showNotification(Session.get('newBidMessage'));
+  }
+}
+
+function checkAuctionNotifications() {
+  if (Session.get('newAuctionMessage') !== null) {
+    showNotification(Session.get('newAuctionMessage'));
+  }
+}
+
+function checkTransactionNotifications() {
+  if (Session.get('newTransactionMessage') !== null) {
+    showNotification(Session.get('newTransactionMessage'));
+  }
+}
+
+function checkClaimNotifications() {
+  if (Session.get('claimMessage') !== null) {
+      showNotification(Session.get('claimMessage'));
+  }
 }
 
 // CHECK FOR NETWORK
@@ -106,6 +172,14 @@ function checkNetwork() {
 Meteor.startup(() => {
   checkNetwork();
 
+  toastr.options = {
+    'closeButton': false,
+    'preventDuplicates': true,
+    'showDuration': '300',
+    'hideDuration': '1000',
+    'timeOut': '5000',
+  }
+
   web3.eth.isSyncing((error, sync) => {
     if (!error) {
       Session.set('syncing', sync !== false);
@@ -131,6 +205,10 @@ Meteor.startup(() => {
 });
 
 Tracker.autorun(() => {
+  checkBidNotifications();
+  checkAuctionNotifications();
+  checkTransactionNotifications();
+  checkClaimNotifications();
   web3.checkAccounts();
   const currentAuctionId = Session.get('currentAuctionId');
   if (currentAuctionId) {

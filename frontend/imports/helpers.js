@@ -3,6 +3,8 @@ import { Template } from 'meteor/templating';
 import Tokens from '/imports/api/tokens.js';
 import Auctions from '/imports/api/auctions.js';
 
+Template.registerHelper('isConnected', () => Session.get('isConnected'));
+
 Template.registerHelper('fromWei', (s) => web3.fromWei(s));
 
 Template.registerHelper('toWei', (s) => web3.toWei(s));

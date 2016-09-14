@@ -1,4 +1,5 @@
 <template name="balance">
+  {{#if isConnected}}
     <div id="balanceDiv">
       <span class="balanceSpan">
         Currency
@@ -22,4 +23,5 @@
         <span class="alert alert-warning ethTokensSpan">You currently have 0 ETH tokens, you can exchange ETH for ETH tokens on <a href="https://mkr.market/" target="_blank">mkr.market</a></span>
       {{/unless}}
     </div>
+    {{/if}}
 </template>

@@ -86,10 +86,10 @@ Auctionlets.watchBid = function watchBid() {
 Auctionlets.watchBidTransactions = function watchBidTransactions() {
   Transactions.observeRemoved('bid', (document) => {
     if (document.receipt.logs.length === 0) {
-      Session.set('bidMessage', { message: 'Error placing bid', type: 'alert-danger' });
+      Session.set('newBidMessage', { message: 'Error placing bid', type: 'danger' });
     } else {
       console.log('bid', document.object.bid);
-      Session.set('bidMessage', { message: 'Bid placed succesfully', type: 'alert-success' });
+      Session.set('newBidMessage', { message: 'Bid placed succesfully', type: 'success' });
     }
   });
 };

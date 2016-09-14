@@ -11,14 +11,21 @@
       </p>
       {{> networkStatus}}
       {{> balance}}
-      {{#if contractExists}}
-        {{> auction}}
-        {{> auctionlet}}
-        {{> newauction}}
-      {{else}}
-        <div class="alert alert-danger" role="alert">
-          Could not find the AuctionManager contract on your current blockchain environment.
-        </div>
+      {{#if isConnected}}
+        {{#if contractExists}}
+          {{> auction}}
+          {{> auctionlet}}
+          {{> newauction}}
+        {{else}}
+          <div class="alert alert-danger" role="alert">
+            Could not find the AuctionManager contract on your current blockchain environment.
+          </div>
+        {{/if}}
+        {{else}}
+          <div class="alert alert-danger" role="alert">
+            Not connected to the ethereum blockchain.
+          </div>
+          <p>Start a node like geth or consider installing <a href="https://metamask.io/">Metamask</a> or the <a href="https://github.com/ethereum/mist/releases">Mist</a> browser to connect to the Ethereum blockchain.</p>
       {{/if}}
     </div>
   </div>

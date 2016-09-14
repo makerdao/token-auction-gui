@@ -41,10 +41,10 @@ Template.auctionlet.viewmodel({
   },
   bid: 0,
   bidMessage() {
-    return Session.get('bidMessage') !== null ? Session.get('bidMessage').message : Session.get('bidMessage');
+    return Session.get('newBidMessage') !== null ? Session.get('newBidMessage').message : Session.get('newBidMessage');
   },
   bidMessageType() {
-    return Session.get('bidMessage').type;
+    return Session.get('newBidMessage').type;
   },
   countdown() {
     if (timeRemaining.get() !== undefined) {
@@ -55,7 +55,7 @@ Template.auctionlet.viewmodel({
   },
   create(event) {
     event.preventDefault();
-    Session.set('bidMessage', null);
+    Session.set('newBidMessage', null);
     const auctionletBid = web3.toWei(this.bid());
     const auction = Auctions.findAuction();
     const auctionlet = Auctionlets.findAuctionlet();
@@ -65,10 +65,10 @@ Template.auctionlet.viewmodel({
       auction.min_increase)) {
         Auctionlets.doBid(auctionletBid);
       } else {
-        Session.set('bidMessage', { message: 'Bid is not high enough', type: 'alert-danger' });
+        Session.set('newBidMessage', { message: 'Bid is not high enough', type: 'danger' });
       }
     } else {
-      Session.set('bidMessage', { message: 'Your balance is insufficient for your current bid', type: 'alert-danger' });
+      Session.set('newBidMessage', { message: 'Your balance is insufficient for your current bid', type: 'danger' });
     }
   },
   expired() {
