@@ -9,9 +9,6 @@ Template.accountSelector.helpers({
   accounts() {
     return Session.get('accounts');
   },
-  currentAccount() {
-    return Session.get('address');
-  },
 });
 
 Template.accountSelector.viewmodel({
