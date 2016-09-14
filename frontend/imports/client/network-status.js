@@ -3,9 +3,7 @@ import './network-status.html';
 
 Template.networkStatus.viewmodel({
   network: () => Session.get('network'),
-  syncing: () => Session.get('syncing'),
   openTransactions: () => Session.get('openTransactions'),
-  outOfSync: () => Session.get('outOfSync'),
   isConnected: () => Session.get('isConnected'),
   latestBlock: () => Session.get('latestBlock'),
   account: () => Session.get('address'),
