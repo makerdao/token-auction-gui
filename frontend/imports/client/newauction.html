@@ -32,6 +32,7 @@
         {{/if}}
       </div>
     {{/if}}
-    <button class="btn btn-primary" {{b "click: create"}}>Create auction</button>
+    <button class="btn btn-primary" {{b "click: create"}} disabled="{{or syncing outOfSync}}">Create auction</button>
+    {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
   </div>
 </template>

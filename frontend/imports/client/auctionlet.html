@@ -30,6 +30,10 @@
           {{/if}}
           <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">{{ETHToken.name}}</span></td>
         </tr>
+        <tr>
+          <td>Unit price</td>
+          <td>{{formatBalance (auctionlet.unitPrice)}} <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span></td>
+        </tr>
         {{/if}}
       </table>
       {{#unless expired}}
@@ -42,7 +46,8 @@
         <br>
         <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}> <span class="ETH">{{ETHToken.name}}</span>
         <br>
-        <button class="btn btn-primary" {{b "click: create"}}>Place bid</button>
+        <button class="btn btn-primary" {{b "click: create"}} disabled="{{or syncing outOfSync}}">Place bid</button>
+        {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
       </div>
       {{else}}
       <div class="form-group">
