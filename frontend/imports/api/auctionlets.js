@@ -11,26 +11,28 @@ Auctionlets.findAuctionlet = function findAuctionlet() {
 };
 
 Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
-  TokenAuction.objects.auction.getAuctionletInfo(currentAuctionletId, (error, result) => {
-    if (!error) {
-      Auctionlets.remove({});
-      const auctionlet = {
-        auctionletId: currentAuctionletId,
-        auction_id: result[0].toString(10),
-        last_bidder: result[1],
-        last_bid_time: new Date(result[2].toNumber() * 1000),
-        buy_amount: result[3].toString(10),
-        sell_amount: result[4].toString(10),
-        unclaimed: result[5],
-        base: result[6],
-        isExpired: false,
-      };
-      Auctionlets.insert(auctionlet);
-      Auctionlets.syncExpired();
-    } else {
-      console.log('auctionlet info error: ', error);
-    }
-  });
+  if (typeof (TokenAuction.objects) !== 'undefined') {
+    TokenAuction.objects.auction.getAuctionletInfo(currentAuctionletId, (error, result) => {
+      if (!error) {
+        Auctionlets.remove({});
+        const auctionlet = {
+          auctionletId: currentAuctionletId,
+          auction_id: result[0].toString(10),
+          last_bidder: result[1],
+          last_bid_time: new Date(result[2].toNumber() * 1000),
+          buy_amount: result[3].toString(10),
+          sell_amount: result[4].toString(10),
+          unclaimed: result[5],
+          base: result[6],
+          isExpired: false,
+        };
+        Auctionlets.insert(auctionlet);
+        Auctionlets.syncExpired();
+      } else {
+        console.log('auctionlet info error: ', error);
+      }
+    });
+  }
 };
 
 // Check whether an auctionlet is expired and if so update the auctionlet

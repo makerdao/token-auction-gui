@@ -7,27 +7,29 @@ const Auctions = new Mongo.Collection(null);
 const AUCTION_GAS = 1000000;
 
 Auctions.loadAuction = function loadAuction(currentAuctionId) {
-  TokenAuction.objects.auction.getAuctionInfo(currentAuctionId, (error, result) => {
-    if (!error) {
-      Auctions.remove({});
-      const auction = {
-        auctionId: currentAuctionId,
-        creator: result[0],
-        selling: result[1],
-        buying: result[2],
-        start_bid: result[3].toString(10),
-        min_increase: result[4].toNumber(),
-        min_decrease: result[5].toNumber(),
-        sell_amount: result[6].toString(10),
-        duration: result[7].toNumber(),
-        reversed: result[8],
-        unsold: result[9],
-      };
-      Auctions.insert(auction);
-    } else {
-      console.log('error: ', error);
-    }
-  });
+  if (typeof (TokenAuction.objects) !== 'undefined') {
+    TokenAuction.objects.auction.getAuctionInfo(currentAuctionId, (error, result) => {
+      if (!error) {
+        Auctions.remove({});
+        const auction = {
+          auctionId: currentAuctionId,
+          creator: result[0],
+          selling: result[1],
+          buying: result[2],
+          start_bid: result[3].toString(10),
+          min_increase: result[4].toNumber(),
+          min_decrease: result[5].toNumber(),
+          sell_amount: result[6].toString(10),
+          duration: result[7].toNumber(),
+          reversed: result[8],
+          unsold: result[9],
+        };
+        Auctions.insert(auction);
+      } else {
+        console.log('error: ', error);
+      }
+    });
+  }
 };
 
 Auctions.createAuction = function createAuction(sellAmount) {
