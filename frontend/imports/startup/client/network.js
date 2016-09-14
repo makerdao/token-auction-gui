@@ -91,6 +91,7 @@ function showNotification(notification) {
       }
     }
   }
+}
 
 function checkBidNotifications() {
   if (Session.get('newBidMessage') !== null) {
