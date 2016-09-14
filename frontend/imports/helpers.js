@@ -5,6 +5,10 @@ import Auctions from '/imports/api/auctions.js';
 
 Template.registerHelper('isConnected', () => Session.get('isConnected'));
 
+Template.registerHelper('syncing', () => Session.get('syncing'));
+
+Template.registerHelper('outOfSync', () => Session.get('outOfSync'));
+
 Template.registerHelper('fromWei', (s) => web3.fromWei(s));
 
 Template.registerHelper('toWei', (s) => web3.toWei(s));
@@ -56,3 +60,5 @@ Template.registerHelper('contractExists', () => {
   const exists = Session.get('contractExists');
   return network !== false && isConnected === true && exists === true;
 });
+
+Template.registerHelper('or', (a, b) => a || b);
