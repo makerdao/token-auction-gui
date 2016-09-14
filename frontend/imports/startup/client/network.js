@@ -4,6 +4,7 @@ import Tokens from '/imports/api/tokens.js';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
 import Transactions from '/imports/api/transactions.js';
+import clearMessages from '/imports/utils/clearmessages.js';
 
 Meteor.disconnect();
 Session.set('network', false);
@@ -12,10 +13,9 @@ Session.set('syncing', false);
 Session.set('isConnected', false);
 Session.set('latestBlock', 0);
 
-Session.set('newBidMessage', null);
-Session.set('newAuctionMessage', null);
-Session.set('newTransactionMessage', null);
-Session.set('claimMessage', null);
+// Clear UI Messages
+clearMessages();
+
 Session.set('lastMessages', []);
 
 let lastMessages = [];
