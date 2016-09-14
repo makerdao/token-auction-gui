@@ -5,6 +5,7 @@ import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
 import { moment } from 'meteor/momentjs:moment';
+import { $ } from 'meteor/jquery';
 
 import './auctionlet.html';
 
@@ -19,7 +20,6 @@ function doCountdown() {
     // console.log('single auction:', singleAuction, ' and singleAuctionlet:', singleAuctionlet);
     const countdown = Math.round(((singleAuction.duration * 1000) -
                       (currentTime - singleAuctionlet.last_bid_time.getTime())));
-    // console.log(countdown);
     if (countdown >= 0) {
       timeRemaining.set(countdown);
     }
@@ -29,22 +29,42 @@ function doCountdown() {
 Template.auctionlet.viewmodel({
   onCreated() {
     Meteor.setInterval(doCountdown, 1000);
+    Session.set('bidProgress', 0);
+  },
+  autorun() {
+    this.checkBid();
+  },
+  events: {
+    'keyup #inputBid': function keyUpBid(event) {
+      event.preventDefault();
+      this.checkBid();
+    },
   },
   auctionlet() {
     const singleAuctionlet = Auctionlets.findAuctionlet();
     const singleAuction = Auctions.findAuction();
     if (singleAuctionlet !== undefined && singleAuction !== undefined) {
       const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
-      this.bid(web3.fromWei(requiredBid));
+      if (this.bid() === 0) {
+       console.log('set minimal bid');
+        this.bid(web3.fromWei(requiredBid));
+      }
     }
     return singleAuctionlet;
   },
+  checkTimer: 0,
   bid: 0,
+  bidsDisabled() {
+    return (Session.get('bidProgress') > 0 ? 'disabled' : '');
+  },
   bidMessage() {
     return Session.get('newBidMessage') !== null ? Session.get('newBidMessage').message : Session.get('newBidMessage');
   },
   bidMessageType() {
-    return Session.get('newBidMessage').type;
+    return Session.get('newBidMessage') !== null ? Session.get('newBidMessage').type : 'info';
+  },
+  bidProgress() {
+    return Session.get('bidProgress');
   },
   countdown() {
     if (timeRemaining.get() !== undefined) {
@@ -55,6 +75,9 @@ Template.auctionlet.viewmodel({
   },
   create(event) {
     event.preventDefault();
+    if (Session.get('bidProgress') > 0) {
+      return;
+    }
     Session.set('newBidMessage', null);
     const auctionletBid = web3.toWei(this.bid());
     const auction = Auctions.findAuction();
@@ -69,6 +92,32 @@ Template.auctionlet.viewmodel({
       }
     } else {
       Session.set('newBidMessage', { message: 'Your balance is insufficient for your current bid', type: 'danger' });
+    }
+  },
+  checkBid() {
+    if (Session.get('bidProgress') > 0) {
+      return;
+    }
+    if (!$('#inputBid').is(':focus')) {
+      return;
+    }
+    Session.set('newBidMessage', null);
+    const auctionletBid = web3.toWei(this.bid(), 'ether');
+    const auction = Auctions.findAuction();
+    const auctionlet = Auctionlets.findAuctionlet();
+    if (Tokens !== undefined && auction !== undefined) {
+      if (Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
+        if (auctionlet !== undefined && web3.toBigNumber(auctionletBid)
+        .lt(Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase))) {
+          Session.set('newBidMessage', { message: 'Bid is not high enough', type: 'danger' });
+        } else {
+          Session.set('newBidMessage', null);
+        }
+      } else {
+        Session.set('newBidMessage', {
+          message: 'Your balance is insufficient for your current bid',
+          type: 'danger' });
+      }
     }
   },
   expired() {

@@ -91,7 +91,11 @@ Auctionlets.watchBidTransactions = function watchBidTransactions() {
       Session.set('newBidMessage', { message: 'Error placing bid', type: 'danger' });
     } else {
       console.log('bid', document.object.bid);
+      Session.set('bidProgress', 100);
       Session.set('newBidMessage', { message: 'Bid placed succesfully', type: 'success' });
+      Meteor.setTimeout(function () {
+        Session.set('bidProgress', 0);
+      }, 5000);
     }
   });
 };

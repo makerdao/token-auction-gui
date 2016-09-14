@@ -73,6 +73,10 @@ Auctions.watchNewAuctionTransactions = function watchNewAuctionTransactions() {
     } else {
       console.log('Creating auction is succesful');
       Session.set('newAuctionMessage', { message: 'New Auction successfully created', type: 'success' });
+      Session.set('newAuctionProgress', 100);
+      Meteor.setTimeout(function () {
+        Session.set('newAuctionProgress', 0);
+      }, 5000);
     }
   });
 };

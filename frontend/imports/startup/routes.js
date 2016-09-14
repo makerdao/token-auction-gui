@@ -8,6 +8,8 @@ function clearSessionVariables() {
   Session.set('newTransactionMessage', null);
   Session.set('newAuctionUrl', null);
   Session.set('claimMessage', null);
+  Session.set('bidProgress', 0);
+  Session.set('newAuctionProgress', 0);
 }
 
 function auctionAction() {
@@ -19,7 +21,6 @@ function auctionAction() {
   clearSessionVariables();
   if (auctionId > 0) {
     console.log('Showing auction with id:', auctionId);
-    //Session.set('newAuctionMessage', { message: 'test', type: 'info' });
     Session.set('currentAuctionletId', auctionId);
     Session.set('currentAuctionId', auctionId);
   } else {
