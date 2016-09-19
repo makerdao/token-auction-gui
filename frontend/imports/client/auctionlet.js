@@ -46,7 +46,7 @@ Template.auctionlet.viewmodel({
     if (singleAuctionlet !== undefined && singleAuction !== undefined) {
       const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
       if (this.bid() === 0) {
-       console.log('set minimal bid');
+        console.log('set minimal bid');
         this.bid(web3.fromWei(requiredBid));
       }
     }
@@ -82,10 +82,9 @@ Template.auctionlet.viewmodel({
     const auctionletBid = web3.toWei(this.bid());
     const auction = Auctions.findAuction();
     const auctionlet = Auctionlets.findAuctionlet();
-
     if (auction !== undefined && Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
-      if (auctionlet !== undefined && auctionletBid > Auctionlets.calculateRequiredBid(auctionlet.buy_amount,
-      auction.min_increase)) {
+      if (auctionlet !== undefined && web3.toBigNumber(auctionletBid)
+      .gt(Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase))) {
         Auctionlets.doBid(auctionletBid);
       } else {
         Session.set('newBidMessage', { message: 'Bid is not high enough', type: 'danger' });
@@ -134,10 +133,10 @@ Template.auctionlet.viewmodel({
     && auctionlet.unclaimed;
   },
   claimMessage() {
-    return Session.get('claimMessage') === null ? null : Session.get('claimMessage').message;
+    return Session.get('claimMessage') !== null ? Session.get('claimMessage').message : Session.get('claimMessage');
   },
   claimMessageType() {
-    return Session.get('claimMessage').type;
+    return Session.get('claimMessage') !== null ? Session.get('claimMessage').type : 'info';
   },
   claim(event) {
     event.preventDefault();

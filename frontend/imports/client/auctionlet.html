@@ -37,7 +37,7 @@
         {{#if bidProgress}}
         <div class="progress">
           <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{bidProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{bidProgress}}%">
-            {{ bidMessage }}}
+            {{{ bidMessage }}}
           </div>
         </div>
         {{/if}}
@@ -62,7 +62,7 @@
           {{#if auctionlet.unclaimed}}
           <br>
             <span>You made the highest bid. Click to receive the tokens</span>
-            <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
+            <button class="btn btn-primary" {{b "click: claim"}}>Claim</button><br>
             {{#if claimMessage}}
               <span id='spnClaimMessage' class="messageSpan alert alert-{{claimMessageType}}">{{{ claimMessage }}}</span>
             {{/if}}
