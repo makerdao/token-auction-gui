@@ -5,7 +5,6 @@ import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
 import { moment } from 'meteor/momentjs:moment';
-import { $ } from 'meteor/jquery';
 
 import './auctionlet.html';
 
@@ -20,6 +19,7 @@ function doCountdown() {
     // console.log('single auction:', singleAuction, ' and singleAuctionlet:', singleAuctionlet);
     const countdown = Math.round(((singleAuction.duration * 1000) -
                       (currentTime - singleAuctionlet.last_bid_time.getTime())));
+    // console.log(countdown);
     if (countdown >= 0) {
       timeRemaining.set(countdown);
     }
@@ -52,7 +52,6 @@ Template.auctionlet.viewmodel({
     }
     return singleAuctionlet;
   },
-  checkTimer: 0,
   bid: 0,
   bidsDisabled() {
     return (Session.get('bidProgress') > 0 ? 'disabled' : '');
@@ -82,6 +81,7 @@ Template.auctionlet.viewmodel({
     const auctionletBid = web3.toWei(this.bid());
     const auction = Auctions.findAuction();
     const auctionlet = Auctionlets.findAuctionlet();
+
     if (auction !== undefined && Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
       if (auctionlet !== undefined && web3.toBigNumber(auctionletBid)
       .gt(Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase))) {
