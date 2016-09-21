@@ -3,6 +3,7 @@ import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
 
+import '/imports/client/accountselector.js';
 import '/imports/client/network-status.js';
 import '/imports/client/balance.js';
 import '/imports/client/newauction.js';
