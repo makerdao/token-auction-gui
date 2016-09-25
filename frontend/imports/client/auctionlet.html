@@ -30,24 +30,26 @@
           {{/if}}
           <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">{{ETHToken.name}}</span></td>
         </tr>
-        <tr>
-          <td>Unit price</td>
-          <td>{{formatBalance (auctionlet.unitPrice)}} <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span></td>
-        </tr>
         {{/if}}
       </table>
       {{#unless expired}}
       <div class="form-group">
+        {{#if bidProgress}}
+        <div class="progress">
+          <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{bidProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{bidProgress}}%">
+            {{{ bidMessage }}}
+          </div>
+        </div>
+        {{/if}}
         {{#if bidMessage}}
           <span id='spnBidMessage' class="messageSpan alert alert-{{bidMessageType}}">{{{ bidMessage }}}</span>
           <br>
         {{/if}}
         <label for="inputBid">Enter a bid for the auctionlet</label>
         <br>
-        <input class="form-control" id="inputBid" type="number" min="{{bid}}" value="{{bid}}" {{b "value: bid"}}> <span class="ETH">{{ETHToken.name}}</span>
+        <input class="form-control" id="inputBid" type="number" {{bidsDisabled}} value="{{bid}}" {{b "value: bid"}}> <span class="ETH">{{ETHToken.name}}</span>
         <br>
-        <button class="btn btn-primary" {{b "click: create"}} disabled="{{or syncing outOfSync}}">Place bid</button>
-        {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
+        <button class="btn btn-primary" {{bidsDisabled}} {{b "click: create"}}>Place bid</button>
       </div>
       {{else}}
       <div class="form-group">
@@ -60,7 +62,7 @@
           {{#if auctionlet.unclaimed}}
           <br>
             <span>You made the highest bid. Click to receive the tokens</span>
-            <button class="btn btn-primary" {{b "click: claim"}}>Claim</button>
+            <button class="btn btn-primary" {{b "click: claim"}}>Claim</button><br>
             {{#if claimMessage}}
               <span id='spnClaimMessage' class="messageSpan alert alert-{{claimMessageType}}">{{{ claimMessage }}}</span>
             {{/if}}

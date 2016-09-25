@@ -107,7 +107,7 @@ Tokens.sync = function sync() {
 Tokens.isBalanceSufficient = function isBalanceSufficient(bid, tokenAddress) {
   const token = Tokens.findOne({ address: tokenAddress });
   if (token !== undefined && web3.toBigNumber(token.balance).gte(web3.toBigNumber(bid))) {
-    console.log('Success! Balance is', token.balance, 'and bid is', bid.toString(10));
+    // console.log('Success! Balance is', token.balance, 'and bid is', bid.toString(10));
     return true;
   } else if (token !== undefined) {
     console.log('Insufficient! Balance is', token.balance, 'and bid is', bid.toString(10));
@@ -124,18 +124,23 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
       token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Mkr approve transaction adding');
-          Session.set('newAuctionMessage', { message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for new auction', type: 'info' });
+          Session.set('newAuctionProgress', 25);
+          Session.set('newAuctionMessage', {
+            message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for new auction <i>(this can take a while)</i>',
+            type: 'info' });
           Transactions.add('mkrallowance', result, { value: amount.toString(10) });
         } else {
           Session.set('newAuctionMessage', {
             message: `Error setting allowance for new auction: ${approveError.toString()}`,
             type: 'danger' });
+          Session.set('newAuctionProgress', 0);
         }
       });
     } else {
       Session.set('newAuctionMessage', {
         message: `Error setting allowance for new auction: ${error.toString()}`,
         type: 'danger' });
+      Session.set('newAuctionProgress', 0);
     }
   });
 };
@@ -146,18 +151,21 @@ Tokens.setEthAllowance = function setEthAllowance(amount) {
       token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Eth approve transaction adding');
+          Session.set('bidProgress', 25);
           Session.set('newBidMessage', {
-            message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for bid (this could take a while)',
+            message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for bid <i>(this can take a while)</i>',
             type: 'info' });
           Transactions.add('ethallowance', result, { value: amount.toString(10) });
         } else {
           console.log('SetEthAllowance error:', approveError);
+          Session.set('bidProgress', 0);
           Session.set('newBidMessage', {
             message: `Error setting allowance for bid: ${approveError.toString()}`,
             type: 'danger' });
         }
       });
     } else {
+      Session.set('bidProgress', 0);
       Session.set('newBidMessage', {
         message: `Error setting allowance for bid: ${error.toString()}`,
         type: 'danger' });
@@ -199,12 +207,14 @@ Tokens.watchEthAllowanceTransactions = function watchEthAllowanceTransactions() 
   Transactions.observeRemoved('ethallowance', (document) => {
     if (document.receipt.logs.length === 0) {
       console.log('Setting ETH allowance went wrong');
+      Session.set('bidProgress', 0);
       Session.set('newBidMessage', { message: 'Error setting allowance for bid', type: 'danger' });
     } else {
       console.log('ETH allowance is set');
       const auction = Auctions.findAuction();
+      Session.set('bidProgress', 50);
       Session.set('newBidMessage', {
-        message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, placing bid (this could take a while)',
+        message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, placing bid <i>(this can take a while)</i>',
         type: 'info' });
       Auctionlets.bidOnAuctionlet(Session.get('currentAuctionletId'), document.object.value, auction.sell_amount);
     }
@@ -229,6 +239,7 @@ Tokens.watchMkrAllowanceTransactions = function watchMkrAllowanceTransactions() 
                             newAuction.startbid.toString(10), newAuction.min_increase,
                             newAuction.duration.toString(10));
         Session.set('newAuctionMessage', { message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, creating new auction', type: 'info' });
+        Session.set('newAuctionProgress', 50);
       } else {
         console.error('Network not initialized');
       }

@@ -91,7 +91,11 @@ Auctionlets.watchBidTransactions = function watchBidTransactions() {
       Session.set('newBidMessage', { message: 'Error placing bid', type: 'danger' });
     } else {
       console.log('bid', document.object.bid);
+      Session.set('bidProgress', 100);
       Session.set('newBidMessage', { message: 'Bid placed succesfully', type: 'success' });
+      Meteor.setTimeout(function () {
+        Session.set('bidProgress', 0);
+      }, 5000);
     }
   });
 };
@@ -100,10 +104,10 @@ Auctionlets.doClaim = function doClaim(auctionletId) {
   TokenAuction.objects.auction.claim(auctionletId, { gas: CLAIM_GAS }, (error, result) => {
     if (!error) {
       Transactions.add('claim', result, { auctionletId });
-      Session.set('claimMessage', { message: 'Claiming your tokens', type: 'alert-info' });
+      Session.set('claimMessage', { message: 'Claiming your tokens', type: 'info' });
     } else {
       console.log('Claim error: ', error);
-      Session.set('claimMessage', { message: `Error claiming tokens: ${error.toString()}`, type: 'alert-danger' });
+      Session.set('claimMessage', { message: `Error claiming tokens: ${error.toString()}`, type: 'danger' });
     }
   });
 };
@@ -112,10 +116,10 @@ Auctionlets.watchClaimTransactions = function watchClaimTransactions() {
   Transactions.observeRemoved('claim', (document) => {
     if (document.receipt.logs.length === 0) {
       console.log('Claim went wrong');
-      Session.set('claimMessage', { message: 'Error claiming tokens', type: 'alert-danger' });
+      Session.set('claimMessage', { message: 'Error claiming tokens', type: 'danger' });
     } else {
       console.log('Claim is succesful');
-      Session.set('claimMessage', { message: 'Tokens successfully claimed', type: 'alert-success' });
+      Session.set('claimMessage', { message: 'Tokens successfully claimed', type: 'success' });
       const currentAuctionletId = Session.get('currentAuctionletId');
       Auctionlets.loadAuctionlet(currentAuctionletId);
     }

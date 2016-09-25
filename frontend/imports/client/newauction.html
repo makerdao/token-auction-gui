@@ -8,31 +8,37 @@
       <tbody>
         <tr>
           <td>Sell amount</td>
-          <td><input type="number" min="0" {{b "value: sellamount"}}> <span class="MKR">{{MKRToken.name}}</span></td>
+          <td><input type="number" min="0" {{newAuctionDisabled}} {{b "value: sellamount"}}> <span class="MKR">{{MKRToken.name}}</span></td>
         </tr>
         <tr>
           <td>Start bid</td>
-          <td><input type="number" min="0" {{b "value: startbid"}}> <span class="ETH">{{ETHToken.name}}</span></td>
+          <td><input type="number" min="0" {{newAuctionDisabled}} {{b "value: startbid"}}> <span class="ETH">{{ETHToken.name}}</span></td>
         </tr>
         <tr>
           <td>Minimum increase</td>
-          <td><input type="number" min="1" step="1" {{b "value: minimumincrease"}}> %</td>
+          <td><input type="number" min="1" step="1" {{newAuctionDisabled}} {{b "value: minimumincrease"}}> %</td>
         </tr>
         <tr>
           <td>Duration</td>
-          <td><input type="number" min="0" {{b "value: duration"}}> seconds</td>
+          <td><input type="number" min="0" {{newAuctionDisabled}} {{b "value: duration"}}> seconds</td>
         </tr>
       </tbody>
     </table>
+    {{#if newAuctionProgress}}
+    <div class="progress">
+      <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{newAuctionProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{newAuctionProgress}}%">
+        {{{ newAuctionMessage }}}
+      </div>
+    </div>
+    {{/if}}
     {{#if newAuctionMessage}}
-      <div class="messageDiv alert alert-{{newAuctionMessage.type}}">
-        <span id='newAuctionMessage'>{{{newAuctionMessage.message}}}</span>
+      <div class="messageDiv alert alert-{{newAuctionMessageType}}">
+        <span id='newAuctionMessage'>{{{newAuctionMessage}}}</span>
         {{#if newAuctionUrl}}
             <span>Your new auction can be found at <a href="{{newAuctionUrl}}">{{newAuctionUrl}}</a></span>
         {{/if}}
       </div>
     {{/if}}
-    <button class="btn btn-primary" {{b "click: create"}} disabled="{{or syncing outOfSync}}">Create auction</button>
-    {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
+    <button class="btn btn-primary" {{newAuctionDisabled}} {{b "click: create"}}>Create auction</button>
   </div>
 </template>

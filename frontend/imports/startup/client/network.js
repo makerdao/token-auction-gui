@@ -17,6 +17,8 @@ Session.set('latestBlock', 0);
 clearMessages();
 
 Session.set('lastMessages', []);
+Session.set('bidProgress', 0);
+Session.set('newAuctionProgress', 0);
 
 let lastMessages = [];
 

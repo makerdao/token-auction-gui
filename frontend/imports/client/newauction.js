@@ -9,10 +9,20 @@ Template.newauction.viewmodel({
   minimumincrease: 0,
   duration: 0,
   newAuctionMessage() {
-    return Session.get('newAuctionMessage');
+    return Session.get('newAuctionMessage') !== null ?
+    Session.get('newAuctionMessage').message : Session.get('newAuctionMessage');
+  },
+  newAuctionMessageType() {
+    return Session.get('newAuctionMessage') !== null ? Session.get('newAuctionMessage').type : 'info';
   },
   newAuctionUrl() {
     return Session.get('newAuctionUrl');
+  },
+  newAuctionProgress() {
+    return Session.get('newAuctionProgress');
+  },
+  newAuctionDisabled() {
+    return (Session.get('newAuctionProgress') > 0 ? 'disabled' : '');
   },
   create(event) {
     event.preventDefault();
