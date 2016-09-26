@@ -1,6 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import Tokens from './tokens.js';
 import Transactions from './transactions.js';
+import prettyError from '../utils/prettyError.js';
 
 const Auctionlets = new Mongo.Collection(null);
 const BID_GAS = 1000000;
@@ -107,7 +108,7 @@ Auctionlets.doClaim = function doClaim(auctionletId) {
       Session.set('claimMessage', { message: 'Claiming your tokens', type: 'info' });
     } else {
       console.log('Claim error: ', error);
-      Session.set('claimMessage', { message: `Error claiming tokens: ${error.toString()}`, type: 'danger' });
+      Session.set('claimMessage', { message: `Error claiming tokens: ${prettyError(error)}`, type: 'danger' });
     }
   });
 };

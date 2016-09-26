@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import Auctions from './auctions.js';
 import Auctionlets from './auctionlets.js';
 import Transactions from './transactions.js';
+import prettyError from '../utils/prettyError.js';
 
 const Tokens = new Mongo.Collection(null);
 const APPROVE_GAS = 1000000;
@@ -131,14 +132,14 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
           Transactions.add('mkrallowance', result, { value: amount.toString(10) });
         } else {
           Session.set('newAuctionMessage', {
-            message: `Error setting allowance for new auction: ${approveError.toString()}`,
+            message: `Error setting allowance for new auction: ${prettyError(approveError)}`,
             type: 'danger' });
           Session.set('newAuctionProgress', 0);
         }
       });
     } else {
       Session.set('newAuctionMessage', {
-        message: `Error setting allowance for new auction: ${error.toString()}`,
+        message: `Error setting allowance for new auction: ${prettyError(error)}`,
         type: 'danger' });
       Session.set('newAuctionProgress', 0);
     }
@@ -160,14 +161,14 @@ Tokens.setEthAllowance = function setEthAllowance(amount) {
           console.log('SetEthAllowance error:', approveError);
           Session.set('bidProgress', 0);
           Session.set('newBidMessage', {
-            message: `Error setting allowance for bid: ${approveError.toString()}`,
+            message: `Error setting allowance for bid: ${prettyError(approveError)}`,
             type: 'danger' });
         }
       });
     } else {
       Session.set('bidProgress', 0);
       Session.set('newBidMessage', {
-        message: `Error setting allowance for bid: ${error.toString()}`,
+        message: `Error setting allowance for bid: ${prettyError(error)}`,
         type: 'danger' });
     }
   });
