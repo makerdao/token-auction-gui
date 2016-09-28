@@ -35,7 +35,7 @@ Template.auctionlet.viewmodel({
     this.checkBid();
   },
   events: {
-    'keyup #inputBid': function keyUpBid(event) {
+    'keyup #inputBid, focus #inputBid, blur #inputBid, change #inputBid': function eventBid(event) {
       event.preventDefault();
       this.checkBid();
     },
@@ -95,9 +95,6 @@ Template.auctionlet.viewmodel({
   },
   checkBid() {
     if (Session.get('bidProgress') > 0) {
-      return;
-    }
-    if (!$('#inputBid').is(':focus')) {
       return;
     }
     Session.set('newBidMessage', null);
