@@ -63,6 +63,7 @@ Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistoryDe
           last_bidder: result[1],
           last_bid_time: new Date(result[2].toNumber() * 1000),
           buy_amount: result[3].toString(10),
+          unit_price: result[3].div(result[4]).toString(10),
         };
         resolve(auctionlet);
       } else {
