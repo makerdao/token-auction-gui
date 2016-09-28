@@ -31,9 +31,6 @@ Template.auctionlet.viewmodel({
     Meteor.setInterval(doCountdown, 1000);
     Session.set('bidProgress', 0);
   },
-  autorun() {
-    this.checkBid();
-  },
   events: {
     'keyup #inputBid, focus #inputBid, blur #inputBid, change #inputBid': function eventBid(event) {
       event.preventDefault();

@@ -1,6 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import Tokens from './tokens.js';
 import Transactions from './transactions.js';
+import prettyError from '../utils/prettyError.js';
 
 const Auctionlets = new Mongo.Collection(null);
 const BID_GAS = 1000000;
@@ -66,9 +67,8 @@ Auctionlets.bidOnAuctionlet = function bidOnAuctionlet(auctionletId, bidAmount, 
       console.log(result);
       Transactions.add('bid', result, { auctionletId, bid: bidAmount.toString(10) });
     } else {
-      Session.set('newBidMessage', { message: 'Error placing bid', type: 'danger' });
       Session.set('bidProgress', 0);
-      console.log('error: ', error);
+      Session.set('newBidMessage', { message: `Error placing bid: ${prettyError(error)}`, type: 'danger' });
     }
   });
 };
@@ -81,7 +81,7 @@ Auctionlets.watchBid = function watchBid() {
       const currentAuctionletId = Session.get('currentAuctionletId');
       Auctionlets.loadAuctionlet(currentAuctionletId);
     } else {
-      Session.set('newBidMessage', { message: 'Error placing bid', type: 'danger' });
+      Session.set('newBidMessage', { message: `Error placing bid: ${prettyError(error)}`, type: 'danger' });
       Session.set('bidProgress', 0);
       console.log('error: ', error);
     }
@@ -111,7 +111,7 @@ Auctionlets.doClaim = function doClaim(auctionletId) {
       Session.set('claimMessage', { message: 'Claiming your tokens', type: 'info' });
     } else {
       console.log('Claim error: ', error);
-      Session.set('claimMessage', { message: `Error claiming tokens: ${error.toString()}`, type: 'danger' });
+      Session.set('claimMessage', { message: `Error claiming tokens: ${prettyError(error)}`, type: 'danger' });
     }
   });
 };
