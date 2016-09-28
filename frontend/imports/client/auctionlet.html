@@ -30,6 +30,10 @@
           {{/if}}
           <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">{{ETHToken.name}}</span></td>
         </tr>
+        <tr>
+          <td>Unit price</td>
+          <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span></td>
+        </tr>
         {{/if}}
       </table>
       {{#unless expired}}

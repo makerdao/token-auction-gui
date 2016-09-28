@@ -23,6 +23,7 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
           last_bid_time: new Date(result[2].toNumber() * 1000),
           buy_amount: result[3].toString(10),
           sell_amount: result[4].toString(10),
+          unit_price: result[3].div(result[4]).toString(10),
           unclaimed: result[5],
           base: result[6],
           isExpired: false,
