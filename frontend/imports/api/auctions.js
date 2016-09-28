@@ -43,6 +43,8 @@ Auctions.newAuction = function newAuction(account, selling, buying, sellAmount, 
       console.log('New auction transaction started');
       Transactions.add('auction', result, { selling, sellAmount });
     } else {
+      Session.set('newAuctionMessage', { message: 'Error creating new auction', type: 'danger' });
+      Session.set('newAuctionProgress', 0);
       console.log(error);
     }
   });
@@ -59,6 +61,8 @@ Auctions.watchNewAuction = function watchNewAuction() {
       /* eslint-disable prefer-template */
       Session.set('newAuctionUrl', auctionUrl);
     } else {
+      Session.set('newAuctionMessage', { message: 'Error creating new auction', type: 'danger' });
+      Session.set('newAuctionProgress', 0);
       console.log('error: ', error);
     }
   });

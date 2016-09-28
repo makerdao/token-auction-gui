@@ -131,14 +131,14 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
           Transactions.add('mkrallowance', result, { value: amount.toString(10) });
         } else {
           Session.set('newAuctionMessage', {
-            message: `Error setting allowance for new auction: ${approveError.toString()}`,
+            message: 'Error setting allowance for new auction',
             type: 'danger' });
           Session.set('newAuctionProgress', 0);
         }
       });
     } else {
       Session.set('newAuctionMessage', {
-        message: `Error setting allowance for new auction: ${error.toString()}`,
+        message: 'Error setting allowance for new auction',
         type: 'danger' });
       Session.set('newAuctionProgress', 0);
     }
