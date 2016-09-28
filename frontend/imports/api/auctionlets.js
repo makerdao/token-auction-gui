@@ -30,12 +30,44 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
         };
         Auctionlets.insert(auctionlet);
         Auctionlets.syncExpired();
+        Auctionlets.loadAuctionletBidHistory(currentAuctionletId);
       } else {
         console.log('auctionlet info error: ', error);
       }
     });
   }
 };
+
+Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(currentAuctionletId) {
+  /* eslint-disable new-cap */
+  if (typeof (TokenAuction.objects) !== 'undefined') {
+    //const bids = [];
+    TokenAuction.objects.auction.Bid({ auctionlet_id: currentAuctionletId }, { fromBlock: 0 }, (error, result) => {
+      if (!error) {
+        if (result) {
+          //bids.push(result);
+          console.log(result);
+          Auctionlets.loadAuctionletBidHistoryDetail(result);
+        }
+      } else {
+        console.log('bidHistory error', error);
+      }
+    });
+  }
+  /* eslint-enable new-cap */
+};
+
+Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistory(bid) {
+  const auctionletId = bid.args.auctionlet_id.toNumber();
+  TokenAuction.objects.auction.getAuctionletInfo(auctionletId, bid.blockNumber, (error, result) => {
+    if (!error) {
+      console.log(result);
+    } else {
+      console.log('auctionlet info bid history error: ', error);
+    }
+  });
+};
+
 
 // Check whether an auctionlet is expired and if so update the auctionlet
 Auctionlets.syncExpired = function syncExpired() {
