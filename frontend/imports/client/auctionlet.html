@@ -56,6 +56,25 @@
         <button class="btn btn-primary" {{bidsDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Place bid</button>
         {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
       </div>
+      {{#if auctionlet.history}}
+      <div>
+        History
+        <table>
+          <tr>
+            <th>Creator</th>
+            <th>Bid Price</th>
+            <th>Bid Time</th>
+          </tr>
+          {{#each auctionlet.history}}
+            <tr>
+              <td>{{last_bidder}}</td>
+              <td>{{formatBalance (fromWei buy_amount)}}</td>
+              <td>{{last_bid_time}}</td>
+            </tr>
+          {{/each}}
+        </table>
+      </div>
+      {{/if}}
       {{else}}
       <div class="form-group">
         <span>Auctionlet has expired.</span>

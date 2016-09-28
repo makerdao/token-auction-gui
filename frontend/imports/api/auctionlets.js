@@ -38,36 +38,40 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
   }
 };
 
-Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(currentAuctionletId) {
+Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auctionletId) {
   /* eslint-disable new-cap */
   if (typeof (TokenAuction.objects) !== 'undefined') {
-    //const bids = [];
-    TokenAuction.objects.auction.Bid({ auctionlet_id: currentAuctionletId }, { fromBlock: 0 }, (error, result) => {
-      if (!error) {
-        if (result) {
-          //bids.push(result);
-          console.log(result);
-          Auctionlets.loadAuctionletBidHistoryDetail(result);
-        }
-      } else {
-        console.log('bidHistory error', error);
+    const bidPromises = [];
+    TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((error, result) => {
+      for (let i = 0; i < result.length; i++) {
+        bidPromises.push(Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, result[i].blockNumber));
       }
+      Promise.all(bidPromises).then((resultProm) => {
+        Auctionlets.update({ auctionletId }, { $set: { history: resultProm } });
+        console.log(Auctionlets.findOne({ auctionletId }));
+      });
     });
   }
   /* eslint-enable new-cap */
 };
 
-Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistory(bid) {
-  const auctionletId = bid.args.auctionlet_id.toNumber();
-  TokenAuction.objects.auction.getAuctionletInfo(auctionletId, bid.blockNumber, (error, result) => {
-    if (!error) {
-      console.log(result);
-    } else {
-      console.log('auctionlet info bid history error: ', error);
-    }
+Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistoryDetail(auctionletId, blockNumber) {
+  const bidPromise = new Promise((resolve, reject) => {
+    TokenAuction.objects.auction.getAuctionletInfo(auctionletId, blockNumber, (error, result) => {
+      if (!error) {
+        const auctionlet = {
+          last_bidder: result[1],
+          last_bid_time: new Date(result[2].toNumber() * 1000),
+          buy_amount: result[3].toString(10),
+        };
+        resolve(auctionlet);
+      } else {
+        reject(error);
+      }
+    });
   });
+  return bidPromise;
 };
-
 
 // Check whether an auctionlet is expired and if so update the auctionlet
 Auctionlets.syncExpired = function syncExpired() {
