@@ -53,7 +53,8 @@
         <br>
         <input class="form-control" id="inputBid" type="number" {{bidsDisabled}} value="{{bid}}" {{b "value: bid"}}> <span class="ETH">{{ETHToken.name}}</span>
         <br>
-        <button class="btn btn-primary" {{bidsDisabled}} {{b "click: create"}}>Place bid</button>
+        <button class="btn btn-primary" {{bidsDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Place bid</button>
+        {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
       </div>
       {{else}}
       <div class="form-group">
