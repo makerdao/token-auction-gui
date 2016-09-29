@@ -48,7 +48,6 @@ Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auction
       }
       Promise.all(bidPromises).then((resultProm) => {
         Auctionlets.update({ auctionletId }, { $set: { history: resultProm } });
-        console.log(Auctionlets.findOne({ auctionletId }));
       });
     });
   }
