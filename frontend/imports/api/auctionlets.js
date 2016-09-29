@@ -2,6 +2,7 @@ import { Mongo } from 'meteor/mongo';
 import Tokens from './tokens.js';
 import Transactions from './transactions.js';
 import prettyError from '../utils/prettyError.js';
+import callContractMethod from '../utils/etherscan-connector.js';
 
 const Auctionlets = new Mongo.Collection(null);
 const BID_GAS = 1000000;
@@ -58,13 +59,32 @@ Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistoryDe
   const bidPromise = new Promise((resolve, reject) => {
     TokenAuction.objects.auction.getAuctionletInfo(auctionletId, blockNumber, (error, result) => {
       if (!error) {
-        const auctionlet = {
-          last_bidder: result[1],
-          last_bid_time: new Date(result[2].toNumber() * 1000),
-          buy_amount: result[3].toString(10),
-          unit_price: result[3].div(result[4]).toString(10),
-        };
-        resolve(auctionlet);
+        let auctionlet = {};
+        if (result[0].toNumber() !== 0) {
+          // We could bring the info from the local node
+          auctionlet = {
+            last_bidder: result[1],
+            last_bid_time: new Date(result[2].toNumber() * 1000),
+            buy_amount: result[3].toString(10),
+            unit_price: result[3].div(result[4]).toString(10),
+          };
+          resolve(auctionlet);
+        } else {
+          // Bring info from etherscan
+          callContractMethod('getAuctionletInfo(uint256)', [auctionletId], blockNumber).then((res) => {
+            const buyAmount = web3.toBigNumber(parseInt(res[3].toString(16), 16));
+            const sellAmount = web3.toBigNumber(parseInt(res[4].toString(16), 16));
+            /* eslint-disable prefer-template */
+            auctionlet = {
+              last_bidder: '0x' + res[1].replace(/^0+/, ''),
+              last_bid_time: new Date(parseInt(res[2].toString(16), 16) * 1000),
+              buy_amount: buyAmount.toString(10),
+              unit_price: buyAmount.div(sellAmount).toString(10),
+            };
+            /* eslint-enable prefer-template */
+            resolve(auctionlet);
+          });
+        }
       } else {
         reject(error);
       }

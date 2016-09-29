@@ -79,7 +79,7 @@
       <span>Auctionlet was not found</span>
     {{/unless}}
   </div>
-  {{#unless expired}}
+  {{#if unclaimed}}
     {{> bidHistory auctionlet=auctionlet}}
-  {{/unless}}
+  {{/if}}
 </template>
