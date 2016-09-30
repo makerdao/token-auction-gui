@@ -31,7 +31,9 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
         };
         Auctionlets.insert(auctionlet);
         Auctionlets.syncExpired();
-        Auctionlets.loadAuctionletBidHistory(currentAuctionletId);
+        if (auctionlet.unclaimed) {
+          Auctionlets.loadAuctionletBidHistory(currentAuctionletId);
+        }
       } else {
         console.log('auctionlet info error: ', error);
       }
@@ -71,6 +73,7 @@ Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistoryDe
           resolve(auctionlet);
         } else {
           // Bring info from etherscan
+          console.log('Could not find history in local node. Calling Etherscan...');
           callContractMethod('getAuctionletInfo(uint256)', [auctionletId], blockNumber).then((res) => {
             const buyAmount = web3.toBigNumber(parseInt(res[3].toString(16), 16));
             const sellAmount = web3.toBigNumber(parseInt(res[4].toString(16), 16));
