@@ -5,6 +5,7 @@ import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
 import { moment } from 'meteor/momentjs:moment';
+import { $ } from 'meteor/jquery';
 
 import './auctionlet.html';
 
