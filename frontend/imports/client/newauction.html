@@ -9,6 +9,7 @@
         <tr>
           <td>Sell amount</td>
           <td><input type="number" min="0" {{newAuctionDisabled}} {{b "value: sellamount"}}> <span class="MKR">{{MKRToken.name}}</span></td>
+          <td><button class="btn" {{b "click: all"}}>Sell all ({{formatBalance (fromWei MKRToken.balance)}} {{MKRToken.name}})</button></td>
         </tr>
         <tr>
           <td>Start bid</td>
