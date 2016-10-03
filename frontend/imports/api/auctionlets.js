@@ -31,10 +31,10 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
         };
         Auctionlets.insert(auctionlet);
         Auctionlets.syncExpired();
-        if (!auctionlet.unclaimed) {
-          Auctionlets.loadAuctionletClaimedBid(currentAuctionletId);
-        } else {
+        if (auctionlet.unclaimed) {
           Auctionlets.loadAuctionletBidHistory(currentAuctionletId);
+        } else {
+          Auctionlets.loadAuctionletClaimedBid(currentAuctionletId);
         }
       } else {
         console.log('auctionlet info error: ', error);
@@ -62,7 +62,13 @@ Auctionlets.loadAuctionletClaimedBid = function loadAuctionletClaimedBid(auction
     const lastIndex = res.length - 1;
     const blockNumber = res[lastIndex].blockNumber;
     Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, blockNumber).then((r) => {
-      const update = { buy_amount: r.buy_amount, sell_amount: r.sell_amount, unit_price: r.unit_price };
+      const update = {
+        last_bidder: r.last_bidder,
+        last_bid_time: r.last_bid_time,
+        buy_amount: r.buy_amount,
+        sell_amount: r.sell_amount,
+        unit_price: r.unit_price,
+      };
       Auctionlets.update({ auctionletId }, { $set: update });
     });
   });
