@@ -41,6 +41,18 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
   }
 };
 
+Auctionlets.sortByBuyAmountDesc = function sortByTimestampDesc(a, b) {
+  let result = 0;
+  if (a.buy_amount > b.buy_amount) {
+    result = -1;
+  } else if (a.buy_amount < b.buy_amount) {
+    result = 1;
+  } else {
+    result = 0;
+  }
+  return result;
+};
+
 Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auctionletId) {
   /* eslint-disable new-cap */
   if (typeof (TokenAuction.objects) !== 'undefined') {
@@ -50,7 +62,8 @@ Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auction
         bidPromises.push(Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, result[i].blockNumber));
       }
       Promise.all(bidPromises).then((resultProm) => {
-        Auctionlets.update({ auctionletId }, { $set: { history: resultProm } });
+        const historySorted = resultProm.sort(Auctionlets.sortByBuyAmountDesc);
+        Auctionlets.update({ auctionletId }, { $set: { history: historySorted } });
       });
     });
   }
