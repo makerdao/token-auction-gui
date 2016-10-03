@@ -29,24 +29,11 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
           base: result[6],
           isExpired: false,
         };
+        Auctionlets.insert(auctionlet);
+        Auctionlets.syncExpired();
         if (!auctionlet.unclaimed) {
-          // Check on local node or Etherscan if there's info
-          /* eslint-disable new-cap */
-          TokenAuction.objects.auction.Bid({ auctionlet_id: currentAuctionletId }, { fromBlock: 0 }).get((err, res) => {
-            const lastIndex = res.length - 1;
-            const blockNumber = res[lastIndex].blockNumber;
-            Auctionlets.loadAuctionletBidHistoryDetail(currentAuctionletId, blockNumber).then((r) => {
-              auctionlet.buy_amount = r.buy_amount;
-              auctionlet.sell_amount = r.sell_amount;
-              auctionlet.unit_price = r.unit_price;
-              Auctionlets.insert(auctionlet);
-              Auctionlets.syncExpired();
-            });
-          });
-          /* eslint-enable new-cap */
+          Auctionlets.loadAuctionletClaimedBid(currentAuctionletId);
         } else {
-          Auctionlets.insert(auctionlet);
-          Auctionlets.syncExpired();
           Auctionlets.loadAuctionletBidHistory(currentAuctionletId);
         }
       } else {
@@ -66,6 +53,20 @@ Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {
     result = 0;
   }
   return result;
+};
+
+Auctionlets.loadAuctionletClaimedBid = function loadAuctionletClaimedBid(auctionletId) {
+  // Check on local node or Etherscan if there's info
+  /* eslint-disable new-cap */
+  TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((err, res) => {
+    const lastIndex = res.length - 1;
+    const blockNumber = res[lastIndex].blockNumber;
+    Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, blockNumber).then((r) => {
+      const update = { buy_amount: r.buy_amount, sell_amount: r.sell_amount, unit_price: r.unit_price };
+      Auctionlets.update({ auctionletId }, { $set: update });
+    });
+  });
+  /* eslint-enable new-cap */
 };
 
 Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auctionletId) {
