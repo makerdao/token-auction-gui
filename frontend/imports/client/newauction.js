@@ -54,4 +54,9 @@ Template.newauction.viewmodel({
       type: 'danger' });
     }
   },
+  all(event) {
+    event.preventDefault();
+    const balance = web3.fromWei(Tokens.findOne({ name: 'MKR' }).balance);
+    this.sellamount(balance);
+  },
 });
