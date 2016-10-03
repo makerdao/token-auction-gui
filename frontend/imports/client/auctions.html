@@ -1,23 +1,27 @@
 <template name="auctions">
-  <div class="boxDiv">
-    <h2>Auctions</h2>
-    <table class="table table-condensed">
-      <tr>
-        <td></td>
-        <td>MKR</td>
-        <td>Bids</td>
-        <td>Unit Price ETH</td>
-        <td>Current Bid ETH</td>
-        <td>Time Left</td>
-      </tr>
-      <tr>
-        <td>bid button</td>
-        <td>5</td>
-        <td>4</td>
-        <td>3</td>
-        <td>15</td>
-        <td>4 hours</td>
-      </tr>
-    </table>
- </div>
+  {{#unless currentAuctionId}}
+    <div class="boxDiv">
+        <h2>Auctions</h2>
+        <table class="table table-condensed">
+          <tr>
+            <th></th>
+            <th>MKR</th>
+            <th>Bids</th>
+            <th>Unit Price ETH</th>
+            <th>Current Bid ETH</th>
+            <th>Time Left</th>
+          </tr>
+          {{#each auctionlets}}
+          <tr>
+            <td><a href="/#!/auction/{{auctionletId}}">Bid</a></td>
+            <td>{{formatBalance (fromWei sell_amount)}}</td>
+            <td></td>
+            <td>{{formatBalance (unit_price)}}</td>
+            <td>{{formatBalance (fromWei buy_amount)}}</td>
+            <td></td>
+          </tr>
+          {{/each}}
+        </table>
+    </div>
+  {{/unless}}
 </template>

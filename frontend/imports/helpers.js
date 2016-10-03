@@ -26,6 +26,10 @@ Template.registerHelper('json', (a) => {
   }
 });
 
+Template.registerHelper('currentAuctionId', () => Session.get('currentAuctionId'));
+
+Template.registerHelper('currentAuctionletId', () => Session.get('currentAuctionletId'));
+
 Template.registerHelper('ETHBalance', () => {
   const balance = Session.get('ETHBalance');
   return balance;
@@ -69,3 +73,4 @@ Template.registerHelper('shortAddress', (address) => {
 Template.registerHelper('equals', (a, b) => a === b);
 
 Template.registerHelper('or', (a, b) => a || b);
+
