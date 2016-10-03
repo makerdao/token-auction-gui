@@ -11,7 +11,7 @@
           </tr>
           {{#each auctionlet.history}}
           <tr>
-            <td><a href="{{etherscanHref}}{{last_bidder}}">(Address)</a></td>
+            <td><a href="{{etherscanHref}}{{last_bidder}}">{{shortAddress last_bidder}}...</a></td>
             <td>{{formatBalance (fromWei buy_amount)}}</td>
             <td>{{formatBalance (unit_price)}}</td>
             <td>{{last_bid_time}}</td>

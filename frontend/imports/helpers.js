@@ -61,6 +61,11 @@ Template.registerHelper('contractExists', () => {
   return network !== false && isConnected === true && exists === true;
 });
 
+Template.registerHelper('shortAddress', (address) => {
+  const short = address.substring(0, 10);
+  return short;
+});
+
 Template.registerHelper('equals', (a, b) => a === b);
 
 Template.registerHelper('or', (a, b) => a || b);
