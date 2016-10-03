@@ -10,6 +10,7 @@ import '/imports/client/newauction.js';
 import '/imports/client/auctions.js';
 import '/imports/client/auction.js';
 import '/imports/client/auctionlet.js';
+import '/imports/client/bid-history.js';
 
 import '/imports/startup/client/index.js';
 import '/imports/helpers.js';
