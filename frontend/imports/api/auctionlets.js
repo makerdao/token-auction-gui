@@ -7,6 +7,28 @@ const Auctionlets = new Mongo.Collection(null);
 const BID_GAS = 1000000;
 const CLAIM_GAS = 1000000;
 
+Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
+  if (typeof (TokenAuction.objects) !== 'undefined') {
+    /* eslint-disable new-cap */
+    TokenAuction.objects.auction.NewAuction({ }, { fromBlock: 0 }).get((error, result) => {
+      if (!error) {
+        const lastEventIndex = result.length - 1;
+        // TODO:When splitting auctions is active we will need to get the max auctionlet id using another way
+        const lastAuctionletId = result[lastEventIndex].args.id.toNumber();
+        const auctionPromises = [];
+        for (let i = 0; i < lastAuctionletId; i++) {
+          auctionPromises.push(Auctionlets.loadAuctionlet(i));
+        }
+
+        Promise.all(auctionPromises).then((resultProm) => {
+          console.log(resultProm);
+        });
+      }
+    });
+    /* eslint-enable new-cap */
+  }
+};
+
 Auctionlets.findAuctionlet = function findAuctionlet() {
   return Auctionlets.findOne({ auctionletId: Session.get('currentAuctionletId') });
 };
