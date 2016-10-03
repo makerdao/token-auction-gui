@@ -59,23 +59,28 @@
       {{else}}
       <div class="form-group">
         <span>Auctionlet has expired.</span>
-        <table class="table">
-          <tr>
-          <td>Sold</td>
-            <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
-          </tr>
-          <tr>
-            <td>Highest bid</td>
-          <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">{{ETHToken.name}}</span></td>
-          </tr>
-          <tr>
-            <td>Unit price</td>
-            <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span></td>
-          </tr>
-        </table>
         {{#unless unclaimed}}
           <br/>
           <span>The tokens have been claimed by the auctionlet winner</span>
+          <br/>
+          <table class="table">
+            <tr>
+            <td>Sold</td>
+              <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
+            </tr>
+            <tr>
+              <td>Highest bid</td>
+            <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">{{ETHToken.name}}</span></td>
+            </tr>
+            <tr>
+              <td>Unit price</td>
+              <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span></td>
+            </tr>
+            <tr>
+              <td>Last bid time</td>
+              <td>{{auctionlet.last_bid_time}}</td>
+            </tr>
+          </table>
         {{/unless}}
         {{#if auctionwinner}}
           {{#if auctionlet.unclaimed}}
