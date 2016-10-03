@@ -18,7 +18,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
         const lastAuctionletId = result[lastEventIndex].args.id.toNumber();
         const auctionPromises = [];
         for (let i = 0; i < lastAuctionletId; i++) {
-          auctionPromises.push(Auctionlets.loadAuctionlet(i));
+          auctionPromises.push(Auctionlets.getAuctionlet(i));
         }
 
         Promise.all(auctionPromises).then((resultProm) => {
@@ -34,13 +34,12 @@ Auctionlets.findAuctionlet = function findAuctionlet() {
   return Auctionlets.findOne({ auctionletId: Session.get('currentAuctionletId') });
 };
 
-Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
-  if (typeof (TokenAuction.objects) !== 'undefined') {
-    TokenAuction.objects.auction.getAuctionletInfo(currentAuctionletId, (error, result) => {
+Auctionlets.getAuctionlet = function getAuctionlet(auctionletId) {
+  const p = new Promise((resolve, reject) => {
+    TokenAuction.objects.auction.getAuctionletInfo(auctionletId, (error, result) => {
       if (!error) {
-        Auctionlets.remove({});
         const auctionlet = {
-          auctionletId: currentAuctionletId,
+          auctionletId,
           auction_id: result[0].toString(10),
           last_bidder: result[1],
           last_bid_time: new Date(result[2].toNumber() * 1000),
@@ -51,16 +50,28 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
           base: result[6],
           isExpired: false,
         };
-        Auctionlets.insert(auctionlet);
-        Auctionlets.syncExpired();
-        if (auctionlet.unclaimed) {
-          Auctionlets.loadAuctionletBidHistory(currentAuctionletId);
-        } else {
-          Auctionlets.loadAuctionletClaimedBid(currentAuctionletId);
-        }
+        resolve(auctionlet);
       } else {
-        console.log('auctionlet info error: ', error);
+        reject(error);
       }
+    });
+  });
+  return p;
+};
+
+Auctionlets.loadAuctionlet = function loadAuctionlet(auctionletId) {
+  if (typeof (TokenAuction.objects) !== 'undefined') {
+    Auctionlets.getAuctionlet(auctionletId).then((auctionlet) => {
+      Auctionlets.remove({});
+      Auctionlets.insert(auctionlet);
+      Auctionlets.syncExpired();
+      if (auctionlet.unclaimed) {
+        Auctionlets.loadAuctionletBidHistory(auctionletId);
+      } else {
+        Auctionlets.loadAuctionletClaimedBid(auctionletId);
+      }
+    }, (error) => {
+      console.log('auctionlet info error: ', error);
     });
   }
 };
