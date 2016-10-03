@@ -2,6 +2,7 @@ import { Mongo } from 'meteor/mongo';
 import Tokens from './tokens.js';
 import Transactions from './transactions.js';
 import auctionPath from '../startup/routes.js';
+import prettyError from '../utils/prettyError.js';
 
 const Auctions = new Mongo.Collection(null);
 const AUCTION_GAS = 1000000;
@@ -43,7 +44,10 @@ Auctions.newAuction = function newAuction(account, selling, buying, sellAmount, 
       console.log('New auction transaction started');
       Transactions.add('auction', result, { selling, sellAmount });
     } else {
-      console.log(error);
+      Session.set('newAuctionMessage', {
+        message: `Error creating new auction: ${prettyError(error)}`,
+        type: 'danger' });
+      Session.set('newAuctionProgress', 0);
     }
   });
 };
@@ -59,7 +63,10 @@ Auctions.watchNewAuction = function watchNewAuction() {
       /* eslint-disable prefer-template */
       Session.set('newAuctionUrl', auctionUrl);
     } else {
-      console.log('error: ', error);
+      Session.set('newAuctionMessage', {
+        message: `Error creating new auction: ${prettyError(error)}`,
+        type: 'danger' });
+      Session.set('newAuctionProgress', 0);
     }
   });
   /* eslint-disable new-cap */
@@ -74,7 +81,7 @@ Auctions.watchNewAuctionTransactions = function watchNewAuctionTransactions() {
       console.log('Creating auction is succesful');
       Session.set('newAuctionMessage', { message: 'New Auction successfully created', type: 'success' });
       Session.set('newAuctionProgress', 100);
-      Meteor.setTimeout(function () {
+      Meteor.setTimeout(() => {
         Session.set('newAuctionProgress', 0);
       }, 5000);
     }

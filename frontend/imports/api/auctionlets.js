@@ -68,7 +68,8 @@ Auctionlets.bidOnAuctionlet = function bidOnAuctionlet(auctionletId, bidAmount, 
       console.log(result);
       Transactions.add('bid', result, { auctionletId, bid: bidAmount.toString(10) });
     } else {
-      console.log('error: ', error);
+      Session.set('bidProgress', 0);
+      Session.set('newBidMessage', { message: `Error placing bid: ${prettyError(error)}`, type: 'danger' });
     }
   });
 };
@@ -81,6 +82,8 @@ Auctionlets.watchBid = function watchBid() {
       const currentAuctionletId = Session.get('currentAuctionletId');
       Auctionlets.loadAuctionlet(currentAuctionletId);
     } else {
+      Session.set('newBidMessage', { message: `Error placing bid: ${prettyError(error)}`, type: 'danger' });
+      Session.set('bidProgress', 0);
       console.log('error: ', error);
     }
   });

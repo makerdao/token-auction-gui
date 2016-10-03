@@ -125,7 +125,7 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
       token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Mkr approve transaction adding');
-          Session.set('newAuctionProgress', 25);
+          Session.set('newAuctionProgress', 33);
           Session.set('newAuctionMessage', {
             message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for new auction <i>(this can take a while)</i>',
             type: 'info' });
@@ -152,7 +152,7 @@ Tokens.setEthAllowance = function setEthAllowance(amount) {
       token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Eth approve transaction adding');
-          Session.set('bidProgress', 25);
+          Session.set('bidProgress', 33);
           Session.set('newBidMessage', {
             message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for bid <i>(this can take a while)</i>',
             type: 'info' });
@@ -213,7 +213,7 @@ Tokens.watchEthAllowanceTransactions = function watchEthAllowanceTransactions() 
     } else {
       console.log('ETH allowance is set');
       const auction = Auctions.findAuction();
-      Session.set('bidProgress', 50);
+      Session.set('bidProgress', 66);
       Session.set('newBidMessage', {
         message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, placing bid <i>(this can take a while)</i>',
         type: 'info' });
@@ -239,8 +239,10 @@ Tokens.watchMkrAllowanceTransactions = function watchMkrAllowanceTransactions() 
                             networkSettings.ETH.address, newAuction.sellamount.toString(10),
                             newAuction.startbid.toString(10), newAuction.min_increase,
                             newAuction.duration.toString(10));
-        Session.set('newAuctionMessage', { message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, creating new auction', type: 'info' });
-        Session.set('newAuctionProgress', 50);
+        Session.set('newAuctionMessage', {
+          message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, creating new auction',
+          type: 'info' });
+        Session.set('newAuctionProgress', 66);
       } else {
         console.error('Network not initialized');
       }
