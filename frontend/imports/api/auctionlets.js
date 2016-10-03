@@ -56,7 +56,7 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
   }
 };
 
-Auctionlets.sortByBuyAmountDesc = function sortByTimestampDesc(a, b) {
+Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {
   let result = 0;
   if (a.buy_amount > b.buy_amount) {
     result = -1;
