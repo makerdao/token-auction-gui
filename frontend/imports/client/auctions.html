@@ -15,10 +15,22 @@
           <tr>
             <td><a href="/#!/auction/{{auctionletId}}">Bid</a></td>
             <td>{{formatBalance (fromWei sell_amount)}}</td>
-            <td></td>
+            <td>
+              {{#if bids}}
+                {{bid}}
+              {{else}}
+                Loading...
+              {{/if}}
+            </td>
             <td>{{formatBalance (unit_price)}}</td>
             <td>{{formatBalance (fromWei buy_amount)}}</td>
-            <td></td>
+            <td>
+              {{#if time_left}}
+                {{time_left}}
+              {{else}}
+                Loading...
+              {{/if}}
+            </td>
           </tr>
           {{/each}}
         </table>

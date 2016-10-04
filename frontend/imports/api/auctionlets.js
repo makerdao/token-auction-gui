@@ -81,6 +81,14 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
               // console.log(resultProm2[i]);
               if (!resultProm2[i]) {
                 Auctionlets.insert(notFinishedAutions[i]);
+                TokenAuction.objects.auction.Bid({ auctionlet_id: notFinishedAutions[i].auctionletId },
+                { fromBlock: 0 }).get((errorBids, resultBids) => {
+                  if (!errorBids) {
+                    console.log(notFinishedAutions[i].auctionletId, resultBids.length);
+                    Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
+                    { $set: { bids: resultBids.length } });
+                  }
+                });
               }
             }
           });
