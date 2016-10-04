@@ -9,6 +9,8 @@ Template.registerHelper('syncing', () => Session.get('syncing'));
 
 Template.registerHelper('outOfSync', () => Session.get('outOfSync'));
 
+Template.registerHelper('latestBlock', () => Session.get('latestBlock'));
+
 Template.registerHelper('fromWei', (s) => web3.fromWei(s));
 
 Template.registerHelper('toWei', (s) => web3.toWei(s));

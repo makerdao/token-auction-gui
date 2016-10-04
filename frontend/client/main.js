@@ -6,7 +6,6 @@ import Tokens from '/imports/api/tokens.js';
 // Headers
 import '/imports/client/headers/accountselector.js';
 import '/imports/client/headers/network-status.js';
-import '/imports/client/headers/volumes.html';
 
 import '/imports/client/balance.js';
 import '/imports/client/newauction.js';

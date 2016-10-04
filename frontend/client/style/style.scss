@@ -88,16 +88,20 @@ table {
     color: #222228;
     opacity: 0.68;
     border: none;
-    margin-right: 20px;
+    margin-right: 16px;
     background: transparent;
     cursor: pointer;
   }
 
-  .link-contract-address {
-    color: #222228;
-    opacity: 0.68;
-    margin-right: 20px;
+  .paragraph-market{
+    color: #A1A0A2;
   }
+
+  .link-contract-address {
+    color: #CCCBCB;
+    margin-right: 12px;
+  }
+
 }
 
 .networkstatus-section {
@@ -106,18 +110,19 @@ table {
 
   p {
     font-family: 'Montserrat', sans-serif;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 500;
     color: #4F5362;
     margin: 0 0 5px;
   }
 
-  img {
-    margin-right: 5px;
+  span.bold{
+    font-weight: bold;
+    text-transform: uppercase;
   }
 
-  .div-connected {
-    margin-bottom: 10px;
+  img {
+    margin-right: 5px;
   }
 
   .network-type {
@@ -126,7 +131,10 @@ table {
   }
 
   .network-status {
-    opacity: 0.8;
+  }
+
+  .grey{
+    color: #70727E;
   }
 
   .circle {
@@ -636,6 +644,10 @@ table {
   color: #848FA5;
   letter-spacing: normal;
   line-height: 12px;
+}
+
+.question-circle a {
+  color: #848FA5;
 }
 
 .question-circle-spacing {

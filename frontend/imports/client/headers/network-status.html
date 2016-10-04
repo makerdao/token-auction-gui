@@ -1,31 +1,36 @@
 <template name="networkStatus">
-  <div class="networkstatus-section">
-    <div class="col-md-6">
+  <div class="networkstatus-section row">
+    <div class="col-md-4">
       <img alt="Maker Token Auction" src="/maker-logo-auction.svg">
     </div>
-    <div class="col-md-6">
-      <div class="div-connected">
-        <p>
-          <span class="network-type">{{network}}</span>
-          {{> whatisthis section="network"}}
-        </p>
-        <p>
-        {{#unless isConnected}}
-          (not connected)
+    <div class="col-md-4 connection">
+      <p>
+        <span class="bold">{{network}}</span>
+        {{> whatisthis section="network"}}
+      </p>
+      <p>
+      {{#unless isConnected}}
+        (not connected)
+      {{else}}
+        {{#if syncing}}
+          (syncing...)
         {{else}}
-          {{#if syncing}}
-            (syncing...)
+          {{#if outOfSync}}
+            (out of sync, waiting for synchronization)
           {{else}}
-            {{#if outOfSync}}
-              (out of sync, waiting for synchronization)
-            {{else}}
-              <span class="green-circle"></span>
-              <span class="network-status">CONNECTED</span>
-            {{/if}}
+            <span class="green-circle"></span>
+            <span class="network-status grey">CONNECTED</span>
           {{/if}}
-        {{/unless}}
-        </p>
-      </div>
+        {{/if}}
+      {{/unless}}
+      </p>
+    </div>
+    <div class="col-md-4">
+      <p>
+        <span class="bold">Latest block</span>
+        {{> whatisthis section="block"}}
+      </p>
+      <p class="grey">{{ latestBlock }}</p>
     </div>
   </div>
 </template>
