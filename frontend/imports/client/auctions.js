@@ -16,7 +16,9 @@ function doCountdown() {
                     (currentTime - auctionlet.last_bid_time.getTime())));
       // console.log(countdown);
       if (countdown >= 0) {
-        timeRemaining[auctionlet.auctionletId] = new ReactiveVar(0);
+        if (typeof timeRemaining[auctionlet.auctionletId] === 'undefined') {
+          timeRemaining[auctionlet.auctionletId] = new ReactiveVar(0);
+        }
         timeRemaining[auctionlet.auctionletId].set(countdown);
       }
     }

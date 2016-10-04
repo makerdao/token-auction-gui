@@ -72,11 +72,14 @@ Template.registerHelper('shortAddress', (address) => {
 });
 
 Template.registerHelper('countdown', (timeRemaining) => {
-  if (timeRemaining.get() !== undefined) {
-    const time = moment.duration(timeRemaining.get());
-    return `${time.days()}d ${time.hours()}h ${time.minutes()}m ${time.seconds()}s`;
+  if (typeof timeRemaining !== 'undefined') {
+    if (timeRemaining.get() !== undefined) {
+      const time = moment.duration(timeRemaining.get());
+      return `${time.days()}d ${time.hours()}h ${time.minutes()}m ${time.seconds()}s`;
+    }
+    return timeRemaining.get();
   }
-  return timeRemaining.get();
+  return false;
 });
 
 Template.registerHelper('equals', (a, b) => a === b);
