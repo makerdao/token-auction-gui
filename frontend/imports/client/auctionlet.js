@@ -48,7 +48,9 @@ Template.auctionlet.viewmodel({
     }
     return singleAuctionlet;
   },
-  timeRemaining,
+  timeRemaining() {
+    return timeRemaining.get();
+  },
   bid: 0,
   bidsDisabled() {
     return (Session.get('bidProgress') > 0 ? 'disabled' : '');

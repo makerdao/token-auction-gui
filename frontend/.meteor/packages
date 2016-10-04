@@ -31,3 +31,4 @@ momentjs:moment
 shell-server
 chrismbeckett:toastr
 fortawesome:fontawesome
+templates:array

@@ -73,11 +73,9 @@ Template.registerHelper('shortAddress', (address) => {
 
 Template.registerHelper('countdown', (timeRemaining) => {
   if (typeof timeRemaining !== 'undefined') {
-    if (timeRemaining.get() !== undefined) {
-      const time = moment.duration(timeRemaining.get());
-      return `${time.days()}d ${time.hours()}h ${time.minutes()}m ${time.seconds()}s`;
-    }
-    return timeRemaining.get();
+    const time = moment.duration(timeRemaining);
+    const returnVar = `${time.days()}d ${time.hours()}h ${time.minutes()}m ${time.seconds()}s`;
+    return returnVar;
   }
   return false;
 });

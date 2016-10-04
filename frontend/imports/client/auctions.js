@@ -1,29 +1,31 @@
 import Auctionlets from '/imports/api/auctionlets.js';
 import { ReactiveVar } from 'meteor/reactive-var';
-import Auctions from '/imports/api/auctions.js';
+import { ReactiveArray } from 'meteor/templates:array';
 import './auctions.html';
 
-const timeRemaining = [];
+const timeRemaining = new ReactiveArray();
 
 function doCountdown() {
   const auctionlets = Auctionlets.find({ });
   const currentTime = (new Date()).getTime();
   let countdown = 0;
+  const countdownArray = [];
 
   auctionlets.forEach((auctionlet) => {
-    if (auctionlet.duration >= 0) {
+    if (auctionlet.duration !== 'undefined' && auctionlet.duration >= 0) {
       countdown = Math.round(((auctionlet.duration * 1000) -
                     (currentTime - auctionlet.last_bid_time.getTime())));
       // console.log(countdown);
       if (countdown >= 0) {
-        if (typeof timeRemaining[auctionlet.auctionletId] === 'undefined') {
+        /* if (typeof timeRemaining[auctionlet.auctionletId] === 'undefined') {
           timeRemaining[auctionlet.auctionletId] = new ReactiveVar(0);
-        }
-        timeRemaining[auctionlet.auctionletId].set(countdown);
+        }*/
+        countdownArray[auctionlet.auctionletId] = countdown;
       }
     }
   });
-  console.log(timeRemaining);
+  timeRemaining.set(countdownArray);
+  // console.log(timeRemaining);
 }
 
 Template.auctions.viewmodel({
@@ -35,6 +37,6 @@ Template.auctions.viewmodel({
     return auctionlets;
   },
   timeRemaining(auctionletId) {
-    return timeRemaining[auctionletId];
+    return timeRemaining.get()[auctionletId];
   },
 });
