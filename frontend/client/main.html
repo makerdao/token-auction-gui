@@ -10,8 +10,12 @@
         </section>
       </div>
     {{/if}}
-    <div id="">
-
+    <div class="row">
+      <div class="msg-disclaimer alert alert-shade col-md-12">
+        <p><span class="red">WARNING!</span> Token Auction is undergoing alpha testing: Procees at your own risk, and use only small amount of MKR and ETH.</p>
+      </div>
+    </div>
+    <div>
       {{> balance}}
       {{#if isConnected}}
         {{#if contractExists}}

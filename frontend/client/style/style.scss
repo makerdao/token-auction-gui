@@ -866,6 +866,22 @@ table {
 
 /* Custom styling for WMA */
 
+.alert-shade{
+  -webkit-box-shadow: 0 1px 6px 0 #BDBDBD;
+  box-shadow: 0 1px 6px 0 #BDBDBD;
+  font-family: 'Montserrat-SemiBold', sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  color: #7F818C;
+  padding: 9px 17px;
+  margin-top:15px;
+}
+
+.red{
+  color:#EE6673;
+  font-weight:700;
+}
+
 .boxDiv {
     background-color: white;
     box-shadow: 2px 2px 5px #E0DFDF;
