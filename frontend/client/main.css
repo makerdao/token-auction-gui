@@ -1,4 +1,4 @@
-/* CSS declarations go here */
+/* CSS declarations go here
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #F8F7F5;
@@ -21,7 +21,7 @@ a:hover {
 
 #inner {
     width: 70%;
-    margin: 0 auto; 
+    margin: 0 auto;
 }
 
 #networkStatusDiv, #accountDiv {
@@ -115,3 +115,4 @@ div.row {
 #inputBid {
     display: inline-block;
 }
+*/

@@ -3,14 +3,20 @@ import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
 
-import '/imports/client/accountselector.js';
-import '/imports/client/network-status.js';
+// Headers
+import '/imports/client/headers/accountselector.js';
+import '/imports/client/headers/network-status.js';
+import '/imports/client/headers/volumes.html';
+
 import '/imports/client/balance.js';
 import '/imports/client/newauction.js';
 import '/imports/client/auction.js';
 import '/imports/client/auctionlet.js';
 
 import '/imports/startup/client/index.js';
+import '/imports/ui/client/footer.html';
+import '/imports/ui/client/noethereum.html';
+import '/imports/ui/client/whatisthis.html';
 import '/imports/helpers.js';
 import './main.html';
 

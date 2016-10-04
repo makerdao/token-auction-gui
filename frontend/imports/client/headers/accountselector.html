@@ -1,0 +1,20 @@
+<template name="accountSelector">
+  <div class="account-section">
+    <p class="paragraph-account">Account:
+      <span class="select-change-allowance">
+        <select class="select-change-account">
+        {{#each accounts}}
+          <option value="{{this}}" selected={{equals this address}}>{{this}}</option>
+        {{/each}}
+        </select>
+        <span class="glyphicon glyphicon-chevron-down select-glyph" aria-hidden="true"></span>
+      </span>
+    </p>
+    <p>
+      Auction:
+      <span class="select-change-allowance">
+        <a class="link-contract-address" href={{etherscanHref}}{{contract}} target="_blank">{{contract}}</a>
+      </span>
+    </p>
+  </div>
+</template>

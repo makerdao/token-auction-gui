@@ -1,0 +1,31 @@
+<template name="networkStatus">
+  <div class="networkstatus-section">
+    <div class="col-md-6">
+      <img alt="Maker Token Auction" src="/maker-logo-auction.svg">
+    </div>
+    <div class="col-md-6">
+      <div class="div-connected">
+        <p>
+          <span class="network-type">{{network}}</span>
+          {{> whatisthis section="network"}}
+        </p>
+        <p>
+        {{#unless isConnected}}
+          (not connected)
+        {{else}}
+          {{#if syncing}}
+            (syncing...)
+          {{else}}
+            {{#if outOfSync}}
+              (out of sync, waiting for synchronization)
+            {{else}}
+              <span class="green-circle"></span>
+              <span class="network-status">CONNECTED</span>
+            {{/if}}
+          {{/if}}
+        {{/unless}}
+        </p>
+      </div>
+    </div>
+  </div>
+</template>

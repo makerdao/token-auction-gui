@@ -1,15 +1,20 @@
-<head>
-  <title>Token auction</title>
-  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
-</head>
 <body>
-  <div id="outer" class="container">
-    <div id="inner">
-      <h1>WEEKLY MKR AUCTION</h1>
-      <p class="text-danger">
-        <strong>Warning!</strong> Token Auction is undergoing alpha testing: Proceed at your own risk, and use only small amounts of MKR and ETH.
-      </p>
-      {{> networkStatus}}
+  <div class="container">
+    {{#if isConnected}}
+      <div class="row row-header">
+        <section class="col-md-4">
+          {{> networkStatus }}
+        </section>
+        <section class="col-md-2">
+          {{> volumes }}
+        </section>
+        <section class="col-md-6">
+          {{> accountSelector }}
+        </section>
+      </div>
+    {{/if}}
+    <div id="">
+
       {{> balance}}
       {{#if isConnected}}
         {{#if contractExists}}
@@ -22,10 +27,7 @@
           </div>
         {{/if}}
         {{else}}
-          <div class="alert alert-danger" role="alert">
-            Not connected to the ethereum blockchain.
-          </div>
-          <p>Start a node like geth or consider installing <a href="https://metamask.io/">Metamask</a> or the <a href="https://github.com/ethereum/mist/releases">Mist</a> browser to connect to the Ethereum blockchain.</p>
+          {{> noEthereum}}
       {{/if}}
     </div>
   </div>
