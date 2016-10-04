@@ -33,6 +33,8 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
         Auctionlets.syncExpired();
         if (auctionlet.unclaimed) {
           Auctionlets.loadAuctionletBidHistory(currentAuctionletId);
+        } else {
+          Auctionlets.loadAuctionletClaimedBid(currentAuctionletId);
         }
       } else {
         console.log('auctionlet info error: ', error);
@@ -51,6 +53,26 @@ Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {
     result = 0;
   }
   return result;
+};
+
+Auctionlets.loadAuctionletClaimedBid = function loadAuctionletClaimedBid(auctionletId) {
+  // Check on local node or Etherscan if there's info
+  /* eslint-disable new-cap */
+  TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((err, res) => {
+    const lastIndex = res.length - 1;
+    const blockNumber = res[lastIndex].blockNumber;
+    Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, blockNumber).then((r) => {
+      const update = {
+        last_bidder: r.last_bidder,
+        last_bid_time: r.last_bid_time,
+        buy_amount: r.buy_amount,
+        sell_amount: r.sell_amount,
+        unit_price: r.unit_price,
+      };
+      Auctionlets.update({ auctionletId }, { $set: update });
+    });
+  });
+  /* eslint-enable new-cap */
 };
 
 Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auctionletId) {
@@ -81,12 +103,13 @@ Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistoryDe
             last_bidder: result[1],
             last_bid_time: new Date(result[2].toNumber() * 1000),
             buy_amount: result[3].toString(10),
+            sell_amount: result[4].toString(10),
             unit_price: result[3].div(result[4]).toString(10),
           };
           resolve(auctionlet);
         } else {
           // Bring info from etherscan
-          console.log('Could not find history in local node. Calling Etherscan...');
+          console.log('Could not find history in local node for block ', blockNumber, '. Calling Etherscan...');
           callContractMethod('getAuctionletInfo(uint256)', [auctionletId], blockNumber).then((res) => {
             const buyAmount = web3.toBigNumber(parseInt(res[3].toString(16), 16));
             const sellAmount = web3.toBigNumber(parseInt(res[4].toString(16), 16));
@@ -95,6 +118,7 @@ Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistoryDe
               last_bidder: '0x' + res[1].replace(/^0+/, ''),
               last_bid_time: new Date(parseInt(res[2].toString(16), 16) * 1000),
               buy_amount: buyAmount.toString(10),
+              sell_amount: sellAmount.toString(10),
               unit_price: buyAmount.div(sellAmount).toString(10),
             };
             /* eslint-enable prefer-template */
