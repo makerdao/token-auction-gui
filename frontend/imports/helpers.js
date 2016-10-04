@@ -2,6 +2,7 @@ import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import Tokens from '/imports/api/tokens.js';
 import Auctions from '/imports/api/auctions.js';
+import { moment } from 'meteor/momentjs:moment';
 
 Template.registerHelper('isConnected', () => Session.get('isConnected'));
 
@@ -68,6 +69,14 @@ Template.registerHelper('contractExists', () => {
 Template.registerHelper('shortAddress', (address) => {
   const short = address.substring(0, 10);
   return short;
+});
+
+Template.registerHelper('countdown', (timeRemaining) => {
+  if (timeRemaining.get() !== undefined) {
+    const time = moment.duration(timeRemaining.get());
+    return `${time.days()}d ${time.hours()}h ${time.minutes()}m ${time.seconds()}s`;
+  }
+  return timeRemaining.get();
 });
 
 Template.registerHelper('equals', (a, b) => a === b);

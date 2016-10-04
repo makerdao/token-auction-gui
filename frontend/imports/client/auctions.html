@@ -16,19 +16,19 @@
             <td><a href="/#!/auction/{{auctionletId}}">Bid</a></td>
             <td>{{formatBalance (fromWei sell_amount)}}</td>
             <td>
-              {{#if bids}}
-                {{bid}}
-              {{else}}
+              {{#if equals bids "undefined"}}
                 Loading...
+              {{else}}
+                {{bids}}
               {{/if}}
             </td>
             <td>{{formatBalance (unit_price)}}</td>
             <td>{{formatBalance (fromWei buy_amount)}}</td>
             <td>
-              {{#if time_left}}
-                {{time_left}}
-              {{else}}
+              {{#if equals duration "undefined"}}
                 Loading...
+              {{else}}
+                {{countdown (timeRemaining auctionletId)}}
               {{/if}}
             </td>
           </tr>

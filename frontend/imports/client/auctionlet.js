@@ -4,8 +4,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
-import { moment } from 'meteor/momentjs:moment';
-import { $ } from 'meteor/jquery';
 
 import './auctionlet.html';
 
@@ -50,6 +48,7 @@ Template.auctionlet.viewmodel({
     }
     return singleAuctionlet;
   },
+  timeRemaining,
   bid: 0,
   bidsDisabled() {
     return (Session.get('bidProgress') > 0 ? 'disabled' : '');
@@ -62,13 +61,6 @@ Template.auctionlet.viewmodel({
   },
   bidProgress() {
     return Session.get('bidProgress');
-  },
-  countdown() {
-    if (timeRemaining.get() !== undefined) {
-      const time = moment.duration(timeRemaining.get());
-      return `${time.days()}d ${time.hours()}h ${time.minutes()}m ${time.seconds()}s`;
-    }
-    return timeRemaining.get();
   },
   create(event) {
     event.preventDefault();

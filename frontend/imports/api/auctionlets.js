@@ -3,6 +3,7 @@ import Tokens from './tokens.js';
 import Transactions from './transactions.js';
 import prettyError from '../utils/prettyError.js';
 import callContractMethod from '../utils/etherscan-connector.js';
+import Auctions from './auctions.js';
 
 const Auctionlets = new Mongo.Collection(null);
 const BID_GAS = 1000000;
@@ -56,7 +57,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
     TokenAuction.objects.auction.NewAuction({ }, { fromBlock: 0 }).get((error, result) => {
       if (!error) {
         const lastEventIndex = result.length - 1;
-        // TODO:When splitting auctions is active we will need to get the max auctionlet id using another way
+        // TODO: When splitting auctions is active we will need to get the max auctionlet id using another way
         const lastAuctionletId = result[lastEventIndex].args.id.toNumber();
         const auctionPromises = [];
 
@@ -80,14 +81,24 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
               // console.log(notFinishedAutions[i]);
               // console.log(resultProm2[i]);
               if (!resultProm2[i]) {
+                notFinishedAutions[i].bids = 'undefined';
+                notFinishedAutions[i].duration = 'undefined';
                 Auctionlets.insert(notFinishedAutions[i]);
+
+                // Update Bids# asynchronously
                 TokenAuction.objects.auction.Bid({ auctionlet_id: notFinishedAutions[i].auctionletId },
                 { fromBlock: 0 }).get((errorBids, resultBids) => {
                   if (!errorBids) {
-                    console.log(notFinishedAutions[i].auctionletId, resultBids.length);
                     Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
                     { $set: { bids: resultBids.length } });
                   }
+                });
+
+                // Update Time Left asynchronously.
+                // TODO: When splitting auctions is active we should only call the auction once per group of auctionlets
+                Auctions.getAuction(notFinishedAutions[i].auction_id).then((resultAuction) => {
+                  Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
+                  { $set: { duration: resultAuction.duration } });
                 });
               }
             }
