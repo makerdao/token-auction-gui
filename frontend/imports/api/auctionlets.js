@@ -77,6 +77,8 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
 
           Promise.all(auctionPromises2).then((resultProm2) => {
             Auctionlets.remove({});
+            const auctionletIds = [];
+
             for (let i = 0; i < resultProm2.length; i++) {
               // console.log(notFinishedAutions[i]);
               // console.log(resultProm2[i]);
@@ -84,15 +86,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
                 notFinishedAutions[i].bids = 'undefined';
                 notFinishedAutions[i].duration = 'undefined';
                 Auctionlets.insert(notFinishedAutions[i]);
-
-                // Update Bids# asynchronously
-                TokenAuction.objects.auction.Bid({ auctionlet_id: notFinishedAutions[i].auctionletId },
-                { fromBlock: 0 }).get((errorBids, resultBids) => {
-                  if (!errorBids) {
-                    Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
-                    { $set: { bids: resultBids.length } });
-                  }
-                });
+                auctionletIds.push(parseInt(notFinishedAutions[i].auction_id));
 
                 // Update Time Left asynchronously.
                 // TODO: When splitting auctions is active we should only call the auction once per group of auctionlets
@@ -101,6 +95,33 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
                   { $set: { duration: resultAuction.duration } });
                 });
               }
+            }
+
+            // Update Bids# asynchronously
+            if (auctionletIds) {
+              TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletIds },
+              { fromBlock: 0 }).get((errorBids, resultBids) => {
+                if (!errorBids) {
+                  const bids = [];
+                  let auctionletId = null;
+
+                  for (let i = 0; i < resultBids.length; i++) {
+                    auctionletId = resultBids[i].args.auctionlet_id.toNumber();
+                    if (typeof bids[auctionletId] === 'undefined') {
+                      bids[auctionletId] = 1;
+                    } else {
+                      bids[auctionletId] += 1;
+                    }
+                  }
+                  for (let i = 0; i < auctionletIds.length; i++) {
+                    if (typeof bids[auctionletIds[i]] === 'undefined') {
+                      bids[auctionletIds[i]] = 0;
+                    }
+                    Auctionlets.update({ auctionletId: auctionletIds[i] },
+                    { $set: { bids: bids[auctionletIds[i]] } });
+                  }
+                }
+              });
             }
           });
         });

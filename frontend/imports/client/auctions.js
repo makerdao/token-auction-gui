@@ -41,5 +41,5 @@ Template.auctions.viewmodel({
   },
   loadingAuctionlets() {
     return (Auctionlets.find({ }).count() === 0);
-  }
+  },
 });
