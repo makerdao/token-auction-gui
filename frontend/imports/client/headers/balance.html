@@ -7,20 +7,21 @@
       <span class="span-total-balance-amount">
         {{formatBalance (fromWei ETHToken.allowance)}} ETH
       </span>
-    <button class="btn btn-default btn-change-allowance" data-toggle="modal" data-target="#allowanceModal" {{b "click: preventDefault"}}>change allowance</button>
   </div>
   <div class="col-md-6 balance">
-      <span class="span-currency-allowance {{currencyType}}">{{formatBalance (fromWei MKRToken.balance)}} <a href="{{etherscanHref}}{{MKRToken.address}}" class="MKR">{{MKRToken.name}}</a></span>
+      <span class="span-currency-allowance MKR">{{formatBalance (fromWei MKRToken.balance)}} <a href="{{etherscanHref}}{{MKRToken.address}}" class="MKR">{{MKRToken.name}}</a></span>
       <span class="span-total-balance-title">ALLOWANCE</span>
       <span class="span-total-balance-amount">
           {{formatBalance (fromWei MKRToken.allowance)}} ETH
       </span>
-    <button class="btn btn-default btn-change-allowance" data-toggle="modal" data-target="#allowanceModal" {{b "click: preventDefault"}}>change allowance</button>
   </div>
-  {{#unless hasETHTokens}}
-    <br>
-    <span class="alert alert-warning ethTokensSpan">You currently have 0 ETH tokens, you can exchange ETH for ETH tokens on <a href="https://mkr.market/" target="_blank">mkr.market</a></span>
-  {{/unless}}
 </div>
+{{#unless hasETHTokens}}
+<div class="row">
+  <div class="col-md-12">
+    <div class="alert alert-warning ethTokensSpan">You currently have 0 ETH tokens, you can exchange ETH for ETH tokens on <a href="https://mkr.market/" target="_blank">mkr.market</a></div>
+  </div>
+</div>
+{{/unless}}
 {{/if}}
 </template>
