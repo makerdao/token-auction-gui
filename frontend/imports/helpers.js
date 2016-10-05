@@ -61,6 +61,13 @@ Template.registerHelper('etherscanHref', () => {
   /* eslint-enable prefer-template */
 });
 
+Template.registerHelper('etherscanTokenHref', () => {
+  const network = Session.get('network');
+  /* eslint-disable prefer-template */
+  return 'https://' + (network === 'morden' ? 'testnet.' : '') + 'etherscan.io/token/';
+  /* eslint-enable prefer-template */
+});
+
 Template.registerHelper('contractExists', () => {
   const network = Session.get('network');
   const isConnected = Session.get('isConnected');
