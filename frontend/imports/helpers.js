@@ -2,6 +2,7 @@ import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import Tokens from '/imports/api/tokens.js';
 import Auctions from '/imports/api/auctions.js';
+import { moment } from 'meteor/momentjs:moment';
 
 Template.registerHelper('isConnected', () => Session.get('isConnected'));
 
@@ -27,6 +28,10 @@ Template.registerHelper('json', (a) => {
     return a;
   }
 });
+
+Template.registerHelper('currentAuctionId', () => Session.get('currentAuctionId'));
+
+Template.registerHelper('currentAuctionletId', () => Session.get('currentAuctionletId'));
 
 Template.registerHelper('ETHBalance', () => {
   const balance = Session.get('ETHBalance');
@@ -63,6 +68,21 @@ Template.registerHelper('contractExists', () => {
   return network !== false && isConnected === true && exists === true;
 });
 
+Template.registerHelper('shortAddress', (address) => {
+  const short = address.substring(0, 10);
+  return short;
+});
+
+Template.registerHelper('countdown', (timeRemaining) => {
+  if (typeof timeRemaining !== 'undefined') {
+    const time = moment.duration(timeRemaining);
+    const returnVar = `${time.days()}d ${time.hours()}h ${time.minutes()}m ${time.seconds()}s`;
+    return returnVar;
+  }
+  return false;
+});
+
 Template.registerHelper('equals', (a, b) => a === b);
 
 Template.registerHelper('or', (a, b) => a || b);
+

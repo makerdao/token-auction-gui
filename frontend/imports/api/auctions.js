@@ -7,13 +7,12 @@ import prettyError from '../utils/prettyError.js';
 const Auctions = new Mongo.Collection(null);
 const AUCTION_GAS = 1000000;
 
-Auctions.loadAuction = function loadAuction(currentAuctionId) {
-  if (typeof (TokenAuction.objects) !== 'undefined') {
-    TokenAuction.objects.auction.getAuctionInfo(currentAuctionId, (error, result) => {
+Auctions.getAuction = function getAuction(auctionId) {
+  const p = new Promise((resolve, reject) => {
+    TokenAuction.objects.auction.getAuctionInfo(auctionId, (error, result) => {
       if (!error) {
-        Auctions.remove({});
         const auction = {
-          auctionId: currentAuctionId,
+          auctionId,
           creator: result[0],
           selling: result[1],
           buying: result[2],
@@ -25,10 +24,22 @@ Auctions.loadAuction = function loadAuction(currentAuctionId) {
           reversed: result[8],
           unsold: result[9],
         };
-        Auctions.insert(auction);
+        resolve(auction);
       } else {
-        console.log('error: ', error);
+        reject(error);
       }
+    });
+  });
+  return p;
+};
+
+Auctions.loadAuction = function loadAuction(auctionId) {
+  if (typeof (TokenAuction.objects) !== 'undefined') {
+    Auctions.getAuction(auctionId).then((auction) => {
+      Auctions.remove({});
+      Auctions.insert(auction);
+    }, (error) => {
+      console.log('error: ', error);
     });
   }
 };

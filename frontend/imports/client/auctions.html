@@ -1,0 +1,45 @@
+<template name="auctions">
+  <div class="row">
+  {{#unless currentAuctionId}}
+    <div class="auction-section boxDiv col-md-12">
+        <h2>Auctions</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>MKR</th>
+              <th>Bids</th>
+              <th>Current Bid <span>ETH</span></th>
+              <th>Unit Price <span>ETH</span></th>
+              <th>Time Left</th>
+            </tr>
+          </thead>
+            <tbody>
+            {{#each auctionlets}}
+            <tr>
+              <td class="buttons"><a class="btn btn-default btn-round" href="/#!/auction/{{auctionletId}}">Bid</a></td>
+              <td>{{formatBalance (fromWei sell_amount)}}</td>
+              <td>
+                {{#if equals bids "undefined"}}
+                  Loading...
+                {{else}}
+                  {{bids}}
+                {{/if}}
+              </td>
+              <td>{{formatBalance (fromWei buy_amount)}}</td>
+              <td>{{formatBalance (unit_price)}}</td>
+              <td class="timeleft">
+                {{#if equals duration "undefined"}}
+                  Loading...
+                {{else}}
+                  {{countdown (timeRemaining auctionletId)}}
+                {{/if}}
+              </td>
+            </tr>
+            {{/each}}
+          </tbody>
+        </table>
+    </div>
+  {{/unless}}
+</div>
+</template>

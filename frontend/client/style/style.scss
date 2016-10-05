@@ -10,9 +10,13 @@ $color-base-currency: #8D86C9;
 $color-buy: #26A69A;
 $color-sell: #EF5350;
 
+$color-grey1: #B6B4B6;
+
 body {
   background-color: $background-color;
   margin-top: 40px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
 }
 
 h2 {
@@ -62,6 +66,51 @@ table {
 
 .row-header {
   margin-bottom: 20px;
+}
+
+.table > thead > tr > th{
+  text-transform: uppercase;
+  background-color: #F8F7F5;
+  border: none;
+}
+
+.table > tbody > tr > td{
+  padding:9px;
+}
+
+.ar{
+  text-align: right;
+}
+
+.btn-round{
+  text-transform: uppercase;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  color:$color-grey1;
+  font-size:12px;
+  padding:5px 18px;
+}
+
+.auction-section{
+
+  .table > thead > tr > th,
+  .table > tbody > tr > td{
+    text-align: right;
+    vertical-align: middle;
+  }
+
+  th span{
+    color: $color-grey1;
+  }
+
+  td.buttons{
+    width:100px;
+  }
+
+  td.timeleft{
+    width:170px;
+  }
+
 }
 
 .account-section {
