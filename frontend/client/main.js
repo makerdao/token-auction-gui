@@ -4,10 +4,12 @@ import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
 
 // Headers
-import '/imports/client/headers/accountselector.js';
 import '/imports/client/headers/network-status.js';
+import '/imports/client/headers/accountselector.js';
+import '/imports/client/headers/balance.js';
+import '/imports/client/headers/currencyselector.js';
 
-import '/imports/client/balance.js';
+// import '/imports/client/balance.js';
 import '/imports/client/newauction.js';
 import '/imports/client/auction.js';
 import '/imports/client/auctionlet.js';
