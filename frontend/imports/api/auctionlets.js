@@ -299,7 +299,7 @@ Auctionlets.watchBidTransactions = function watchBidTransactions() {
       console.log('bid', document.object.bid);
       Session.set('bidProgress', 100);
       Session.set('newBidMessage', { message: 'Bid placed succesfully', type: 'success' });
-      Meteor.setTimeout(function () {
+      Meteor.setTimeout(() => {
         Session.set('bidProgress', 0);
       }, 5000);
     }
