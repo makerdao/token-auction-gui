@@ -56,16 +56,12 @@ Template.registerHelper('auctionNotFound', () => {
 
 Template.registerHelper('etherscanHref', () => {
   const network = Session.get('network');
-  /* eslint-disable prefer-template */
-  return 'https://' + (network === 'morden' ? 'testnet.' : '') + 'etherscan.io/address/';
-  /* eslint-enable prefer-template */
+  return `https://${(network === 'morden' ? 'testnet.' : '')}etherscan.io/address/`;
 });
 
 Template.registerHelper('etherscanTokenHref', () => {
   const network = Session.get('network');
-  /* eslint-disable prefer-template */
-  return 'https://' + (network === 'morden' ? 'testnet.' : '') + 'etherscan.io/token/';
-  /* eslint-enable prefer-template */
+  return `https://${(network === 'morden' ? 'testnet.' : '')}etherscan.io/token/`;
 });
 
 Template.registerHelper('contractExists', () => {
