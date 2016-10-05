@@ -1,6 +1,7 @@
 <template name="bidHistory">
   {{#if auctionlet.history}}
-    <div class="boxDiv">
+  <div class="row">
+    <div class="bidhistory-section boxDiv col-md-12">
       <h2>Bid History #{{auctionlet.auctionletId}}</h2>
         <table class="table">
           <tr>
@@ -19,5 +20,6 @@
           {{/each}}
         </table>
     </div>
+  </div>
   {{/if}}
 </template>

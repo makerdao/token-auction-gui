@@ -82,7 +82,10 @@ Template.registerHelper('countdown', (timeRemaining) => {
   return false;
 });
 
+Template.registerHelper('loaderIcon', () => {
+  return '<i class="fa fa-spinner fa-pulse fa-fw"></i>';
+});
+
 Template.registerHelper('equals', (a, b) => a === b);
 
 Template.registerHelper('or', (a, b) => a || b);
-

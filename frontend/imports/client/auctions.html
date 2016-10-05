@@ -1,6 +1,6 @@
 <template name="auctions">
-  <div class="row">
   {{#unless currentAuctionId}}
+  <div class="row">
     <div class="auction-section boxDiv col-md-12">
         <h2>Auctions</h2>
         <table class="table">
@@ -15,13 +15,16 @@
             </tr>
           </thead>
             <tbody>
+            {{#if loadingAuctionlets}}
+            <tr><td class="ac" colspan="6">{{{loaderIcon}}} Loading auctions</td></tr>
+            {{/if}}
             {{#each auctionlets}}
             <tr>
               <td class="buttons"><a class="btn btn-default btn-round" href="/#!/auction/{{auctionletId}}">Bid</a></td>
               <td>{{formatBalance (fromWei sell_amount)}}</td>
               <td>
                 {{#if equals bids "undefined"}}
-                  Loading...
+                  {{{loaderIcon}}}
                 {{else}}
                   {{bids}}
                 {{/if}}
@@ -30,7 +33,7 @@
               <td>{{formatBalance (unit_price)}}</td>
               <td class="timeleft">
                 {{#if equals duration "undefined"}}
-                  Loading...
+                  {{{loaderIcon}}}
                 {{else}}
                   {{countdown (timeRemaining auctionletId)}}
                 {{/if}}
@@ -40,6 +43,6 @@
           </tbody>
         </table>
     </div>
+  </div>
   {{/unless}}
-</div>
 </template>

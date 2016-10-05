@@ -1,5 +1,6 @@
 <template name="auction">
   {{#if currentAuctionId}}
+  <div class="row">
     <div class="auction-section boxDiv col-md-12">
       <h2>Auction #{{auction.auctionId}}</h2>
       <ol class="breadcrumb">
@@ -8,25 +9,25 @@
       </ol>
       {{#unless auctionNotFound}}
       <table class="table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Creator</th>
+            <th>MKR</th>
+            <th>Bids</th>
+            <th>Start Bid <span>ETH</span></th>
+            <th>Minimum increase</th>
+            <th>Expires <span>after last bid</span></th>
+          </tr>
+        </thead>
         <tbody>
           <tr>
-            <td>Creator</td>
-            <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank">{{auction.creator}}</a></td>
-          </tr>
-          <tr>
-            <td>Selling</td>
+            <td><a href="#share" class="btn btn-default btn-round">Share</a></td>
+            <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank">{{shortAddress auction.creator}}...</a></td>
             <td>{{formatBalance (fromWei auction.sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
-          </tr>
-          <tr>
-            <td>Start bid</td>
+            <td>?</td>
             <td>{{formatBalance (fromWei auction.start_bid)}} <span class="ETH">{{ETHToken.name}}</span></td>
-          </tr>
-          <tr>
-            <td>Minimum increase</td>
             <td>{{auction.min_increase}}%</td>
-          </tr>
-          <tr>
-            <td>Duration <i>(after last bid)</i></td>
             <td>{{auction.duration}} seconds</td>
           </tr>
         </tbody>
@@ -35,5 +36,6 @@
     <span>Auction was not found</span>
     {{/unless}}
   </div>
+</div>
  {{/if}}
 </template>

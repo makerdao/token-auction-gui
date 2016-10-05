@@ -39,4 +39,7 @@ Template.auctions.viewmodel({
   timeRemaining(auctionletId) {
     return timeRemaining.get()[auctionletId];
   },
+  loadingAuctionlets() {
+    return (Auctionlets.find({ }).count() === 0);
+  }
 });

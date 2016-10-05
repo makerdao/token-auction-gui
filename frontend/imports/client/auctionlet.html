@@ -1,6 +1,7 @@
 <template name="auctionlet">
   {{#if currentAuctionletId}}
-    <div class="boxDiv">
+  <div class="row">
+    <div class="auctionlet-section boxDiv col-md-12">
       <h2>Auctionlet #{{auctionlet.auctionletId}}</h2>
       {{#unless auctionNotFound}}
         <table class="table">
@@ -101,5 +102,6 @@
     {{#if unclaimed}}
       {{> bidHistory auctionlet=auctionlet}}
     {{/if}}
+  </div>
   {{/if}}
 </template>

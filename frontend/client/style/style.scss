@@ -11,6 +11,7 @@ $color-buy: #26A69A;
 $color-sell: #EF5350;
 
 $color-grey1: #B6B4B6;
+$color-grey-dark: #70727E;
 
 body {
   background-color: $background-color;
@@ -82,6 +83,14 @@ table {
   text-align: right;
 }
 
+.al{
+  text-align: right;
+}
+
+.ac{
+  text-align: center;
+}
+
 .btn-round{
   text-transform: uppercase;
   -webkit-border-radius: 15px;
@@ -93,6 +102,26 @@ table {
 
 .auction-section{
 
+  h2{
+    float:left;
+  }
+
+  .breadcrumb{
+    float:right;
+    margin-top: 10px;
+    margin-bottom:0px;
+    opacity: 0.7;
+    background-color: #fff;
+  }
+
+  .breadcrumb a{
+    color:$color-grey-dark;
+  }
+
+  .breadcrumb:hover{
+    opacity: 1;
+  }
+
   .table > thead > tr > th,
   .table > tbody > tr > td{
     text-align: right;
@@ -101,6 +130,10 @@ table {
 
   th span{
     color: $color-grey1;
+  }
+
+  .table > tbody > tr > td.ac{
+    text-align: center;
   }
 
   td.buttons{
@@ -270,6 +303,7 @@ table {
   text-align: center;
   color: #4F5362;
   margin-bottom: 35px;
+  margin-top: 22px;
 
   .span-currency-allowance {
     font-size: 30.5px;
@@ -766,12 +800,21 @@ table {
 
 .boxDiv {
     background-color: white;
-    box-shadow: 2px 2px 5px #E0DFDF;
+    -webkit-box-shadow: 0 1px 6px 0 #BDBDBD;
+    box-shadow: 0 1px 6px 0 #BDBDBD;
     padding: 10px;
     margin-bottom: 20px;
     margin-top: 10px;
     border: 1px solid #E0DFDF;
     padding: 10px 20px 10px 20px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.boxDiv h2{
+  text-transform: uppercase;
+  margin:20px;
+  margin-left:0px;
 }
 
 .ETH, a.ETH {
