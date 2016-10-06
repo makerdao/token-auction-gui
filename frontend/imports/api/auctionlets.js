@@ -41,6 +41,8 @@ Auctionlets.getAuctionlet = function getAuctionlet(auctionletId) {
           unclaimed: result[5],
           base: result[6],
           isExpired: false,
+          bids: 'undefined',
+          duration: 'undefined',
         };
         resolve(auctionlet);
       } else {
@@ -83,10 +85,8 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
               // console.log(notFinishedAutions[i]);
               // console.log(resultProm2[i]);
               if (!resultProm2[i]) {
-                notFinishedAutions[i].bids = 'undefined';
-                notFinishedAutions[i].duration = 'undefined';
                 Auctionlets.insert(notFinishedAutions[i]);
-                auctionletIds.push(parseInt(notFinishedAutions[i].auction_id));
+                auctionletIds.push(parseInt(notFinishedAutions[i].auction_id, 10));
 
                 // Update Time Left asynchronously.
                 // TODO: When splitting auctions is active we should only call the auction once per group of auctionlets
@@ -185,6 +185,9 @@ Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auction
   if (typeof (TokenAuction.objects) !== 'undefined') {
     const bidPromises = [];
     TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((error, result) => {
+      // Set Bids# in the Auctionlet and in the Auction
+      Auctionlets.update({ auctionletId }, { $set: { bids: result.length } });
+      // Get the state of the auctionlet at the moment of the bid
       for (let i = 0; i < result.length; i++) {
         bidPromises.push(Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, result[i].blockNumber));
       }

@@ -86,7 +86,8 @@ Template.registerHelper('countdown', (timeRemaining) => {
 });
 
 Template.registerHelper('loaderIcon', () => {
-  return '<i class="fa fa-spinner fa-pulse fa-fw"></i>';
+  const loaderIcon = '<i class="fa fa-spinner fa-pulse fa-fw"></i>';
+  return loaderIcon;
 });
 
 Template.registerHelper('equals', (a, b) => a === b);

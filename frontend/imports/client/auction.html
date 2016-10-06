@@ -25,7 +25,13 @@
             <td><a href="#share" class="btn btn-default btn-round">Share</a></td>
             <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank">{{shortAddress auction.creator}}...</a></td>
             <td>{{formatBalance (fromWei auction.sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
-            <td>?</td>
+            <td>
+              {{#if equals auctionlet.bids "undefined"}}
+                {{{loaderIcon}}}
+              {{else}}
+                {{auctionlet.bids}}
+              {{/if}}
+            </td>
             <td>{{formatBalance (fromWei auction.start_bid)}} <span class="ETH">{{ETHToken.name}}</span></td>
             <td>{{auction.min_increase}}%</td>
             <td>{{auction.duration}} seconds</td>
