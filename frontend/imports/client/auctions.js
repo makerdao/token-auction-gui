@@ -1,4 +1,5 @@
 import Auctionlets from '/imports/api/auctionlets.js';
+import { Session } from 'meteor/session';
 import { ReactiveArray } from 'meteor/templates:array';
 import './auctions.html';
 
@@ -40,6 +41,6 @@ Template.auctions.viewmodel({
     return timeRemaining.get()[auctionletId];
   },
   loadingAuctionlets() {
-    return (Auctionlets.find({ }).count() === 0);
+    return Session.get('loadingAuctionlets');
   },
 });

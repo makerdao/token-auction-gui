@@ -16,30 +16,37 @@
           </thead>
             <tbody>
             {{#if loadingAuctionlets}}
-            <tr><td class="ac" colspan="6">{{{loaderIcon}}} Loading auctions</td></tr>
+              <tr><td class="ac" colspan="6">{{{loaderIcon}}} Loading auctions</td></tr>
+            {{else}}
+              {{#each auctionlets}}
+                <tr>
+                  <td class="buttons"><a class="btn btn-default btn-round" href="/#!/auction/{{auctionletId}}">Bid</a></td>
+                  <td>{{formatBalance (fromWei sell_amount)}}</td>
+                  <td>
+                    {{#if equals bids "undefined"}}
+                      {{{loaderIcon}}}
+                    {{else}}
+                      {{bids}}
+                    {{/if}}
+                  </td>
+                  <td>{{formatBalance (fromWei buy_amount)}}</td>
+                  <td>{{formatBalance (unit_price)}}</td>
+                  <td class="timeleft">
+                    {{#if equals duration "undefined"}}
+                      {{{loaderIcon}}}
+                    {{else}}
+                      {{countdown (timeRemaining auctionletId)}}
+                    {{/if}}
+                  </td>
+                </tr>
+              {{else}}
+                <tr>
+                  <td colspan="6">
+                    There are no active auctions
+                  </td>
+                </tr>
+              {{/each}}
             {{/if}}
-            {{#each auctionlets}}
-            <tr>
-              <td class="buttons"><a class="btn btn-default btn-round" href="/#!/auction/{{auctionletId}}">Bid</a></td>
-              <td>{{formatBalance (fromWei sell_amount)}}</td>
-              <td>
-                {{#if equals bids "undefined"}}
-                  {{{loaderIcon}}}
-                {{else}}
-                  {{bids}}
-                {{/if}}
-              </td>
-              <td>{{formatBalance (fromWei buy_amount)}}</td>
-              <td>{{formatBalance (unit_price)}}</td>
-              <td class="timeleft">
-                {{#if equals duration "undefined"}}
-                  {{{loaderIcon}}}
-                {{else}}
-                  {{countdown (timeRemaining auctionletId)}}
-                {{/if}}
-              </td>
-            </tr>
-            {{/each}}
           </tbody>
         </table>
     </div>

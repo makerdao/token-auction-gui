@@ -54,6 +54,7 @@ Auctionlets.getAuctionlet = function getAuctionlet(auctionletId) {
 };
 
 Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
+  Session.set('loadingAuctionlets', true);
   if (typeof (TokenAuction.objects) !== 'undefined') {
     /* eslint-disable new-cap */
     TokenAuction.objects.auction.NewAuction({ }, { fromBlock: 0 }).get((error, result) => {
@@ -80,7 +81,6 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
           Promise.all(auctionPromises2).then((resultProm2) => {
             Auctionlets.remove({});
             const auctionletIds = [];
-
             for (let i = 0; i < resultProm2.length; i++) {
               // console.log(notFinishedAutions[i]);
               // console.log(resultProm2[i]);
@@ -96,6 +96,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
                 });
               }
             }
+            Session.set('loadingAuctionlets', false);
 
             // Update Bids# asynchronously
             if (auctionletIds) {
