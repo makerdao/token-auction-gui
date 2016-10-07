@@ -54,6 +54,9 @@ Auctionlets.getAuctionlet = function getAuctionlet(auctionletId) {
 };
 
 Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
+  if (Session.get('auctionletsListLoaded')) {
+    return;
+  }
   Session.set('loadingAuctionlets', true);
   if (typeof (TokenAuction.objects) !== 'undefined') {
     /* eslint-disable new-cap */
@@ -97,6 +100,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
               }
             }
             Session.set('loadingAuctionlets', false);
+            Session.set('auctionletsListLoaded', true);
 
             // Update Bids# asynchronously
             if (auctionletIds) {
@@ -133,6 +137,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
 };
 
 Auctionlets.loadAuctionlet = function loadAuctionlet(auctionletId) {
+  Session.set('auctionletsListLoaded', false);
   if (typeof (TokenAuction.objects) !== 'undefined') {
     Auctionlets.getAuctionlet(auctionletId).then((auctionlet) => {
       Auctionlets.remove({});
