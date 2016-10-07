@@ -27,6 +27,10 @@ Template.newbid.viewmodel({
       event.preventDefault();
       this.checkBid();
     },
+    'keyup #inputUnitPrice, focus #inputUnitPrice, blur #inputUnitPrice, change #inputUnitPrice': function eventUnitPrice(event) {
+      event.preventDefault();
+      this.checkUnitPrice();
+    },
   },
   checkBid() {
     if (Session.get('bidProgress') > 0) {
@@ -34,9 +38,32 @@ Template.newbid.viewmodel({
     }
     Session.set('newBidMessage', null);
     const auctionletBid = web3.toWei(this.bid(), 'ether');
+    this.unitPrice(auctionletBid / this.auctionlet().sell_amount);
     if (Tokens !== undefined && this.auction() !== undefined) {
       if (Tokens.isBalanceSufficient(auctionletBid, this.auction().buying)) {
         if (this.auctionlet() !== undefined && web3.toBigNumber(auctionletBid)
+        .lt(Auctionlets.calculateRequiredBid(this.auctionlet().buy_amount, this.auction().min_increase))) {
+          Session.set('newBidMessage', { message: 'Bid is not high enough', type: 'danger' });
+        } else {
+          Session.set('newBidMessage', null);
+        }
+      } else {
+        Session.set('newBidMessage', {
+          message: 'Your balance is insufficient for your current bid',
+          type: 'danger' });
+      }
+    }
+  },
+  checkUnitPrice() {
+    if (Session.get('bidProgress') > 0) {
+      return;
+    }
+    Session.set('newBidMessage', null);
+    // how much its selling times unit price
+    const unitPrice = web3.toWei(this.unitPrice(), 'ether');
+    if (Tokens !== undefined && this.auction() !== undefined) {
+      if (Tokens.isBalanceSufficient(unitPrice, this.auction().buying)) {
+        if (this.auctionlet() !== undefined && web3.toBigNumber(unitPrice)
         .lt(Auctionlets.calculateRequiredBid(this.auctionlet().buy_amount, this.auction().min_increase))) {
           Session.set('newBidMessage', { message: 'Bid is not high enough', type: 'danger' });
         } else {
