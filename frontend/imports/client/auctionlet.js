@@ -3,7 +3,6 @@ import { Meteor } from 'meteor/meteor';
 import { ReactiveVar } from 'meteor/reactive-var';
 import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
-import Tokens from '/imports/api/tokens.js';
 
 import './auctionlet.html';
 
@@ -33,7 +32,6 @@ Template.auctionlet.viewmodel({
   auctionlet() {
     const singleAuctionlet = Auctionlets.findAuctionlet();
     const singleAuction = Auctions.findAuction();
-    console.log(singleAuctionlet);
     if (singleAuctionlet !== undefined && singleAuction !== undefined) {
       const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
       if (this.bid() === 0) {

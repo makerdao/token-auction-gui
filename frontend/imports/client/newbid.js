@@ -1,12 +1,11 @@
 import { Template } from 'meteor/templating';
-import { Meteor } from 'meteor/meteor';
 import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
 
-import './bid.html';
+import './newbid.html';
 
-Template.auctionlet.viewmodel({
+Template.newbid.viewmodel({
   onCreated() {
     Session.set('bidProgress', 0);
   },
@@ -16,6 +15,7 @@ Template.auctionlet.viewmodel({
       this.checkBid();
     },
   },
+  bid: 0,
   checkBid() {
     if (Session.get('bidProgress') > 0) {
       return;
