@@ -90,7 +90,8 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
 
                 // Update Time Left asynchronously.
                 // TODO: When splitting auctions is active we should only call the auction once per group of auctionlets
-                Auctions.getAuction(notFinishedAutions[i].auction_id).then((resultAuction) => {
+                Auctions.getAuction(parseInt(notFinishedAutions[i].auction_id, 10)).then((resultAuction) => {
+                  Auctions.upsert({ auctionId: resultAuction.auctionId }, resultAuction, { upsert: true });
                   Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
                   { $set: { duration: resultAuction.duration } });
                 });

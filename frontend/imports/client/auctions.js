@@ -42,4 +42,15 @@ Template.auctions.viewmodel({
   loadingAuctionlets() {
     return Session.get('loadingAuctionlets');
   },
+  selectAuctionlet(event) {
+    event.preventDefault();
+    Session.set('auctionletSelected', $(event.target).data('auctionletid'));
+  },
+  auctionletSelected() {
+    const auctionletId = Session.get('auctionletSelected');
+    if (auctionletId) {
+      return Auctionlets.findOne({ auctionletId });
+    }
+    return false;
+  },
 });

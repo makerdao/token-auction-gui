@@ -20,7 +20,10 @@
             {{else}}
               {{#each auctionlets}}
                 <tr>
-                  <td class="buttons"><a class="btn btn-default btn-round" href="/#!/auction/{{auctionletId}}">Bid</a></td>
+                  <td class="buttons">
+                    <a class="btn btn-default btn-round" href="/#!/" data-auctionletid="{{auctionletId}}" {{b "click: selectAuctionlet"}}>Bid</a>
+                    <a class="btn btn-default btn-round" href="/#!/auction/{{auctionletId}}">Detail</a>
+                  </td>
                   <td>{{formatBalance (fromWei sell_amount)}}</td>
                   <td>
                     {{#if equals bids "undefined"}}
@@ -49,6 +52,9 @@
             {{/if}}
           </tbody>
         </table>
+        {{#if auctionletSelected}}
+          {{> newbid auctionlet=auctionletSelected}}
+        {{/if}}
     </div>
   </div>
   {{/unless}}
