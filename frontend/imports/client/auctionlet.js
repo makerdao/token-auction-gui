@@ -28,17 +28,8 @@ Template.auctionlet.viewmodel({
   onCreated() {
     Meteor.setInterval(doCountdown, 1000);
   },
-  bid: 0,
   auctionlet() {
     const singleAuctionlet = Auctionlets.findAuctionlet();
-    const singleAuction = Auctions.findAuction();
-    if (singleAuctionlet !== undefined && singleAuction !== undefined) {
-      const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
-      if (this.bid() === 0) {
-        console.log('set minimal bid');
-        this.bid(web3.fromWei(requiredBid));
-      }
-    }
     return singleAuctionlet;
   },
   timeRemaining() {

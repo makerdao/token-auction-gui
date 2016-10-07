@@ -10,11 +10,21 @@
     <span id='spnBidMessage' class="messageSpan alert alert-{{bidMessageType}}">{{{ bidMessage }}}</span>
     <br>
     {{/if}}
-    <label for="inputBid">Enter a bid for the auctionlet</label>
+    Minimum bid increase: {{auction.min_increase}}
+    <br/>
+    Closes without bid in:  {{auction.duration}}
+    <br/>
+    <label for="inputBid">Price</label>
     <br>
     <input class="form-control" id="inputBid" type="number" {{bidsDisabled}} value="{{bid}}" {{b "value: bid"}}> <span class="ETH">{{ETHToken.name}}</span>
     <br>
     <button class="btn btn-primary" {{bidsDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Place bid</button>
+    {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
+    <br/>
+    <label for="inputUnitPrice">Unit Price</label>
+    <br>
+    <input class="form-control" id="inputUnitPrice" type="number" {{bidsDisabled}} value="{{unitPrice}}" {{b "value: unitPrice"}}> <span class="ETH">{{ETHToken.name}}</span>
+    <br>
     {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
   </div>
 </template>

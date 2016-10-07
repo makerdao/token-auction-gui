@@ -9,25 +9,35 @@ Template.newbid.viewmodel({
   onCreated() {
     Session.set('bidProgress', 0);
   },
+  bid: 0,
+  auction() {
+    const singleAuctionlet = this.auctionlet();
+    const singleAuction = Auctions.findOne({ auctionId: parseInt(singleAuctionlet.auction_id, 10) });
+    if (singleAuctionlet !== undefined && singleAuction !== undefined) {
+      const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
+      if (this.bid() === 0) {
+        console.log('set minimal bid');
+        this.bid(web3.fromWei(requiredBid));
+      }
+    }
+    return singleAuction;
+  },
   events: {
     'keyup #inputBid, focus #inputBid, blur #inputBid, change #inputBid': function eventBid(event) {
       event.preventDefault();
       this.checkBid();
     },
   },
-  bid: 0,
   checkBid() {
     if (Session.get('bidProgress') > 0) {
       return;
     }
     Session.set('newBidMessage', null);
     const auctionletBid = web3.toWei(this.bid(), 'ether');
-    const auction = Auctions.findAuction();
-    const auctionlet = Auctionlets.findAuctionlet();
-    if (Tokens !== undefined && auction !== undefined) {
-      if (Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
-        if (auctionlet !== undefined && web3.toBigNumber(auctionletBid)
-        .lt(Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase))) {
+    if (Tokens !== undefined && this.auction() !== undefined) {
+      if (Tokens.isBalanceSufficient(auctionletBid, this.auction().buying)) {
+        if (this.auctionlet() !== undefined && web3.toBigNumber(auctionletBid)
+        .lt(Auctionlets.calculateRequiredBid(this.auctionlet().buy_amount, this.auction().min_increase))) {
           Session.set('newBidMessage', { message: 'Bid is not high enough', type: 'danger' });
         } else {
           Session.set('newBidMessage', null);
