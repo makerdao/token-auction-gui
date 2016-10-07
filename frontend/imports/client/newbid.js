@@ -13,6 +13,7 @@ Template.newbid.viewmodel({
   auction() {
     const singleAuctionlet = this.auctionlet();
     const singleAuction = Auctions.findOne({ auctionId: parseInt(singleAuctionlet.auction_id, 10) });
+    console.log(singleAuctionlet, singleAuction);
     if (singleAuctionlet !== undefined && singleAuction !== undefined) {
       const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
       if (this.bid() === 0) {
