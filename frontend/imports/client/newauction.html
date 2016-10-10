@@ -72,7 +72,7 @@
           </div>
         </div>
       </div>
-      {{#if newAuctionMessage and newAuctionMessageType equal "danger"}}
+      {{#if newAuctionMessageRelevant}}
         <div class="messageDiv alert alert-{{newAuctionMessageType}}">
           <span id='newAuctionMessage'>{{{newAuctionMessage}}}</span>
           {{#if newAuctionUrl}}

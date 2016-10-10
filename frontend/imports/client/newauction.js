@@ -15,6 +15,9 @@ Template.newauction.viewmodel({
   newAuctionMessageType() {
     return Session.get('newAuctionMessage') !== null ? Session.get('newAuctionMessage').type : 'info';
   },
+  newAuctionMessageRelevant() {
+    return this.newAuctionMessageType() !== 'info';
+  },
   newAuctionUrl() {
     return Session.get('newAuctionUrl');
   },
