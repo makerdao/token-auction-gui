@@ -819,6 +819,26 @@ table {
 
 }
 
+.progress{
+  background-color: #55C9AB;
+  height:32px;
+  border-radius: 16px;
+  p{
+    font-family: 'Montserrat-SemiBold', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    position: absolute;
+    width:96%;
+    padding-top:6px;
+    color:#fff;
+    text-shadow: 1px 1px 0 #429B82;
+    text-align:center;
+  }
+  .progress-bar{
+    background-color: #1ED8AA;
+  }
+}
+
 /* Custom styling for WMA */
 
 .alert-shade{
