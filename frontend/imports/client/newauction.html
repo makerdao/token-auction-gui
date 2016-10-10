@@ -3,36 +3,77 @@
   <div class="row">
     <div class="newauction-section boxDiv col-md-12">
       <h2>New auction</h2>
-      <p class="text-danger">
-        <strong>Experimental:</strong> Only create auctions with a small amount and short duration!
+      <p class="alert-shade">
+        <span class="red"><strong>Experimental:</strong></span> Only create auctions with a small amount and short duration!
       </p>
-      <table>
-        <tbody>
-          <tr>
-            <td>Sell amount</td>
-            <td><input type="number" min="0" {{newAuctionDisabled}} {{b "value: sellamount"}}> <span class="MKR">{{MKRToken.name}}</span></td>
-            <td><button class="btn" {{b "click: all"}}>Sell all ({{formatBalance (fromWei MKRToken.balance)}} {{MKRToken.name}})</button></td>
-          </tr>
-          <tr>
-            <td>Start bid</td>
-            <td><input type="number" min="0" {{newAuctionDisabled}} {{b "value: startbid"}}> <span class="ETH">{{ETHToken.name}}</span></td>
-          </tr>
-          <tr>
-            <td>Minimum increase</td>
-            <td><input type="number" min="1" step="1" {{newAuctionDisabled}} {{b "value: minimumincrease"}}> %</td>
-          </tr>
-          <tr>
-            <td>Duration</td>
-            <td><input type="number" min="0" {{newAuctionDisabled}} {{b "value: duration"}}> seconds</td>
-          </tr>
-        </tbody>
-      </table>
-      {{#if newAuctionProgress}}
-      <div class="progress">
-        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{newAuctionProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{newAuctionProgress}}%">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6">
+              <p>AMOUNT</p>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <input class="form-control" type="number" min="0" {{newAuctionDisabled}} {{b "value: sellamount"}}>
+                <span class="input-group-addon MKR">{{MKRToken.name}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <p>START PRICE</p>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <input class="form-control" type="number" min="0" {{newAuctionDisabled}} {{b "value: startbid"}}>
+                <span class="input-group-addon ETH">{{ETHToken.name}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <p>MIMIMUM BID INCREASE</p>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <input class="form-control" type="number" min="1" step="1" {{newAuctionDisabled}} {{b "value: minimumincrease"}}>
+                <span class="input-group-addon">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 grey">
+          <div class="row">
+            <div class="col-md-12">
+              <p><strong>DURATIONS</strong></p>
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-md-6">
+              <p>MAXIMUM</p>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <input class="form-control" type="number" min="1" step="1" {{newAuctionDisabled}} {{b "value: minimumincrease"}}>
+                <span class="input-group-addon">%</span>
+              </div>
+            </div>
+          </div> -->
+          <div class="row">
+            <div class="col-md-6">
+              <p>WINNING BID</p>
+            </div>
+            <div class="col-md-6">
+              <div class="input-group">
+                <input class="form-control" type="number" min="0" {{newAuctionDisabled}} {{b "value: duration"}}>
+                <span class="input-group-addon">seconds</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      {{/if}}
+
+
       {{#if newAuctionMessage}}
         <div class="messageDiv alert alert-{{newAuctionMessageType}}">
           <span id='newAuctionMessage'>{{{newAuctionMessage}}}</span>
@@ -41,7 +82,14 @@
           {{/if}}
         </div>
       {{/if}}
-      <button class="btn btn-primary" {{newAuctionDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Create auction</button>
+      {{#if newAuctionProgress}}
+        <div class="progress">
+          <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{newAuctionProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{newAuctionProgress}}%">
+          </div>
+        </div>
+      {{else}}
+        <button class="pull-right btn btn-mint btn-round" {{newAuctionDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Create auction</button>
+      {{/if}}
       {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
     </div>
   </div>

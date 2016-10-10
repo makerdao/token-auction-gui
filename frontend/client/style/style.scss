@@ -787,6 +787,38 @@ table {
   }
 }
 
+.newauction-section{
+
+  .alert-shade{
+    background-color:#FCFCFC;
+    width:580px;
+    margin:0 auto;
+    margin-bottom:20px;
+  }
+
+  .grey{
+    background-color:#FCFCFC;
+  }
+
+  .alert{
+    margin-top:10px;
+    margin-bottom:15px;
+  }
+
+  .input-group-addon{
+    width:5em;
+  }
+
+  .row{
+    margin-bottom:4px;
+
+    p{
+      margin:8px 0px;
+    }
+  }
+
+}
+
 /* Custom styling for WMA */
 
 .alert-shade{
@@ -852,6 +884,23 @@ table {
     font-size: 14px;
     display: inline-block;
     margin-top: 10px;
+}
+
+.btn{
+  outline-style:none!important;
+}
+
+.btn-mint,
+.btn-mint:focus{
+  color:#82DACA;
+  border-color:#82DACA;
+  background-color:#FFFFFF;
+}
+
+.btn-mint:active,
+.btn-mint:hover{
+  background-color:rgba(130,218,202, 0.3);
+  color:#82DACA;
 }
 
 /* Custom styling WMA */
