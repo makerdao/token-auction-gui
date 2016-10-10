@@ -170,9 +170,16 @@ table {
     color: #222228;
     opacity: 0.68;
     border: none;
-    margin-right: 16px;
+    margin-right: -16px;
+    padding:6px 4px;
+    padding-right:32px;
     background: transparent;
     cursor: pointer;
+    z-index:1;
+  }
+
+  .glyphicon-chevron-down{
+    z-index:-1;
   }
 
   .paragraph-market{
