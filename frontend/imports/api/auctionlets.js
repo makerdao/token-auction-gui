@@ -141,7 +141,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
 Auctionlets.loadAuctionlet = function loadAuctionlet(auctionletId) {
   if (typeof (TokenAuction.objects) !== 'undefined') {
     Auctionlets.getAuctionlet(auctionletId).then((auctionlet) => {
-      if (Auctionlets.find({ _id: auctionletId })) {
+      if (Auctionlets.findOne({ auctionletId })) {
         console.log('found auction');
       } else {
         Session.set('auctionletsListLoaded', false);
