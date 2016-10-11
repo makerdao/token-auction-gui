@@ -31,10 +31,6 @@ table {
   width: 100%;
 }
 
-.container {
-  width: 980px;
-}
-
 .bid,
 .buy,
 .deposit
@@ -170,9 +166,16 @@ table {
     color: #222228;
     opacity: 0.68;
     border: none;
-    margin-right: 16px;
+    margin-right: -16px;
+    padding:6px 4px;
+    padding-right:32px;
     background: transparent;
     cursor: pointer;
+    z-index:1;
+  }
+
+  .glyphicon-chevron-down{
+    z-index:-1;
   }
 
   .paragraph-market{
@@ -187,8 +190,6 @@ table {
 }
 
 .networkstatus-section {
-  display: flex;
-  align-items: center;
 
   p {
     font-family: 'Montserrat', sans-serif;
@@ -780,6 +781,63 @@ table {
   }
 }
 
+.newauction-section{
+
+  .alert-shade{
+    background-color:#FCFCFC;
+    width:580px;
+    margin:0 auto;
+    margin-bottom:20px;
+  }
+
+  .grey{
+    background-color:#FCFCFC;
+  }
+
+  .progress{
+    margin-top:10px;
+    margin-bottom:15px;
+  }
+
+  .alert{
+    margin-top:10px;
+    margin-bottom:15px;
+  }
+
+  .input-group-addon{
+    width:5em;
+  }
+
+  .row{
+    margin-bottom:4px;
+
+    p{
+      margin:8px 0px;
+    }
+  }
+
+}
+
+.progress{
+  background-color: #55C9AB;
+  height:32px;
+  border-radius: 16px;
+  p{
+    font-family: 'Montserrat-SemiBold', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    position: absolute;
+    width:96%;
+    padding-top:6px;
+    color:#fff;
+    text-shadow: 1px 1px 0 #429B82;
+    text-align:center;
+  }
+  .progress-bar{
+    background-color: #1ED8AA;
+  }
+}
+
 /* Custom styling for WMA */
 
 .alert-shade{
@@ -847,6 +905,23 @@ table {
     margin-top: 10px;
 }
 
+.btn{
+  outline-style:none!important;
+}
+
+.btn-mint,
+.btn-mint:focus{
+  color:#82DACA;
+  border-color:#82DACA;
+  background-color:#FFFFFF;
+}
+
+.btn-mint:active,
+.btn-mint:hover{
+  background-color:rgba(130,218,202, 0.3);
+  color:#82DACA;
+}
+
 /* Custom styling WMA */
 
 .footer {
@@ -857,4 +932,64 @@ table {
   opacity: 0.70;
   margin-top: 100px;
   margin-bottom: 30px;
+}
+
+/* Media queries */
+@media only screen and (max-width : 1200px) {
+
+}
+
+@media only screen and (max-width : 979px) {
+  body{
+    margin-top: 20px;
+  }
+  .networkstatus-section{
+    border-bottom:1px solid rgba(0,0,0,0.1);
+    padding-bottom:10px;
+    .connection,
+    .blocks{
+      margin-top:9px;
+    }
+  }
+  .account-section{
+    padding-top:20px;
+  }
+}
+
+@media only screen and (max-width : 767px) {
+
+  .alert-shade{
+    margin-left:15px;
+    margin-right:15px;
+  }
+  .networkstatus-section{
+    border-bottom:1px solid rgba(0,0,0,0.1);
+    padding-bottom:10px;
+    .connection,
+    .blocks{
+      margin-top:9px;
+    }
+  }
+  .newauction-section .alert-shade{
+    width:auto;
+  }
+
+  .account-section .select-change-allowance{
+    margin-left:5px;
+    padding: 11px 14px 11px 27px;
+  }
+  .balance .span-currency-allowance{
+    font-size:24px;
+  }
+  .table > tbody > tr > td{
+    padding:4px;
+  }
+}
+
+@media only screen and (max-width : 480px) {
+
+}
+
+@media only screen and (max-width : 320px) {
+
 }

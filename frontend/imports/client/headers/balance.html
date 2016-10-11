@@ -1,14 +1,14 @@
 <template name="balance">
 {{#if isConnected}}
 <div class="row">
-  <div class="col-md-6 balance">
+  <div class="col-md-6 col-sm-6 col-xs-6 balance">
       <span class="span-currency-allowance ETH">{{formatBalance (fromWei ETHToken.balance)}} <a href="{{etherscanTokenHref}}{{ETHToken.address}}" target="_blank" class="ETH">{{ETHToken.name}}</a></span>
       <span class="span-total-balance-title">ALLOWANCE</span>
       <span class="span-total-balance-amount">
         {{formatBalance (fromWei ETHToken.allowance)}} ETH
       </span>
   </div>
-  <div class="col-md-6 balance">
+  <div class="col-md-6 col-sm-6 col-xs-6 balance">
       <span class="span-currency-allowance MKR">{{formatBalance (fromWei MKRToken.balance)}} <a href="{{etherscanTokenHref}}{{MKRToken.address}}" target="_blank" class="MKR">{{MKRToken.name}}</a></span>
       <span class="span-total-balance-title">ALLOWANCE</span>
       <span class="span-total-balance-amount">

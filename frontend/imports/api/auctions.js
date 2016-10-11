@@ -90,7 +90,7 @@ Auctions.watchNewAuctionTransactions = function watchNewAuctionTransactions() {
       Session.set('newAuctionMessage', { message: 'Error creating new auction', type: 'danger' });
     } else {
       console.log('Creating auction is succesful');
-      Session.set('newAuctionMessage', { message: 'New Auction successfully created', type: 'success' });
+      Session.set('newAuctionMessage', { message: 'New Auction successfully created.', type: 'success' });
       Session.set('newAuctionProgress', 100);
       Meteor.setTimeout(() => {
         Session.set('newAuctionProgress', 0);
