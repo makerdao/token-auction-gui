@@ -295,8 +295,7 @@ Auctionlets.watchBid = function watchBid() {
   TokenAuction.objects.auction.Bid((error) => {
     if (!error) {
       console.log('Bid is set');
-      const currentAuctionletId = Session.get('currentAuctionletId');
-      Auctionlets.loadAuctionlet(currentAuctionletId);
+      Session.set('auctionletsListLoaded', false); // Tracker run should execute and load again the list or the auction detail
     } else {
       Session.set('newBidMessage', { message: `Error placing bid: ${prettyError(error)}`, type: 'danger' });
       Session.set('bidProgress', 0);
