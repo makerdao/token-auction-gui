@@ -11,6 +11,7 @@ Template.newbid.viewmodel({
   },
   bid: 0,
   unitPrice: 0,
+  sellAmount: 0,
   auction() {
     const singleAuctionlet = this.auctionlet();
     const singleAuction = Auctions.findOne({ auctionId: parseInt(singleAuctionlet.auction_id, 10) });
@@ -19,8 +20,8 @@ Template.newbid.viewmodel({
       if (this.bid() === 0) {
         console.log('set minimal bid');
         this.bid(web3.fromWei(requiredBid));
-        const sellAmount = web3.toBigNumber(singleAuctionlet.sell_amount);
-        this.unitPrice(requiredBid.div(sellAmount));
+        this.sellAmount(web3.fromWei(web3.toBigNumber(singleAuctionlet.sell_amount)));
+        this.unitPrice(requiredBid.div(web3.toBigNumber(singleAuctionlet.sell_amount)));
       }
     }
     return singleAuction;
@@ -28,13 +29,23 @@ Template.newbid.viewmodel({
   events: {
     'keyup #inputBid, focus #inputBid, blur #inputBid, change #inputBid': function eventBid(event) {
       event.preventDefault();
+      this.updateUnitPrice();
       this.checkBid();
     },
     'keyup #inputUnitPrice, focus #inputUnitPrice, blur #inputUnitPrice, change #inputUnitPrice':
       function eventUnitPrice(event) {
         event.preventDefault();
-        this.checkUnitPrice();
+        this.updatePrice();
+        this.checkBid();
       },
+  },
+  updateUnitPrice() {
+    this.unitPrice(web3.toBigNumber(this.bid()).div(this.sellAmount()));
+    console.log(this.bid());
+  },
+  updatePrice() {
+    this.bid(web3.toBigNumber(this.unitPrice()).mul(this.sellAmount()));
+    console.log(this.unitPrice());
   },
   checkBid() {
     if (Session.get('bidProgress') > 0) {
