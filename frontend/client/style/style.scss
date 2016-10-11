@@ -31,10 +31,6 @@ table {
   width: 100%;
 }
 
-.container {
-  width: 980px;
-}
-
 .bid,
 .buy,
 .deposit
@@ -194,8 +190,6 @@ table {
 }
 
 .networkstatus-section {
-  display: flex;
-  align-items: center;
 
   p {
     font-family: 'Montserrat', sans-serif;
@@ -938,4 +932,64 @@ table {
   opacity: 0.70;
   margin-top: 100px;
   margin-bottom: 30px;
+}
+
+/* Media queries */
+@media only screen and (max-width : 1200px) {
+
+}
+
+@media only screen and (max-width : 979px) {
+  body{
+    margin-top: 20px;
+  }
+  .networkstatus-section{
+    border-bottom:1px solid rgba(0,0,0,0.1);
+    padding-bottom:10px;
+    .connection,
+    .blocks{
+      margin-top:9px;
+    }
+  }
+  .account-section{
+    padding-top:20px;
+  }
+}
+
+@media only screen and (max-width : 767px) {
+
+  .alert-shade{
+    margin-left:15px;
+    margin-right:15px;
+  }
+  .networkstatus-section{
+    border-bottom:1px solid rgba(0,0,0,0.1);
+    padding-bottom:10px;
+    .connection,
+    .blocks{
+      margin-top:9px;
+    }
+  }
+  .newauction-section .alert-shade{
+    width:auto;
+  }
+
+  .account-section .select-change-allowance{
+    margin-left:5px;
+    padding: 11px 14px 11px 27px;
+  }
+  .balance .span-currency-allowance{
+    font-size:24px;
+  }
+  .table > tbody > tr > td{
+    padding:4px;
+  }
+}
+
+@media only screen and (max-width : 480px) {
+
+}
+
+@media only screen and (max-width : 320px) {
+
 }

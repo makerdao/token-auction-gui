@@ -7,7 +7,7 @@
         <span class="red"><strong>Experimental:</strong></span> Only create auctions with a small amount and short duration!
       </p>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-6 col-xs-6">
           <div class="row">
             <div class="col-md-6">
               <p>AMOUNT</p>
@@ -42,7 +42,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6 grey">
+        <div class="col-md-6 col-sm-6 col-xs-6 grey">
           <div class="row">
             <div class="col-md-12">
               <p><strong>DURATIONS</strong></p>
@@ -72,24 +72,28 @@
           </div>
         </div>
       </div>
-      {{#if newAuctionMessageRelevant}}
-        <div class="messageDiv alert alert-{{newAuctionMessageType}}">
-          <span id='newAuctionMessage'>{{{newAuctionMessage}}}</span>
-          {{#if newAuctionUrl}}
-              <span>Your new auction can be found at <a href="{{newAuctionUrl}}">{{newAuctionUrl}}</a></span>
+        <div class="row">
+          <div class="col-md-12">
+          {{#if newAuctionMessageRelevant}}
+            <div class="messageDiv alert alert-{{newAuctionMessageType}}">
+              <span id='newAuctionMessage'>{{{newAuctionMessage}}}</span>
+              {{#if newAuctionUrl}}
+                  <span>Your new auction can be found at <a href="{{newAuctionUrl}}">{{newAuctionUrl}}</a></span>
+              {{/if}}
+            </div>
           {{/if}}
+          {{#if newAuctionProgress}}
+            <div class="progress">
+              <p>{{{newAuctionMessage}}}</p>
+              <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{newAuctionProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{newAuctionProgress}}%">
+              </div>
+            </div>
+          {{else}}
+            <button class="pull-right btn btn-mint btn-round" {{newAuctionDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Create auction</button>
+          {{/if}}
+          {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
         </div>
-      {{/if}}
-      {{#if newAuctionProgress}}
-        <div class="progress">
-          <p>{{{newAuctionMessage}}}</p>
-          <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{newAuctionProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{newAuctionProgress}}%">
-          </div>
-        </div>
-      {{else}}
-        <button class="pull-right btn btn-mint btn-round" {{newAuctionDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Create auction</button>
-      {{/if}}
-      {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
+      </div>
     </div>
   </div>
   {{/unless}}
