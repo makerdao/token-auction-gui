@@ -1,4 +1,77 @@
 <template name="newbid">
+  <div class="row">
+    <div class="col-md-6 col-sm-6 col-xs-6">
+      <div class="row">
+        <div class="col-md-6">
+          <p>MIMIMUM BID INCREASE</p>
+        </div>
+        <div class="col-md-6">
+          <div class="input-group">
+            <input class="form-control" type="number" min="1" step="1" disabled {{b "value: auction.min_increase"}}>
+            <span class="input-group-addon">%</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p>CLOSES WITHOUT BID IN</p>
+        </div>
+        <div class="col-md-6">
+          <div class="input-group">
+            <input class="form-control" type="number" min="0" disabled {{b "value: auction.duration"}}>
+            <span class="input-group-addon">seconds</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-6 col-xs-6 grey">
+      <div class="row">
+        <div class="col-md-6">
+          <p>PRICE</p>
+        </div>
+        <div class="col-md-6">
+          <div class="input-group">
+            <input class="form-control" id="inputBid" type="number" {{bidsDisabled}} {{b "value: bid"}}>
+            <span class="input-group-addon ETH">{{ETHToken.name}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p>UNIT PRICE</p>
+        </div>
+        <div class="col-md-6">
+          <div class="input-group">
+            <input class="form-control" id="inputUnitPrice" type="number" {{bidsDisabled}} {{b "value: unitPrice"}}>
+            <span class="input-group-addon">
+              <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p>AMOUNT</p>
+        </div>
+        <div class="col-md-6">
+          <div class="input-group">
+            <input class="form-control" type="number" disabled value="{{formatBalance (fromWei auction.sell_amount)}}">
+            <span class="input-group-addon MKR">{{MKRToken.name}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <p></p>
+        </div>
+        <div class="col-md-6">
+          <div class="input-group">
+            <button class="btn btn-primary" {{bidsDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Place bid</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="form-group">
     {{#if bidProgress}}
     <div class="progress">
@@ -10,21 +83,6 @@
     <span id='spnBidMessage' class="messageSpan alert alert-{{bidMessageType}}">{{{ bidMessage }}}</span>
     <br>
     {{/if}}
-    Minimum bid increase: {{auction.min_increase}}
-    <br/>
-    Closes without bid in:  {{auction.duration}}
-    <br/>
-    <label for="inputBid">Price</label>
-    <br>
-    <input class="form-control" id="inputBid" type="number" {{bidsDisabled}} value="{{bid}}" {{b "value: bid"}}> <span class="ETH">{{ETHToken.name}}</span>
-    <br>
-    <button class="btn btn-primary" {{bidsDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Place bid</button>
-    {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
-    <br/>
-    <label for="inputUnitPrice">Unit Price</label>
-    <br>
-    <input class="form-control" id="inputUnitPrice" type="number" {{bidsDisabled}} value="{{unitPrice}}" {{b "value: unitPrice"}}> <span class="ETH">{{ETHToken.name}}</span>
-    <br>
     {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
   </div>
 </template>
