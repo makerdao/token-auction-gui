@@ -91,7 +91,8 @@ Template.newbid.viewmodel({
     if (auction !== undefined && Tokens.isBalanceSufficient(auctionletBid, auction.buying)) {
       if (auctionlet !== undefined && web3.toBigNumber(auctionletBid)
       .gt(Auctionlets.calculateRequiredBid(auctionlet.buy_amount, auction.min_increase))) {
-        Auctionlets.doBid(auctionletBid);
+        console.log('New Bid Button', auctionlet.auctionletId, auctionletBid, auction.sell_amount);
+        Auctionlets.doBid(auctionlet.auctionletId, auctionletBid, auction.sell_amount);
       } else {
         Session.set('newBidMessage', { message: 'Bid is not high enough', type: 'danger' });
       }

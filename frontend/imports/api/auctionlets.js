@@ -272,17 +272,18 @@ Auctionlets.calculateRequiredBid = function calculateRequiredBid(buyAmount, minI
   return requiredBid;
 };
 
-Auctionlets.doBid = function doBid(bidAmount) {
+Auctionlets.doBid = function doBid(auctionletId, bidAmount, sellAmount) {
   console.log('doBid function called');
-  Tokens.setEthAllowance(bidAmount);
+  Tokens.setEthAllowance(auctionletId, bidAmount, sellAmount);
 };
 
-Auctionlets.bidOnAuctionlet = function bidOnAuctionlet(auctionletId, bidAmount, quantity) {
-  TokenAuction.objects.auction.bid['uint256,uint256,uint256'](auctionletId, bidAmount, quantity,
+Auctionlets.bidOnAuctionlet = function bidOnAuctionlet(auctionletId, bidAmount, sellAmount) {
+  console.log('Before Bid', auctionletId, bidAmount, sellAmount);
+  TokenAuction.objects.auction.bid['uint256,uint256,uint256'](auctionletId, bidAmount, sellAmount,
   { gas: BID_GAS }, (error, result) => {
     if (!error) {
       console.log(result);
-      Transactions.add('bid', result, { auctionletId, bid: bidAmount.toString(10) });
+      Transactions.add('bid', result, { auctionletId, bid: bidAmount });
     } else {
       Session.set('bidProgress', 0);
       Session.set('newBidMessage', { message: `Error placing bid: ${prettyError(error)}`, type: 'danger' });

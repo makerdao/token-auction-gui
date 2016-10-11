@@ -146,17 +146,19 @@ Tokens.setMkrAllowance = function setMkrAllowance(amount) {
   });
 };
 
-Tokens.setEthAllowance = function setEthAllowance(amount) {
+Tokens.setEthAllowance = function setEthAllowance(auctionletId, bidAmount, sellAmount) {
   Tokens.getToken('ETH', (error, token) => {
     if (!error) {
-      token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
+      token.approve(Session.get('contractAddress'), bidAmount, { gas: APPROVE_GAS }, (approveError, result) => {
         if (!approveError) {
           console.log('Eth approve transaction adding');
           Session.set('bidProgress', 33);
           Session.set('newBidMessage', {
             message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for bid <i>(this can take a while)</i>',
             type: 'info' });
-          Transactions.add('ethallowance', result, { value: amount.toString(10) });
+          Transactions.add('ethallowance', result, { auctionletId,
+                                                     bid_amount: bidAmount.toString(10),
+                                                     sell_amount: sellAmount });
         } else {
           console.log('SetEthAllowance error:', approveError);
           Session.set('bidProgress', 0);
@@ -206,18 +208,18 @@ Tokens.watchMkrApproval = function watchMkrApproval() {
 
 Tokens.watchEthAllowanceTransactions = function watchEthAllowanceTransactions() {
   Transactions.observeRemoved('ethallowance', (document) => {
+    console.log(document);
     if (document.receipt.logs.length === 0) {
       console.log('Setting ETH allowance went wrong');
       Session.set('bidProgress', 0);
       Session.set('newBidMessage', { message: 'Error setting allowance for bid', type: 'danger' });
     } else {
       console.log('ETH allowance is set');
-      const auction = Auctions.findAuction();
       Session.set('bidProgress', 66);
       Session.set('newBidMessage', {
         message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, placing bid <i>(this can take a while)</i>',
         type: 'info' });
-      Auctionlets.bidOnAuctionlet(Session.get('currentAuctionletId'), document.object.value, auction.sell_amount);
+      Auctionlets.bidOnAuctionlet(document.object.auctionletId, document.object.bid_amount, document.object.sell_amount);
     }
   });
 };
