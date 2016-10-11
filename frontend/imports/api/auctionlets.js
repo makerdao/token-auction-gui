@@ -278,7 +278,6 @@ Auctionlets.doBid = function doBid(auctionletId, bidAmount, sellAmount) {
 };
 
 Auctionlets.bidOnAuctionlet = function bidOnAuctionlet(auctionletId, bidAmount, sellAmount) {
-  console.log('Before Bid', auctionletId, bidAmount, sellAmount);
   TokenAuction.objects.auction.bid['uint256,uint256,uint256'](auctionletId, bidAmount, sellAmount,
   { gas: BID_GAS }, (error, result) => {
     if (!error) {

@@ -4,7 +4,6 @@ const Transactions = new Mongo.Collection(null);
 
 Transactions.add = function add(type, transactionHash, object) {
   console.log('tx', type, transactionHash, object);
-  console.log('Transaction added', object);
   // Session.set('newTransactionMessage', { message: 'Transaction ' + transactionHash, type: 'info' });
   Transactions.insert({ type, tx: transactionHash, object });
 };
