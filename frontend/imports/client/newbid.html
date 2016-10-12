@@ -1,88 +1,88 @@
 <template name="newbid">
-  <div class="row">
-    <div class="col-md-6 col-sm-6 col-xs-6">
-      <div class="row">
-        <div class="col-md-6">
-          <p>MIMIMUM BID INCREASE</p>
+  <section class="newbid-section grey">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="#" alt="Close bid" title="Close bid" class="btn close pull-right"><i class="fa fa-times"></i></a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-sm-6 col-xs-6">
+        <div class="row">
+          <div class="col-md-6">
+            <p>MIMIMUM BID INCREASE</p>
+          </div>
+          <div class="col-md-6">
+            <div class="input-group">
+              <input class="form-control" type="number" min="1" step="1" disabled {{b "value: auction.min_increase"}}>
+              <span class="input-group-addon">%</span>
+            </div>
+          </div>
         </div>
-        <div class="col-md-6">
-          <div class="input-group">
-            <input class="form-control" type="number" min="1" step="1" disabled {{b "value: auction.min_increase"}}>
-            <span class="input-group-addon">%</span>
+        <div class="row">
+          <div class="col-md-6">
+            <p>CLOSES WITHOUT BID IN</p>
+          </div>
+          <div class="col-md-6">
+            <div class="input-group">
+              <input class="form-control" type="number" min="0" disabled {{b "value: auction.duration"}}>
+              <span class="input-group-addon">seconds</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <p>CLOSES WITHOUT BID IN</p>
+      <div class="col-md-6 col-sm-6 col-xs-6">
+        <div class="row">
+          <div class="col-md-6">
+            <p>PRICE</p>
+          </div>
+          <div class="col-md-6">
+            <div class="input-group">
+              <input class="form-control" id="inputBid" type="number" {{bidsDisabled}} {{b "value: bid"}}>
+              <span class="input-group-addon ETH">{{ETHToken.name}}</span>
+            </div>
+          </div>
         </div>
-        <div class="col-md-6">
-          <div class="input-group">
-            <input class="form-control" type="number" min="0" disabled {{b "value: auction.duration"}}>
-            <span class="input-group-addon">seconds</span>
+        <div class="row">
+          <div class="col-md-6">
+            <p>UNIT PRICE</p>
+          </div>
+          <div class="col-md-6">
+            <div class="input-group">
+              <input class="form-control" id="inputUnitPrice" type="number" {{bidsDisabled}} {{b "value: unitPrice"}}>
+              <span class="input-group-addon">
+                <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <p>AMOUNT</p>
+          </div>
+          <div class="col-md-6">
+            <div class="input-group">
+              <input class="form-control" type="number" disabled value="{{formatBalance (fromWei auction.sell_amount)}}">
+              <span class="input-group-addon MKR">{{MKRToken.name}}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="col-md-6 col-sm-6 col-xs-6 grey">
-      <div class="row">
-        <div class="col-md-6">
-          <p>PRICE</p>
-        </div>
-        <div class="col-md-6">
-          <div class="input-group">
-            <input class="form-control" id="inputBid" type="number" {{bidsDisabled}} {{b "value: bid"}}>
-            <span class="input-group-addon ETH">{{ETHToken.name}}</span>
+    <div class="row">
+      <div class="col-md-12">
+        {{#if or syncing outOfSync}}<div id='spnBidMessage' class="messageDiv alert alert-info">Waiting for synchronization...</div>{{/if}}
+        {{#if bidMessageRelevant}}
+          <div id='spnBidMessage' class="messageDiv alert alert-{{bidMessageType}}">{{{ bidMessage }}}</div>
+        {{/if}}
+        {{#if bidProgress}}
+          <div class="progress">
+            <p>{{{bidMessage}}}</p>
+            <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{bidProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{bidProgress}}%"></div>
           </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <p>UNIT PRICE</p>
-        </div>
-        <div class="col-md-6">
-          <div class="input-group">
-            <input class="form-control" id="inputUnitPrice" type="number" {{bidsDisabled}} {{b "value: unitPrice"}}>
-            <span class="input-group-addon">
-              <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span>
-            </span>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <p>AMOUNT</p>
-        </div>
-        <div class="col-md-6">
-          <div class="input-group">
-            <input class="form-control" type="number" disabled value="{{formatBalance (fromWei auction.sell_amount)}}">
-            <span class="input-group-addon MKR">{{MKRToken.name}}</span>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <p></p>
-        </div>
-        <div class="col-md-6">
-          <div class="input-group">
-            <button class="btn btn-primary" {{bidsDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Place bid</button>
-          </div>
-        </div>
+        {{else}}
+          <button class="pull-right btn btn-mint btn-round" {{bidsDisabled}} {{b "click: create"}} disabled="{{or syncing outOfSync}}">Place bid</button>
+        {{/if}}
       </div>
     </div>
-  </div>
-  <div class="form-group">
-    {{#if bidProgress}}
-    <div class="progress">
-    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="{{bidProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{bidProgress}}%">
-    </div>
-    </div>
-    {{/if}}
-    {{#if bidMessage}}
-    <span id='spnBidMessage' class="messageSpan alert alert-{{bidMessageType}}">{{{ bidMessage }}}</span>
-    <br>
-    {{/if}}
-    {{#if or syncing outOfSync}} Waiting for synchronization...{{/if}}
-  </div>
+  </section>
 </template>

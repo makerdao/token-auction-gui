@@ -38,6 +38,10 @@ Template.newbid.viewmodel({
         this.updatePrice();
         this.checkBid();
       },
+    'click .close': function closeBid(event) {
+      event.preventDefault();
+      Session.set('auctionletSelected', null);
+    },
   },
   updateUnitPrice() {
     this.unitPrice(web3.toBigNumber(this.bid()).div(this.sellAmount()));
@@ -122,6 +126,9 @@ Template.newbid.viewmodel({
   },
   bidMessageType() {
     return Session.get('newBidMessage') !== null ? Session.get('newBidMessage').type : 'info';
+  },
+  bidMessageRelevant() {
+    return this.bidMessageType() !== 'info';
   },
   bidProgress() {
     return Session.get('bidProgress');
