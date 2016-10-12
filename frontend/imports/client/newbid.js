@@ -9,19 +9,21 @@ Template.newbid.viewmodel({
   onCreated() {
     Session.set('bidProgress', 0);
   },
-  bid: 0,
   unitPrice: 0,
   sellAmount: 0,
   auction() {
     const singleAuctionlet = this.auctionlet();
-    const singleAuction = Auctions.findOne({ auctionId: parseInt(singleAuctionlet.auction_id, 10) });
-    if (singleAuctionlet !== undefined && singleAuction !== undefined) {
-      const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
-      if (this.bid() === 0) {
-        console.log('set minimal bid');
-        this.bid(web3.fromWei(requiredBid));
-        this.sellAmount(web3.fromWei(web3.toBigNumber(singleAuctionlet.sell_amount)));
-        this.unitPrice(requiredBid.div(web3.toBigNumber(singleAuctionlet.sell_amount)));
+    let singleAuction = null;
+    if (singleAuctionlet !== undefined) {
+      singleAuction = Auctions.findOne({ auctionId: parseInt(singleAuctionlet.auction_id, 10) });
+      if (singleAuction !== undefined) {
+        const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
+        if (this.bid() === 0) {
+          console.log('set minimal bid');
+          this.bid(web3.fromWei(requiredBid));
+          this.sellAmount(web3.fromWei(web3.toBigNumber(singleAuctionlet.sell_amount)));
+          this.unitPrice(requiredBid.div(web3.toBigNumber(singleAuctionlet.sell_amount)));
+        }
       }
     }
     return singleAuction;

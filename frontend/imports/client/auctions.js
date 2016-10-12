@@ -1,6 +1,7 @@
 import Auctionlets from '/imports/api/auctionlets.js';
 import { Session } from 'meteor/session';
 import { ReactiveArray } from 'meteor/templates:array';
+import { $ } from 'meteor/jquery';
 import './auctions.html';
 
 const timeRemaining = new ReactiveArray();

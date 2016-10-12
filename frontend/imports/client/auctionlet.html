@@ -39,7 +39,7 @@
           {{/if}}
         </table>
         {{#unless expired}}
-          {{> newbid auctionlet=auctionlet close=false }}
+          {{> newbid auctionlet=auctionlet bid=0 close=false }}
         {{else}}
         <div class="form-group">
           <span>Auctionlet has expired.</span>
