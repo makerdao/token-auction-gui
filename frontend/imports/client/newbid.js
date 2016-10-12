@@ -19,7 +19,6 @@ Template.newbid.viewmodel({
       if (singleAuction !== undefined) {
         const requiredBid = Auctionlets.calculateRequiredBid(singleAuctionlet.buy_amount, singleAuction.min_increase);
         if (this.bid() === 0) {
-          console.log('set minimal bid');
           this.bid(web3.fromWei(requiredBid));
           this.sellAmount(web3.fromWei(web3.toBigNumber(singleAuctionlet.sell_amount)));
           this.unitPrice(requiredBid.div(web3.toBigNumber(singleAuctionlet.sell_amount)));
@@ -47,11 +46,9 @@ Template.newbid.viewmodel({
   },
   updateUnitPrice() {
     this.unitPrice(web3.toBigNumber(this.bid()).div(this.sellAmount()));
-    console.log(this.bid());
   },
   updatePrice() {
     this.bid(web3.toBigNumber(this.unitPrice()).mul(this.sellAmount()));
-    console.log(this.unitPrice());
   },
   checkBid() {
     if (Session.get('bidProgress') > 0) {
