@@ -36,8 +36,7 @@ Auctions.getAuction = function getAuction(auctionId) {
 Auctions.loadAuction = function loadAuction(auctionId) {
   if (typeof (TokenAuction.objects) !== 'undefined') {
     Auctions.getAuction(auctionId).then((auction) => {
-      Auctions.remove({});
-      Auctions.insert(auction);
+      Auctions.upsert({ auctionId }, auction, { upsert: true });
     }, (error) => {
       console.log('error: ', error);
     });
