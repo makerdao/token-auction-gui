@@ -54,7 +54,7 @@ Auctionlets.getAuctionlet = function getAuctionlet(auctionletId) {
 };
 
 Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
-  console.log('al loaded: '+Session.get('auctionletsListLoaded'));
+  console.log('al loaded: ', Session.get('auctionletsListLoaded'));
   if (Session.get('auctionletsListLoaded')) {
     return;
   }
