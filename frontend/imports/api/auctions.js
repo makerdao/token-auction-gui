@@ -72,6 +72,7 @@ Auctions.watchNewAuction = function watchNewAuction() {
       const auctionUrl = Meteor.absoluteUrl() + '#' + auctionPath + auctionId;
       /* eslint-disable prefer-template */
       Session.set('newAuctionUrl', auctionUrl);
+      Session.set('auctionletsListLoaded', false); // Tracker run should execute and load again the list
     } else {
       Session.set('newAuctionMessage', {
         message: `Error creating new auction: ${prettyError(error)}`,

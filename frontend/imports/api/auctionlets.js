@@ -148,6 +148,7 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(auctionletId) {
         Auctionlets.remove({});
         Auctionlets.insert(auctionlet);
       }
+      Session.set('auctionletSelected', false);
       Auctionlets.syncExpired();
       if (auctionlet.unclaimed) {
         Auctionlets.loadAuctionletBidHistory(auctionletId);
