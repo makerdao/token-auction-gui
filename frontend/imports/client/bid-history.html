@@ -4,20 +4,24 @@
     <div class="bidhistory-section boxDiv col-md-12">
       <h2>Bid History #{{auctionlet.auctionletId}}</h2>
         <table class="table">
-          <tr>
-            <th>Creator</th>
-            <th>Bid Price</th>
-            <th>Unit Price</th>
-            <th>Bid Time</th>
-          </tr>
-          {{#each auctionlet.history}}
-          <tr>
-            <td><a href="{{etherscanHref}}{{last_bidder}}" target="_blank">{{shortAddress last_bidder}}...</a></td>
-            <td>{{formatBalance (fromWei buy_amount)}}</td>
-            <td>{{formatBalance (unit_price)}}</td>
-            <td>{{last_bid_time}}</td>
-          </tr>
-          {{/each}}
+          <thead>
+            <tr>
+              <th>Creator</th>
+              <th>Bid Price</th>
+              <th>Unit Price</th>
+              <th>Bid Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each auctionlet.history}}
+            <tr>
+              <td><a href="{{etherscanHref}}{{last_bidder}}" target="_blank">{{shortAddress last_bidder}}...</a></td>
+              <td>{{formatBalance (fromWei buy_amount)}}</td>
+              <td>{{formatBalance (unit_price)}}</td>
+              <td>{{last_bid_time}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
         </table>
     </div>
   </div>
