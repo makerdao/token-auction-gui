@@ -96,6 +96,24 @@ table {
   padding:5px 18px;
 }
 
+.newbid-section{
+  padding:15px;
+  padding-top:0px;
+
+  .close{
+    margin-right:-15px;
+  }
+
+  .row{
+    margin-bottom:4px;
+
+    p{
+      margin:8px 0px;
+    }
+  }
+
+}
+
 .auction-section{
 
   h2{
@@ -147,14 +165,8 @@ table {
   .newbid-section{
     border-top:1px solid #E6E6E6;
     border-bottom:1px solid #E6E6E6;
-    padding:15px;
-    padding-top:0px;
     -webkit-box-shadow:inset 0 0 5px 0 rgba(0,0,0,0.1);
     box-shadow:inset 0 0 5px 0 rgba(0,0,0,0.1);
-
-    .close{
-      margin-right:-15px;
-    }
   }
 
 }

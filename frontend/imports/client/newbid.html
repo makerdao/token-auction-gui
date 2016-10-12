@@ -1,10 +1,12 @@
 <template name="newbid">
-  <section class="newbid-section grey">
+  <section class="newbid-section grey{{#if shade}} shade{{/if}}">
+    {{#if close}}
     <div class="row">
       <div class="col-md-12">
         <a href="#" alt="Close bid" title="Close bid" class="btn close pull-right"><i class="fa fa-times"></i></a>
       </div>
     </div>
+    {{/if}}
     <div class="row">
       <div class="col-md-6 col-sm-6 col-xs-6">
         <div class="row">
