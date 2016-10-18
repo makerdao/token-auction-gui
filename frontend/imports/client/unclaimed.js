@@ -9,10 +9,6 @@ Template.unclaimed.viewmodel({
     return auctionlets;
   },
   count() {
-    console.log('AAAAAAA', this.auctionlets().fetch().length);
     return this.auctionlets().fetch().length;
-  },
-  claim(event) {
-    console.log(event);
   },
 });
