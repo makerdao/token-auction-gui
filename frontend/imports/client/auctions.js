@@ -34,7 +34,7 @@ Template.auctions.viewmodel({
     Meteor.setInterval(doCountdown, 1000);
   },
   auctionlets() {
-    const auctionlets = Auctionlets.find({ });
+    const auctionlets = Auctionlets.find({ isExpired: false });
     return auctionlets;
   },
   timeRemaining(auctionletId) {
