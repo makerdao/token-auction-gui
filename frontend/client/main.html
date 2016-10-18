@@ -19,6 +19,7 @@
       {{> balance}}
       {{#if isConnected}}
         {{#if contractExists}}
+          {{> unclaimed}}
           {{> auctions}}
           {{> auction}}
           {{> auctionlet}}
