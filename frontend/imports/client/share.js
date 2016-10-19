@@ -3,11 +3,15 @@ import Auctions from '/imports/api/auctions.js';
 import './share.html';
 
 Template.share.viewmodel({
-  auction() {
+  shareUrl() {
+    // TODO: get real url
+    const url = 'https://makerdao.github.io/weekly-mkr-auction';
     const singleAuction = Auctions.findAuction();
-    return singleAuction;
+    return `${url}/#!/auction/${singleAuction.auctionId}`;
   },
-  absoluteUrl() {
-    return 'https://makerdao.github.io/weekly-mkr-auction';
+  copy() {
+    const el = document.querySelector('#shareTextbox');
+    el.select();
+    document.execCommand('copy');
   },
 });
