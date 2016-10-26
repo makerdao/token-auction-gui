@@ -346,8 +346,9 @@ Auctionlets.watchClaimTransactions = function watchClaimTransactions() {
     } else {
       console.log('Claim is succesful');
       Session.set('claimMessage', { message: 'Tokens successfully claimed', type: 'success' });
-      const currentAuctionletId = Session.get('currentAuctionletId');
-      Auctionlets.loadAuctionlet(currentAuctionletId);
+      const auctionletId = document.object.auctionletId;
+      Auctionlets.update({ auctionletId }, { $set: { unclaimed: false } });
+      Auctionlets.loadAuctionlet(auctionletId);
     }
   });
 };

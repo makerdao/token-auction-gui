@@ -5,7 +5,7 @@ import './unclaimed.html';
 
 Template.unclaimed.viewmodel({
   auctionlets() {
-    const auctionlets = Auctionlets.find({ isExpired: true });
+    const auctionlets = Auctionlets.find({ isExpired: true, unclaimed: true });
     return auctionlets;
   },
   count() {
