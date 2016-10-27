@@ -16,6 +16,7 @@ import '/imports/client/auction.js';
 import '/imports/client/auctionlet.js';
 import '/imports/client/newbid.js';
 import '/imports/client/bid-history.js';
+import '/imports/client/share.js';
 import '/imports/client/unclaimed.js';
 
 import '/imports/startup/client/index.js';
