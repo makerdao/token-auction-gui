@@ -64,8 +64,8 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
     TokenAuction.objects.auction.NewAuction({ }, { fromBlock: 0 }).get((error, result) => {
       if (!error) {
         const lastEventIndex = result.length - 1;
-        // TODO: When splitting auctions is active we will need to get the max auctionlet id using another way
-        const lastAuctionletId = result[lastEventIndex].args.id.toNumber();
+        // TODO: When splitting auctions is active we will need to get the max auctionlet id not only from New Auction Event, also checking the Bid Event
+        const lastAuctionletId = result[lastEventIndex].args.base_id.toNumber();
         const auctionPromises = [];
 
         for (let i = 1; i <= lastAuctionletId; i++) {
@@ -76,7 +76,8 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
           const notFinishedAutions = [];
           for (let i = 0; i < resultProm.length; i++) {
             // console.log(resultProm[i]);
-            if (resultProm[i].auctionletId && resultProm[i].unclaimed) {
+            if (resultProm[i].auctionletId &&
+                (resultProm[i].unclaimed || resultProm[i].last_bidder === Session.get('address'))) {
               notFinishedAutions.push(resultProm[i]);
               auctionPromises2.push(Auctionlets.checkExpired(resultProm[i].auctionletId));
             }
@@ -99,6 +100,10 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
                   Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
                   { $set: { duration: resultAuction.duration } });
                 });
+              } else if (notFinishedAutions[i].unclaimed
+                         && notFinishedAutions[i].last_bidder === Session.get('address')) {
+                notFinishedAutions[i].isExpired = true;
+                Auctionlets.insert(notFinishedAutions[i]);
               }
             }
             Session.set('loadingAuctionlets', false);
@@ -341,8 +346,9 @@ Auctionlets.watchClaimTransactions = function watchClaimTransactions() {
     } else {
       console.log('Claim is succesful');
       Session.set('claimMessage', { message: 'Tokens successfully claimed', type: 'success' });
-      const currentAuctionletId = Session.get('currentAuctionletId');
-      Auctionlets.loadAuctionlet(currentAuctionletId);
+      const auctionletId = document.object.auctionletId;
+      Auctionlets.update({ auctionletId }, { $set: { unclaimed: false } });
+      Auctionlets.loadAuctionlet(auctionletId);
     }
   });
 };
