@@ -1,0 +1,29 @@
+<template name="unclaimed">
+  {{#if count}}
+    <div class="row">
+      <div class="unclaimed-section boxDiv col-md-12">
+        <h2>You have unclaimed tokens!</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Auctionlet</th>
+              <th>MKR</th>
+              <th>Unit Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each auctionlets}}
+              <tr>
+                <td><a class="btn btn-default btn-round" href="/#!/auction/{{auctionletId}}">Detail</a></td>
+                <td>{{auctionletId}}</td>
+                <td>{{formatBalance (fromWei sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
+                <td>{{formatBalance (unit_price)}} <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span></td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {{/if}}
+</template>
