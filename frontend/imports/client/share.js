@@ -1,9 +1,10 @@
 import { Template } from 'meteor/templating';
+import auctionPath from '../startup/routes.js';
 import './share.html';
 
 Template.share.viewmodel({
   shareUrl() {
-    const url = window.location.href;
+    const url = `${Meteor.absoluteUrl()}#${auctionPath}${Session.get('currentAuctionId')}`;
     return url;
   },
   copy() {
