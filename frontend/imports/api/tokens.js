@@ -190,7 +190,7 @@ Tokens.watchEthApproval = function watchEthApproval() {
 };
 
 Tokens.watchMkrApproval = function watchMkrApproval() {
-  Tokens.getToken('ETH', (error, token) => {
+  Tokens.getToken('MKR', (error, token) => {
     if (!error) {
       /* eslint-disable new-cap */
       token.Approval({ owner: Session.get('address'), spender: Session.get('contractAddress') },
