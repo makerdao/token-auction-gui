@@ -106,7 +106,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
 
             // Update Bids# asynchronously
             if (auctionletIds) {
-              TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletIds },
+              TokenAuction.objects.auction.LogBid({ auctionlet_id: auctionletIds },
               { fromBlock: 0 }).get((errorBids, resultBids) => {
                 if (!errorBids) {
                   const bids = [];
