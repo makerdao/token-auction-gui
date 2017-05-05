@@ -90,19 +90,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
               // console.log(resultProm2[i]);
               if (!resultProm2[i]) {
                 Auctionlets.insert(notFinishedAutions[i]);
-<<<<<<< HEAD
                 auctionletIds.push(parseInt(notFinishedAutions[i].auction_id, 10));
-=======
-
-                // Update Bids# asynchronously
-                TokenAuction.objects.auction.LogBid({ auctionlet_id: notFinishedAutions[i].auctionletId },
-                { fromBlock: 0 }).get((errorBids, resultBids) => {
-                  if (!errorBids) {
-                    Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
-                    { $set: { bids: resultBids.length } });
-                  }
-                });
->>>>>>> origin/master
 
                 // Update Time Left asynchronously.
                 // TODO: When splitting auctions is active we should only call the auction once per group of auctionlets
