@@ -9,16 +9,16 @@ if (typeof web3 === 'undefined' && typeof Web3 === 'undefined') {
 Dapple['token-auction'] = (function builder () {
   var environments = {
       'develop': {},
-      'morden': {
+      'kovan': {
         'auction': {
-          'class': 'SplittingAuctionManager',
-          'address': '0x6b4ae8fa2fd6cbe715e89b1f0df9d952ea97d7a9'
+          'type': 'SplittingAuctionManager',
+          'value': '0xD0Abb0e61A905a50b21Bf4c74F39B9e101469365'
         }
       },
       'live': {
         'auction': {
-          'class': 'SplittingAuctionManager',
-          'address': '0x7f6eccbca710e8b5af7d837c7e2e406844538e10'
+          'type': 'SplittingAuctionManager',
+          'value': '0x7f6eccbca710e8b5af7d837c7e2e406844538e10'
         }
       }
     };
