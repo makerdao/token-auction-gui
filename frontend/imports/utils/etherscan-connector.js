@@ -8,7 +8,7 @@ function leftPad32(value) {
 function etherscanUrl() {
   const network = Session.get('network');
   /* eslint-disable prefer-template */
-  return 'https://' + (network === 'morden' ? 'testnet.' : '') + 'etherscan.io/';
+  return 'https://' + (network === 'kovan' ? 'kovan.' : '') + 'etherscan.io/';
   /* eslint-enable prefer-template */
 }
 

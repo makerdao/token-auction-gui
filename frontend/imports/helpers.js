@@ -56,12 +56,13 @@ Template.registerHelper('auctionNotFound', () => {
 
 Template.registerHelper('etherscanHref', () => {
   const network = Session.get('network');
-  return `https://${(network === 'morden' ? 'testnet.' : '')}etherscan.io/address/`;
+<<<<<<< HEAD
+  return `https://${(network === 'kovan' ? 'kovan.' : '')}etherscan.io/address/`;
 });
 
 Template.registerHelper('etherscanTokenHref', () => {
   const network = Session.get('network');
-  return `https://${(network === 'morden' ? 'testnet.' : '')}etherscan.io/token/`;
+  return `https://${(network === 'kovan' ? 'kovan.' : '')}etherscan.io/token/`;
 });
 
 Template.registerHelper('contractExists', () => {
