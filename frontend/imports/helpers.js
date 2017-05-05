@@ -55,7 +55,7 @@ Template.registerHelper('auctionNotFound', () => {
 Template.registerHelper('etherscanHref', () => {
   const network = Session.get('network');
   /* eslint-disable prefer-template */
-  return 'https://' + (network === 'morden' ? 'testnet.' : '') + 'etherscan.io/address/';
+  return 'https://' + (network === 'kovan' ? 'kovan.' : '') + 'etherscan.io/address/';
   /* eslint-enable prefer-template */
 });
 

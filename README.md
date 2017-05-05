@@ -15,23 +15,20 @@ The auction would have a single beneficiary: the Maker fund.
 
 ## Overview
 
-This dapp uses [Meteor](https://www.meteor.com/) as a frontend and the contract can be deployed/tested with [dapple](https://github.com/nexusdev/dapple).
+This dapp uses [Meteor](https://www.meteor.com/) as a frontend and the contract can be deployed/tested with [dapp](https://github.com/dapphub/dapp).
 
 ## Installation
 
 Requirements:
 
-* geth `brew install ethereum` (or [`apt-get` for ubuntu](https://github.com/ethereum/go-ethereum/wiki/Installation-Instructions-for-Ubuntu))
-* solidity https://solidity.readthedocs.org/en/latest/installing-solidity.html
 * meteor `curl https://install.meteor.com/ | sh`
-* Global dapple, `npm install -g dapple meteor-build-client`
+* Global meteor-build-client, `npm install -g meteor-build-client`
 
 Clone and install:
 
 ```bash
-git clone https://github.com/makerdao/weekly-mkr-auction
-cd weekly-mkr-auction
-git submodule update --init --recursive
+git clone https://github.com/makerdao/token-auction-gui
+cd token-auction-gui
 npm install
 gulp build
 ```
@@ -42,7 +39,7 @@ gulp build
 cd frontend && npm run start
 ```
 
-Meteor has to be started with npm run start in order to include the settings.json file
+Meteor has to be started with `npm run start` in order to include the settings.json file
 
 You can access the user interface on [http://localhost:3000/](http://localhost:3000/)
 
@@ -52,7 +49,7 @@ To deploy the frontend to Github Pages:
 gulp deploy
 ```
 
-The deployed frontend can be found at: [https://makerdao.github.io/weekly-mkr-auction/](https://makerdao.github.io/weekly-mkr-auction/)
+The deployed frontend can be found at: [http://makerdao.com/token-auction-gui/](http://makerdao.com/token-auction-gui/)
 
 ## Development
 

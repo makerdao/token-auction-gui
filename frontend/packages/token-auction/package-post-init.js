@@ -1,10 +1,17 @@
 Dapple['token-auction'].init = function init(env) {
-  if (env === 'test' || env === 'morden') {
-    Dapple.env = 'morden';
-  } else if (env === 'live' || env === 'main') {
-    Dapple.env = 'live';
-  } else if (env === 'private' || env === 'default') {
-    Dapple.env = 'default';
+  switch (env) {
+    case 'test':
+      Dapple.env = 'kovan';
+      break;
+    case 'main':
+      Dapple.env = 'live';
+      break;
+    case 'private':
+      Dapple.env = 'default';
+      break;
+    default:
+      Dapple.env = env;
+      break;
   }
   Dapple['token-auction'].class(web3, Dapple['token-auction'].environments[Dapple.env]);
   // Check if contract exists on new environment
