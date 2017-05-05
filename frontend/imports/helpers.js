@@ -52,7 +52,7 @@ Template.registerHelper('auctionNotFound', () => {
 Template.registerHelper('etherscanHref', () => {
   const network = Session.get('network');
   /* eslint-disable prefer-template */
-  return 'https://' + (network === 'morden' ? 'testnet.' : '') + 'etherscan.io/address/';
+  return 'https://' + (network === 'kovan' ? 'kovan.' : '') + 'etherscan.io/address/';
   /* eslint-enable prefer-template */
 });
 
@@ -61,6 +61,11 @@ Template.registerHelper('contractExists', () => {
   const isConnected = Session.get('isConnected');
   const exists = Session.get('contractExists');
   return network !== false && isConnected === true && exists === true;
+});
+
+Template.registerHelper('shortAddress', (address) => {
+  const short = address.substring(0, 10);
+  return short;
 });
 
 Template.registerHelper('equals', (a, b) => a === b);

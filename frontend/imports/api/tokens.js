@@ -9,9 +9,9 @@ const Tokens = new Mongo.Collection(null);
 const APPROVE_GAS = 1000000;
 
 const tokens = {
-  morden: {
-    ETH: '0x52fe88b987c7829e5d5a61c98f67c9c14e6a7a90',
-    MKR: '0xffb1c99b389ba527a9194b1606b3565a07da3eef',
+  kovan: {
+    ETH: '0x53eccc9246c1e537d79199d0c7231e425a40f896',
+    MKR: '0x4bb514a7f83fbb13c2b41448208e89fabbcfe2fb',
   },
   live: {
     ETH: '0xecf8f87f810ecf450940c9f60066b4a7a501d6a7',
@@ -190,7 +190,7 @@ Tokens.watchEthApproval = function watchEthApproval() {
 };
 
 Tokens.watchMkrApproval = function watchMkrApproval() {
-  Tokens.getToken('ETH', (error, token) => {
+  Tokens.getToken('MKR', (error, token) => {
     if (!error) {
       /* eslint-disable new-cap */
       token.Approval({ owner: Session.get('address'), spender: Session.get('contractAddress') },
