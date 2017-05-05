@@ -54,7 +54,7 @@ Auctionlets.getAuctionlet = function getAuctionlet(auctionletId) {
 Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
   if (typeof (TokenAuction.objects) !== 'undefined') {
     /* eslint-disable new-cap */
-    TokenAuction.objects.auction.NewAuction({ }, { fromBlock: 0 }).get((error, result) => {
+    TokenAuction.objects.auction.LogNewAuction({ }, { fromBlock: 0 }).get((error, result) => {
       if (!error) {
         const lastEventIndex = result.length - 1;
         // TODO: When splitting auctions is active we will need to get the max auctionlet id using another way
@@ -86,7 +86,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
                 Auctionlets.insert(notFinishedAutions[i]);
 
                 // Update Bids# asynchronously
-                TokenAuction.objects.auction.Bid({ auctionlet_id: notFinishedAutions[i].auctionletId },
+                TokenAuction.objects.auction.LogBid({ auctionlet_id: notFinishedAutions[i].auctionletId },
                 { fromBlock: 0 }).get((errorBids, resultBids) => {
                   if (!errorBids) {
                     Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
