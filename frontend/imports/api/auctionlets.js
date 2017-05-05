@@ -61,7 +61,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
   Session.set('loadingAuctionlets', true);
   if (typeof (TokenAuction.objects) !== 'undefined') {
     /* eslint-disable new-cap */
-    TokenAuction.objects.auction.NewAuction({ }, { fromBlock: 0 }).get((error, result) => {
+    TokenAuction.objects.auction.LogNewAuction({ }, { fromBlock: 0 }).get((error, result) => {
       if (!error) {
         const lastEventIndex = result.length - 1;
         // TODO: When splitting auctions is active we will need to get the max auctionlet id using another way
@@ -90,7 +90,19 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
               // console.log(resultProm2[i]);
               if (!resultProm2[i]) {
                 Auctionlets.insert(notFinishedAutions[i]);
+<<<<<<< HEAD
                 auctionletIds.push(parseInt(notFinishedAutions[i].auction_id, 10));
+=======
+
+                // Update Bids# asynchronously
+                TokenAuction.objects.auction.LogBid({ auctionlet_id: notFinishedAutions[i].auctionletId },
+                { fromBlock: 0 }).get((errorBids, resultBids) => {
+                  if (!errorBids) {
+                    Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
+                    { $set: { bids: resultBids.length } });
+                  }
+                });
+>>>>>>> origin/master
 
                 // Update Time Left asynchronously.
                 // TODO: When splitting auctions is active we should only call the auction once per group of auctionlets
@@ -175,7 +187,8 @@ Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {
 Auctionlets.loadAuctionletClaimedBid = function loadAuctionletClaimedBid(auctionletId) {
   // Check on local node or Etherscan if there's info
   /* eslint-disable new-cap */
-  TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((err, res) => {
+  TokenAuction.objects.auction.LogBid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((err, res) => {
+    if (res.length == 0) return;
     const lastIndex = res.length - 1;
     const blockNumber = res[lastIndex].blockNumber;
     Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, blockNumber).then((r) => {
@@ -196,7 +209,7 @@ Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auction
   /* eslint-disable new-cap */
   if (typeof (TokenAuction.objects) !== 'undefined') {
     const bidPromises = [];
-    TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((error, result) => {
+      TokenAuction.objects.auction.LogBid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((error, result) => {
       // Set Bids# in the Auctionlet and in the Auction
       Auctionlets.update({ auctionletId }, { $set: { bids: result.length } });
       // Get the state of the auctionlet at the moment of the bid
@@ -292,7 +305,7 @@ Auctionlets.bidOnAuctionlet = function bidOnAuctionlet(auctionletId, bidAmount, 
 
 Auctionlets.watchBid = function watchBid() {
   /* eslint-disable new-cap */
-  TokenAuction.objects.auction.Bid((error) => {
+  TokenAuction.objects.auction.LogBid((error) => {
     if (!error) {
       console.log('Bid is set');
       Session.set('auctionletsListLoaded', false); // Tracker run should execute and load again the list or the auction detail
