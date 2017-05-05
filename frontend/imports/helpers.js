@@ -56,7 +56,6 @@ Template.registerHelper('auctionNotFound', () => {
 
 Template.registerHelper('etherscanHref', () => {
   const network = Session.get('network');
-<<<<<<< HEAD
   return `https://${(network === 'kovan' ? 'kovan.' : '')}etherscan.io/address/`;
 });
 
