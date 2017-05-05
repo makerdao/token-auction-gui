@@ -142,7 +142,8 @@ Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {
 Auctionlets.loadAuctionletClaimedBid = function loadAuctionletClaimedBid(auctionletId) {
   // Check on local node or Etherscan if there's info
   /* eslint-disable new-cap */
-  TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((err, res) => {
+  TokenAuction.objects.auction.LogBid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((err, res) => {
+    if (res.length == 0) return;
     const lastIndex = res.length - 1;
     const blockNumber = res[lastIndex].blockNumber;
     Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, blockNumber).then((r) => {
@@ -163,7 +164,7 @@ Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auction
   /* eslint-disable new-cap */
   if (typeof (TokenAuction.objects) !== 'undefined') {
     const bidPromises = [];
-    TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((error, result) => {
+    TokenAuction.objects.auction.LogBid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((error, result) => {
       for (let i = 0; i < result.length; i++) {
         bidPromises.push(Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, result[i].blockNumber));
       }
@@ -256,7 +257,7 @@ Auctionlets.bidOnAuctionlet = function bidOnAuctionlet(auctionletId, bidAmount, 
 
 Auctionlets.watchBid = function watchBid() {
   /* eslint-disable new-cap */
-  TokenAuction.objects.auction.Bid((error) => {
+  TokenAuction.objects.auction.LogBid((error) => {
     if (!error) {
       console.log('Bid is set');
       const currentAuctionletId = Session.get('currentAuctionletId');

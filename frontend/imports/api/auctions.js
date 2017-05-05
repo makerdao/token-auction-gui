@@ -65,7 +65,7 @@ Auctions.newAuction = function newAuction(account, selling, buying, sellAmount, 
 
 Auctions.watchNewAuction = function watchNewAuction() {
   /* eslint-disable new-cap */
-  TokenAuction.objects.auction.NewAuction((error, result) => {
+  TokenAuction.objects.auction.LogNewAuction((error, result) => {
     if (!error) {
       const auctionId = result.args.id.toNumber();
       console.log('AuctionId: ', auctionId);
