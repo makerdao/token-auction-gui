@@ -5,5 +5,3 @@ dist/
 node_modules/
 npm-debug.log
 nohup.out
-frontend/packages/erc20/build/
-frontend/packages/token-auction/build/
