@@ -3,6 +3,7 @@ import Tokens from './tokens.js';
 import Transactions from './transactions.js';
 import prettyError from '../utils/prettyError.js';
 import callContractMethod from '../utils/etherscan-connector.js';
+import Auctions from './auctions.js';
 
 const Auctionlets = new Mongo.Collection(null);
 const BID_GAS = 1000000;
@@ -12,13 +13,25 @@ Auctionlets.findAuctionlet = function findAuctionlet() {
   return Auctionlets.findOne({ auctionletId: Session.get('currentAuctionletId') });
 };
 
-Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
-  if (typeof (TokenAuction.objects) !== 'undefined') {
-    TokenAuction.objects.auction.getAuctionletInfo(currentAuctionletId, (error, result) => {
+Auctionlets.checkExpired = function checkExpired(auctionletId) {
+  const p = new Promise((resolve, reject) => {
+    TokenAuction.objects.auction.isExpired(auctionletId, (error, result) => {
       if (!error) {
-        Auctionlets.remove({});
+        resolve(result);
+      } else {
+        reject(error);
+      }
+    });
+  });
+  return p;
+};
+
+Auctionlets.getAuctionlet = function getAuctionlet(auctionletId) {
+  const p = new Promise((resolve, reject) => {
+    TokenAuction.objects.auction.getAuctionletInfo(auctionletId, (error, result) => {
+      if (!error) {
         const auctionlet = {
-          auctionletId: currentAuctionletId,
+          auctionletId,
           auction_id: result[0].toString(10),
           last_bidder: result[1],
           last_bid_time: new Date(result[2].toNumber() * 1000),
@@ -29,16 +42,87 @@ Auctionlets.loadAuctionlet = function loadAuctionlet(currentAuctionletId) {
           base: result[6],
           isExpired: false,
         };
-        Auctionlets.insert(auctionlet);
-        Auctionlets.syncExpired();
-        if (auctionlet.unclaimed) {
-          Auctionlets.loadAuctionletBidHistory(currentAuctionletId);
-        } else {
-          Auctionlets.loadAuctionletClaimedBid(currentAuctionletId);
-        }
+        resolve(auctionlet);
       } else {
-        console.log('auctionlet info error: ', error);
+        reject(error);
       }
+    });
+  });
+  return p;
+};
+
+Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
+  if (typeof (TokenAuction.objects) !== 'undefined') {
+    /* eslint-disable new-cap */
+    TokenAuction.objects.auction.LogNewAuction({ }, { fromBlock: 0 }).get((error, result) => {
+      if (!error) {
+        const lastEventIndex = result.length - 1;
+        // TODO: When splitting auctions is active we will need to get the max auctionlet id using another way
+        const lastAuctionletId = result[lastEventIndex].args.id.toNumber();
+        const auctionPromises = [];
+
+        for (let i = 1; i <= lastAuctionletId; i++) {
+          auctionPromises.push(Auctionlets.getAuctionlet(i));
+        }
+        Promise.all(auctionPromises).then((resultProm) => {
+          const auctionPromises2 = [];
+          const notFinishedAutions = [];
+          for (let i = 0; i < resultProm.length; i++) {
+            // console.log(resultProm[i]);
+            if (resultProm[i].auctionletId && resultProm[i].unclaimed) {
+              notFinishedAutions.push(resultProm[i]);
+              auctionPromises2.push(Auctionlets.checkExpired(resultProm[i].auctionletId));
+            }
+          }
+
+          Promise.all(auctionPromises2).then((resultProm2) => {
+            Auctionlets.remove({});
+            for (let i = 0; i < resultProm2.length; i++) {
+              // console.log(notFinishedAutions[i]);
+              // console.log(resultProm2[i]);
+              if (!resultProm2[i]) {
+                notFinishedAutions[i].bids = 'undefined';
+                notFinishedAutions[i].duration = 'undefined';
+                Auctionlets.insert(notFinishedAutions[i]);
+
+                // Update Bids# asynchronously
+                TokenAuction.objects.auction.LogBid({ auctionlet_id: notFinishedAutions[i].auctionletId },
+                { fromBlock: 0 }).get((errorBids, resultBids) => {
+                  if (!errorBids) {
+                    Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
+                    { $set: { bids: resultBids.length } });
+                  }
+                });
+
+                // Update Time Left asynchronously.
+                // TODO: When splitting auctions is active we should only call the auction once per group of auctionlets
+                Auctions.getAuction(notFinishedAutions[i].auction_id).then((resultAuction) => {
+                  Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
+                  { $set: { duration: resultAuction.duration } });
+                });
+              }
+            }
+          });
+        });
+      }
+    });
+    /* eslint-enable new-cap */
+  }
+};
+
+Auctionlets.loadAuctionlet = function loadAuctionlet(auctionletId) {
+  if (typeof (TokenAuction.objects) !== 'undefined') {
+    Auctionlets.getAuctionlet(auctionletId).then((auctionlet) => {
+      Auctionlets.remove({});
+      Auctionlets.insert(auctionlet);
+      Auctionlets.syncExpired();
+      if (auctionlet.unclaimed) {
+        Auctionlets.loadAuctionletBidHistory(auctionletId);
+      } else {
+        Auctionlets.loadAuctionletClaimedBid(auctionletId);
+      }
+    }, (error) => {
+      console.log('auctionlet info error: ', error);
     });
   }
 };
@@ -136,16 +220,16 @@ Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistoryDe
 
 // Check whether an auctionlet is expired and if so update the auctionlet
 Auctionlets.syncExpired = function syncExpired() {
-  const currentAuctionletId = Session.get('currentAuctionletId');
-  TokenAuction.objects.auction.isExpired(currentAuctionletId, (error, result) => {
-    if (!error) {
-      if (result) {
+  if (typeof (TokenAuction.objects) !== 'undefined') {
+    const currentAuctionletId = Session.get('currentAuctionletId');
+    if (currentAuctionletId) {
+      Auctionlets.checkExpired(currentAuctionletId).then((result) => {
         Auctionlets.update({ auctionletId: currentAuctionletId }, { $set: { isExpired: result } });
-      }
-    } else {
-      console.log('syncExpired error', error);
+      }, (error) => {
+        console.log('syncExpired error', error);
+      });
     }
-  });
+  }
 };
 
 Auctionlets.calculateRequiredBid = function calculateRequiredBid(buyAmount, minIncrease) {

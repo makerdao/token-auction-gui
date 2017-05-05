@@ -65,7 +65,7 @@ function initNetwork(newNetwork) {
   Session.set('network', newNetwork);
   Session.set('isConnected', true);
   Session.set('latestBlock', 0);
-  const networkSettings = Meteor.settings.public[newNetwork];
+  /* const networkSettings = Meteor.settings.public[newNetwork];
   const currentAuctionId = Session.get('currentAuctionId');
   if (!currentAuctionId) {
     // setting default auction id for the current network
@@ -75,7 +75,7 @@ function initNetwork(newNetwork) {
   if (!currentAuctionletId) {
     // setting default auction id for the current network
     Session.set('currentAuctionletId', networkSettings.auctionletId);
-  }
+  }*/
 
   TokenAuction.init(newNetwork);
   Tokens.sync();
@@ -246,6 +246,8 @@ Tracker.autorun(() => {
   const currentAuctionletId = Session.get('currentAuctionletId');
   if (currentAuctionletId) {
     Auctionlets.loadAuctionlet(currentAuctionletId);
+  } else {
+    Auctionlets.getOpenAuctionlets();
   }
   Tokens.sync();
 });
