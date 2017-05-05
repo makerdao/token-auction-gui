@@ -59,6 +59,7 @@ Auctionlets.loadAuctionletClaimedBid = function loadAuctionletClaimedBid(auction
   // Check on local node or Etherscan if there's info
   /* eslint-disable new-cap */
   TokenAuction.objects.auction.Bid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((err, res) => {
+    if (res.length == 0) return;
     const lastIndex = res.length - 1;
     const blockNumber = res[lastIndex].blockNumber;
     Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, blockNumber).then((r) => {
