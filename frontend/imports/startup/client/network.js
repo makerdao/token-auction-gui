@@ -125,15 +125,9 @@ function checkBidNotifications() {
 }
 
 function checkAuctionNotifications() {
-  if (Session.get('newAuctionMessage') !== null) {
-    showNotification(Session.get('newAuctionMessage'));
-  }
-}
-
-function checkTransactionNotifications() {
   //TODO replace with notifications for new auctions created by others
-  // if (Session.get('newTransactionMessage') !== null) {
-  //   showNotification(Session.get('newTransactionMessage'));
+  // if (Session.get('newAuctionMessage') !== null) {
+  //   showNotification(Session.get('newAuctionMessage'));
   // }
 }
 
@@ -237,7 +231,6 @@ Meteor.startup(() => {
 Tracker.autorun(() => {
   checkBidNotifications();
   checkAuctionNotifications();
-  checkTransactionNotifications();
   checkClaimNotifications();
   checkAccounts();
   const currentAuctionId = Session.get('currentAuctionId');
