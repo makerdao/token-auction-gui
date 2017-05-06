@@ -1,6 +1,5 @@
 import { Template } from 'meteor/templating';
 
-import '/imports/client/accountselector.js';
 import '/imports/client/network-status.js';
 import '/imports/client/auctions.js';
 import '/imports/client/auction.js';

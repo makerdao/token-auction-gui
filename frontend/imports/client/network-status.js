@@ -5,4 +5,5 @@ Template.networkStatus.viewmodel({
   network: () => Session.get('network'),
   isConnected: () => Session.get('isConnected'),
   latestBlock: () => Session.get('latestBlock'),
+  contract: () => Session.get('contractAddress'),
 });
