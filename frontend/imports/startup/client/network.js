@@ -22,13 +22,15 @@ let lastMessages = [];
 function setupFilters() {
   // log events need to be reset for each network
   if (Session.get('network')) {
-    Auctions.watchNewAuction();
+    Auctions.discoverExistingAuctions();
+    Auctions.watchNewAuctions();
+    Auctionlets.discoverExistingAuctionlets();
     Auctionlets.watchBid();
   }
 
   web3.eth.filter('latest', () => {
     Session.get('network');
-    Auctionlets.syncExpired();
+    //TODO Auctionlets.syncExpired();
   });
 }
 
@@ -205,15 +207,15 @@ Tracker.autorun(() => {
   checkBidNotifications();
   checkAuctionNotifications();
   checkClaimNotifications();
-  const currentAuctionId = Session.get('currentAuctionId');
-  if (currentAuctionId) {
-    Auctions.loadAuction(currentAuctionId);
-  }
-  const currentAuctionletId = Session.get('currentAuctionletId');
-  if (currentAuctionletId) {
-    Auctionlets.loadAuctionlet(currentAuctionletId);
-  } else {
-    Auctionlets.getOpenAuctionlets();
-  }
+  // const currentAuctionId = Session.get('currentAuctionId');
+  // if (currentAuctionId) {
+  //   Auctions.loadAuction(currentAuctionId);
+  // }
+  // const currentAuctionletId = Session.get('currentAuctionletId');
+  // if (currentAuctionletId) {
+  //   Auctionlets.loadAuctionlet(currentAuctionletId);
+  // } else {
+  //   Auctionlets.getOpenAuctionlets();
+  // }
   Session.get('network');
 });

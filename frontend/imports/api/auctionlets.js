@@ -1,6 +1,4 @@
 import { Mongo } from 'meteor/mongo';
-import Tokens from './tokens.js';
-import prettyError from '../utils/prettyError.js';
 import callContractMethod from '../utils/etherscan-connector.js';
 import Auctions from './auctions.js';
 
@@ -10,8 +8,33 @@ Auctionlets.findAuctionlet = function findAuctionlet() {
   return Auctionlets.findOne({ auctionletId: Session.get('currentAuctionletId') });
 };
 
-Auctionlets.checkExpired = function checkExpired(auctionletId) {
-  const p = new Promise((resolve, reject) => {
+Auctionlets.getAuctionletInfo = function getAuctionletInfo(auctionletId) {
+  return new Promise((resolve, reject) => {
+    TokenAuction.objects.auction.getAuctionletInfo(auctionletId, (error, result) => {
+      // we assume that if result[0] (auctionId) is 0 then the auctionlet is not valid anymore
+      // this is a way to detect that the getAuctionInfo(...) contract call actually failed
+      if (!error & (result[0] != 0)) {
+        const auctionlet = {
+          auctionletId: auctionletId,
+          auctionId: result[0].toString(10),
+          last_bidder: result[1],
+          last_bid_time: new Date(result[2].toNumber() * 1000),
+          buy_amount: result[3].toString(10),
+          sell_amount: result[4].toString(10),
+          unit_price: result[3].div(result[4]).toString(10),
+          unclaimed: result[5],
+          base: result[6]
+        };
+        resolve(auctionlet);
+      } else {
+        reject(error);
+      }
+    });
+  });
+};
+
+Auctionlets.isExpired = function checkExpired(auctionletId) {
+  return new Promise((resolve, reject) => {
     TokenAuction.objects.auction.isExpired(auctionletId, (error, result) => {
       if (!error) {
         resolve(result);
@@ -20,32 +43,44 @@ Auctionlets.checkExpired = function checkExpired(auctionletId) {
       }
     });
   });
-  return p;
 };
 
-Auctionlets.getAuctionlet = function getAuctionlet(auctionletId) {
-  const p = new Promise((resolve, reject) => {
-    TokenAuction.objects.auction.getAuctionletInfo(auctionletId, (error, result) => {
-      if (!error) {
-        const auctionlet = {
-          auctionletId,
-          auction_id: result[0].toString(10),
-          last_bidder: result[1],
-          last_bid_time: new Date(result[2].toNumber() * 1000),
-          buy_amount: result[3].toString(10),
-          sell_amount: result[4].toString(10),
-          unit_price: result[3].div(result[4]).toString(10),
-          unclaimed: result[5],
-          base: result[6],
-          isExpired: false,
-        };
-        resolve(auctionlet);
-      } else {
-        reject(error);
-      }
-    });
+Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId) {
+  return Promise.all([Auctionlets.getAuctionletInfo(auctionletId), Auctionlets.isExpired(auctionletId)]).then(values => {
+    const auctionlet = values[0];
+    auctionlet.expired = values[1];
+
+    Auctionlets.remove({ auctionletId: auctionletId },
+      () => Auctionlets.insert(auctionlet));
+  }).catch(() =>
+    Auctionlets.remove({ auctionletId: auctionletId })
+  );
+};
+
+Auctionlets.discoverExistingAuctionlets = function discoverExistingAuctionlets() {
+  // the first auctionlet gets created when a new auction is created
+  TokenAuction.objects.auction.LogNewAuction({ }, { fromBlock: 0 }).get((error, events) => {
+    if (error) {
+      console.log('error: ', error);
+      return;
+    }
+
+    Promise.all(events
+      .map((event) => event.args['base_id'].toNumber())
+      .map((auctionletId) => Auctionlets.syncAuctionlet(auctionletId)));
   });
-  return p;
+
+  // more auctionlets get created on a split bid
+  TokenAuction.objects.auction.LogSplit({ }, { fromBlock: 0 }).get((error, events) => {
+    if (error) {
+      console.log('error: ', error);
+      return;
+    }
+
+    Promise.all(events
+      .map((event) => event.args['split_id'].toNumber())
+      .map((auctionletId) => Auctionlets.syncAuctionlet(auctionletId)));
+  });
 };
 
 Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
@@ -59,7 +94,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
         const auctionPromises = [];
 
         for (let i = 1; i <= lastAuctionletId; i++) {
-          auctionPromises.push(Auctionlets.getAuctionlet(i));
+          auctionPromises.push(Auctionlets.getAuctionletInfo(i));
         }
         Promise.all(auctionPromises).then((resultProm) => {
           const auctionPromises2 = [];
@@ -68,7 +103,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
             // console.log(resultProm[i]);
             if (resultProm[i].auctionletId && resultProm[i].unclaimed) {
               notFinishedAutions.push(resultProm[i]);
-              auctionPromises2.push(Auctionlets.checkExpired(resultProm[i].auctionletId));
+              auctionPromises2.push(Auctionlets.isExpired(resultProm[i].auctionletId));
             }
           }
 
@@ -79,7 +114,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
               // console.log(resultProm2[i]);
               if (!resultProm2[i]) {
                 notFinishedAutions[i].bids = 'undefined';
-                notFinishedAutions[i].duration = 'undefined';
+                notFinishedAutions[i].ttl = 'undefined';
                 Auctionlets.insert(notFinishedAutions[i]);
 
                 // Update Bids# asynchronously
@@ -95,7 +130,7 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
                 // TODO: When splitting auctions is active we should only call the auction once per group of auctionlets
                 Auctions.getAuction(notFinishedAutions[i].auction_id).then((resultAuction) => {
                   Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
-                  { $set: { duration: resultAuction.duration } });
+                  { $set: { ttl: resultAuction.ttl } });
                 });
               }
             }
@@ -104,23 +139,6 @@ Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
       }
     });
     /* eslint-enable new-cap */
-  }
-};
-
-Auctionlets.loadAuctionlet = function loadAuctionlet(auctionletId) {
-  if (typeof (TokenAuction.objects) !== 'undefined') {
-    Auctionlets.getAuctionlet(auctionletId).then((auctionlet) => {
-      Auctionlets.remove({});
-      Auctionlets.insert(auctionlet);
-      Auctionlets.syncExpired();
-      if (auctionlet.unclaimed) {
-        Auctionlets.loadAuctionletBidHistory(auctionletId);
-      } else {
-        Auctionlets.loadAuctionletClaimedBid(auctionletId);
-      }
-    }, (error) => {
-      console.log('auctionlet info error: ', error);
-    });
   }
 };
 
@@ -136,105 +154,24 @@ Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {
   return result;
 };
 
-Auctionlets.loadAuctionletClaimedBid = function loadAuctionletClaimedBid(auctionletId) {
-  // Check on local node or Etherscan if there's info
-  /* eslint-disable new-cap */
-  TokenAuction.objects.auction.LogBid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((err, res) => {
-    if (res.length == 0) return;
-    const lastIndex = res.length - 1;
-    const blockNumber = res[lastIndex].blockNumber;
-    Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, blockNumber).then((r) => {
-      const update = {
-        last_bidder: r.last_bidder,
-        last_bid_time: r.last_bid_time,
-        buy_amount: r.buy_amount,
-        sell_amount: r.sell_amount,
-        unit_price: r.unit_price,
-      };
-      Auctionlets.update({ auctionletId }, { $set: update });
-    });
-  });
-  /* eslint-enable new-cap */
-};
-
-Auctionlets.loadAuctionletBidHistory = function loadAuctionletBidHistory(auctionletId) {
-  /* eslint-disable new-cap */
-  if (typeof (TokenAuction.objects) !== 'undefined') {
-    const bidPromises = [];
-    TokenAuction.objects.auction.LogBid({ auctionlet_id: auctionletId }, { fromBlock: 0 }).get((error, result) => {
-      for (let i = 0; i < result.length; i++) {
-        bidPromises.push(Auctionlets.loadAuctionletBidHistoryDetail(auctionletId, result[i].blockNumber));
-      }
-      Promise.all(bidPromises).then((resultProm) => {
-        const historySorted = resultProm.sort(Auctionlets.sortByBuyAmountDesc);
-        Auctionlets.update({ auctionletId }, { $set: { history: historySorted } });
-      });
-    });
-  }
-  /* eslint-enable new-cap */
-};
-
-Auctionlets.loadAuctionletBidHistoryDetail = function loadAuctionletBidHistoryDetail(auctionletId, blockNumber) {
-  const bidPromise = new Promise((resolve, reject) => {
-    TokenAuction.objects.auction.getAuctionletInfo(auctionletId, blockNumber, (error, result) => {
-      if (!error) {
-        let auctionlet = {};
-        if (result[0].toNumber() !== 0) {
-          // We could bring the info from the local node
-          auctionlet = {
-            last_bidder: result[1],
-            last_bid_time: new Date(result[2].toNumber() * 1000),
-            buy_amount: result[3].toString(10),
-            sell_amount: result[4].toString(10),
-            unit_price: result[3].div(result[4]).toString(10),
-          };
-          resolve(auctionlet);
-        } else {
-          // Bring info from etherscan
-          console.log('Could not find history in local node for block ', blockNumber, '. Calling Etherscan...');
-          callContractMethod('getAuctionletInfo(uint256)', [auctionletId], blockNumber).then((res) => {
-            const buyAmount = web3.toBigNumber(parseInt(res[3].toString(16), 16));
-            const sellAmount = web3.toBigNumber(parseInt(res[4].toString(16), 16));
-            /* eslint-disable prefer-template */
-            auctionlet = {
-              last_bidder: '0x' + res[1].replace(/^0+/, ''),
-              last_bid_time: new Date(parseInt(res[2].toString(16), 16) * 1000),
-              buy_amount: buyAmount.toString(10),
-              sell_amount: sellAmount.toString(10),
-              unit_price: buyAmount.div(sellAmount).toString(10),
-            };
-            /* eslint-enable prefer-template */
-            resolve(auctionlet);
-          });
-        }
-      } else {
-        reject(error);
-      }
-    });
-  });
-  return bidPromise;
-};
-
-// Check whether an auctionlet is expired and if so update the auctionlet
-Auctionlets.syncExpired = function syncExpired() {
-  if (typeof (TokenAuction.objects) !== 'undefined') {
-    const currentAuctionletId = Session.get('currentAuctionletId');
-    if (currentAuctionletId) {
-      Auctionlets.checkExpired(currentAuctionletId).then((result) => {
-        Auctionlets.update({ auctionletId: currentAuctionletId }, { $set: { isExpired: result } });
-      }, (error) => {
-        console.log('syncExpired error', error);
-      });
-    }
-  }
-};
-
 Auctionlets.watchBid = function watchBid() {
-  /* eslint-disable new-cap */
-  TokenAuction.objects.auction.LogBid((error) => {
-    console.log('Bid is set');
+  TokenAuction.objects.auction.LogNewAuction((error, event) => {
+    const auctionletId = event.args['base_id'].toNumber();
+    Auctions.syncAuction(auctionletId);
   });
-  /* eslint-enable new-cap */
+
+  TokenAuction.objects.auction.LogSplit((error, event) => {
+    const auctionletId = event.args['split_id'].toNumber();
+    Auctions.syncAuction(auctionletId);
+  });
+
+  TokenAuction.objects.auction.LogBid((error) => {
+    const auctionletId = event.args['auctionlet_id'].toNumber();
+    Auctions.syncAuction(auctionletId);
+  });
+
+  //TODO how to detect claims??
+  //TODO how to detect expirations??
 };
 
 export default Auctionlets;

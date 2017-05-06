@@ -16,7 +16,7 @@ function doCountdown() {
   // console.log('current time', currentTime);
   if (singleAuction !== undefined && singleAuctionlet !== undefined) {
     // console.log('single auction:', singleAuction, ' and singleAuctionlet:', singleAuctionlet);
-    const countdown = Math.round(((singleAuction.duration * 1000) -
+    const countdown = Math.round(((singleAuction.ttl * 1000) -
                       (currentTime - singleAuctionlet.last_bid_time.getTime())));
     // console.log(countdown);
     if (countdown >= 0) {

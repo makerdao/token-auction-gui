@@ -1,3 +1,4 @@
+import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { ReactiveArray } from 'meteor/templates:array';
@@ -12,8 +13,8 @@ function doCountdown() {
   const countdownArray = [];
 
   auctionlets.forEach((auctionlet) => {
-    if (auctionlet.duration !== 'undefined' && auctionlet.duration >= 0) {
-      countdown = Math.round(((auctionlet.duration * 1000) -
+    if (auctionlet.ttl !== 'undefined' && auctionlet.ttl >= 0) {
+      countdown = Math.round(((auctionlet.ttl * 1000) -
                     (currentTime - auctionlet.last_bid_time.getTime())));
       // console.log(countdown);
       if (countdown >= 0) {
@@ -31,6 +32,10 @@ function doCountdown() {
 Template.auctions.viewmodel({
   onCreated() {
     Meteor.setInterval(doCountdown, 1000);
+  },
+  auctions() {
+    const auctions = Auctions.find({ });
+    return auctions;
   },
   auctionlets() {
     const auctionlets = Auctionlets.find({ });
