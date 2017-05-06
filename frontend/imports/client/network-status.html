@@ -1,12 +1,12 @@
 <template name="networkStatus">
   <div id="networkStatusDiv">
     <ul>
-      <li>Network: {{ network}}</li>
-      <li>Status: 
+      <li>Network: <strong>{{ network}}</strong></li>
+      <li>Status:
         {{#if isConnected}}
-          <span>Connected</span>
+          <strong>Connected</strong>
         {{else}}
-          <span>Not connected!</span>
+          <strong>Not connected!</strong>
         {{/if}}
         </li>
       <li>Latest block: {{ latestBlock}}</li>
