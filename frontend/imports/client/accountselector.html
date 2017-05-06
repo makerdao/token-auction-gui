@@ -1,14 +1,5 @@
 <template name="accountSelector">
   <div id="accountDiv">
-    <p>Accounts:
-      <select>
-      {{#each accounts}}
-        <option value="{{this}}" selected={{equals this address}}>{{this}}</option>
-      {{/each}}
-      </select>
-    </p>
-    <span>Active account: <a href="{{etherscanHref}}{{account}}" target="_blank">{{account}}</a></span>
-    <br>
     <span>Auction contract: <a href="{{etherscanHref}}{{contract}}" target="_blank">{{contract}}</a></span>
   </div>
 </template>
