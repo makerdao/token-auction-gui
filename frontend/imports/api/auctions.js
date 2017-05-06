@@ -6,8 +6,8 @@ Auctions.findAuctions = function findAuctions() {
   return Auctions.find({ }, {sort: {auction_id: -1}});
 };
 
-Auctions.findAuction = function findAuction() {
-  return Auctions.findOne({ auction_id: Session.get('currentAuctionId') });
+Auctions.findAuction = function findAuction(auctionId) {
+  return Auctions.findOne({ auction_id: auctionId });
 };
 
 Auctions.getAuction = function getAuction(auctionId) {

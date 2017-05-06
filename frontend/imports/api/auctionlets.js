@@ -10,8 +10,8 @@ Auctionlets.findAuctionletsByAuctionId = function findAuctionletsByAuctionId(auc
   return Auctionlets.find({ auction_id: auction_id }, {sort: {auctionlet_id: -1}});
 };
 
-Auctionlets.findAuctionlet = function findAuctionlet() {
-  return Auctionlets.findOne({ auctionlet_id: Session.get('currentAuctionletId') });
+Auctionlets.findAuctionlet = function findAuctionlet(auctionletId) {
+  return Auctionlets.findOne({ auctionlet_id: auctionletId });
 };
 
 Auctionlets.getAuctionletInfo = function getAuctionletInfo(auctionletId) {

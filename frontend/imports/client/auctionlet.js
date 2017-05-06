@@ -7,39 +7,28 @@ import Tokens from '/imports/api/tokens.js';
 
 import './auctionlet.html';
 
-// let auctionletId;
-const timeRemaining = new ReactiveVar(0);
-
-function doCountdown() {
-  const singleAuctionlet = Auctionlets.findAuctionlet();
-  const singleAuction = Auctions.findAuction();
-  const currentTime = (new Date()).getTime();
-  // console.log('current time', currentTime);
-  if (singleAuction !== undefined && singleAuctionlet !== undefined) {
-    // console.log('single auction:', singleAuction, ' and singleAuctionlet:', singleAuctionlet);
-    const countdown = Math.round(((singleAuction.ttl * 1000) -
-                      (currentTime - singleAuctionlet.last_bid_time.getTime())));
-    // console.log(countdown);
-    if (countdown >= 0) {
-      timeRemaining.set(countdown);
+function prepareDoCountdown(auctionletId, timeRemaining) {
+  return function() {
+    const auctionlet = Auctionlets.findAuctionlet(auctionletId);
+    const auction = Auctions.findAuction(auctionlet.auction_id);
+    const currentTime = (new Date()).getTime();
+    if (auction !== undefined && auctionlet !== undefined) {
+      const countdown = Math.round(((auction.ttl * 1000) - (currentTime - auctionlet.last_bid_time.getTime())));
+      if (countdown >= 0) {
+        timeRemaining.set(countdown);
+      }
     }
   }
 }
 
 Template.auctionlet.viewmodel({
   onCreated() {
-    // auctionletId = templateInstance.data.auctionlet.auctionlet_id;
-    Meteor.setInterval(doCountdown, 1000);
+    const instance = Template.instance();
+    const auctionletId = instance.data.auctionlet.auctionlet_id;
+    instance.timeRemaining = new ReactiveVar(0);
+    Meteor.setInterval(prepareDoCountdown(auctionletId, instance.timeRemaining), 1000);
   },
   timeRemaining() {
-    return timeRemaining.get();
+    return Template.instance().timeRemaining.get();
   },
-  // expired() {
-  //   const auctionlet = Auctionlets.findAuctionlet();
-  //   return auctionlet !== undefined && auctionlet.isExpired;
-  // },
-  // unclaimed() {
-  //   const auctionlet = Auctionlets.findAuctionlet();
-  //   return auctionlet !== undefined && auctionlet.auction_id !== '0' && auctionlet.unclaimed;
-  // },
 });
