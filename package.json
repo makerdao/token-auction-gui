@@ -1,5 +1,5 @@
 {
-  "name": "weekly-mkr-auction",
+  "name": "token-auction-gui",
   "scripts": {
     "build": "gulp build"
   },
