@@ -199,7 +199,6 @@ Meteor.startup(() => {
   });
 
   Meteor.setInterval(checkNetwork, 2503);
-  Meteor.setInterval(checkAccounts, 10657);
 });
 
 Tracker.autorun(() => {
