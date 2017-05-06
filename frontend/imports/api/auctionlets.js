@@ -43,18 +43,6 @@ Auctionlets.isExpired = function checkExpired(auctionletId) {
   });
 };
 
-Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId) {
-  return Promise.all([Auctionlets.getAuctionletInfo(auctionletId), Auctionlets.isExpired(auctionletId)]).then(values => {
-    const auctionlet = values[0];
-    auctionlet.expired = values[1];
-
-    Auctionlets.remove({ auctionletId: auctionletId },
-      () => Auctionlets.insert(auctionlet));
-  }).catch(() =>
-    Auctionlets.remove({ auctionletId: auctionletId })
-  );
-};
-
 Auctionlets.initialize = function initialize() {
   // clear existing auctionlets collection
   Auctionlets.remove({ });
@@ -108,6 +96,18 @@ Auctionlets.initialize = function initialize() {
 
   //TODO how to detect claims??
   //TODO how to detect expirations??
+};
+
+Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId) {
+  return Promise.all([Auctionlets.getAuctionletInfo(auctionletId), Auctionlets.isExpired(auctionletId)]).then(values => {
+    const auctionlet = values[0];
+    auctionlet.expired = values[1];
+
+    Auctionlets.remove({ auctionletId: auctionletId },
+      () => Auctionlets.insert(auctionlet));
+  }).catch(() =>
+    Auctionlets.remove({ auctionletId: auctionletId })
+  );
 };
 
 Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {

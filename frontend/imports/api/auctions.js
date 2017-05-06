@@ -2,8 +2,12 @@ import { Mongo } from 'meteor/mongo';
 
 const Auctions = new Mongo.Collection(null);
 
+Auctions.findAuction = function findAuction() {
+  return Auctions.findOne({ auctionId: Session.get('currentAuctionId') });
+};
+
 Auctions.getAuction = function getAuction(auctionId) {
-  const p = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     TokenAuction.objects.auction.getAuctionInfo(auctionId, (error, result) => {
       if (!error) {
         const auction = {
@@ -24,18 +28,6 @@ Auctions.getAuction = function getAuction(auctionId) {
         reject(error);
       }
     });
-  });
-  return p;
-};
-
-//TODO refactor it so it returns a promise
-Auctions.syncAuction = function syncAuction(auctionId) {
-  Auctions.getAuction(auctionId).then((auction) => {
-    Auctions.remove({ auctionId: auctionId }, function() {
-      Auctions.insert(auction)
-    });
-  }, (error) => {
-    console.log('error: ', error);
   });
 };
 
@@ -59,12 +51,13 @@ Auctions.initialize = function initialize() {
   });
 };
 
-Auctions.loadAuction = function loadAuction(auctionId) {
-  Auctions.syncAuction(auctionId);
-};
-
-Auctions.findAuction = function findAuction() {
-  return Auctions.findOne({ auctionId: Session.get('currentAuctionId') });
+Auctions.syncAuction = function syncAuction(auctionId) {
+  return Auctions.getAuction(auctionId).then((auction) => {
+    Auctions.remove({ auctionId: auctionId }, function() {
+      Auctions.insert(auction)
+    });
+  }).catch((error) =>
+    console.log('error: ', error));
 };
 
 export default Auctions;
