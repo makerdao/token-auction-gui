@@ -25,7 +25,6 @@ erc20:dapple
 web3:dapple
 session@1.1.6
 numeral:numeral
-kadira:flow-router
 underscore@1.0.9
 momentjs:moment
 shell-server
