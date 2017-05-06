@@ -1,5 +1,8 @@
 <template name="auctions">
-  {{#unless currentAuctionId}}
+  {{#each auctions}}
+    {{> auction auction=this}}
+  {{/each}}
+
     <div class="boxDiv">
         <h2>Auctionlets Actually</h2>
         <table class="table table-condensed">
@@ -37,7 +40,6 @@
           {{/each}}
         </table>
     </div>
-  {{/unless}}
 
     <div class="boxDiv">
         <h2>Real Auctions</h2>

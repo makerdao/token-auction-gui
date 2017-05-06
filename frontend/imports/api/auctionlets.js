@@ -2,8 +2,16 @@ import { Mongo } from 'meteor/mongo';
 
 const Auctionlets = new Mongo.Collection(null);
 
+Auctionlets.findAuctionlets = function findAuctionlets() {
+  return Auctionlets.find({ }, {sort: {auctionlet_id: -1}});
+};
+
+Auctionlets.findAuctionletsByAuctionId = function findAuctionletsByAuctionId(auction_id) {
+  return Auctionlets.find({ auction_id: auction_id }, {sort: {auctionlet_id: -1}});
+};
+
 Auctionlets.findAuctionlet = function findAuctionlet() {
-  return Auctionlets.findOne({ auctionletId: Session.get('currentAuctionletId') });
+  return Auctionlets.findOne({ auctionlet_id: Session.get('currentAuctionletId') });
 };
 
 Auctionlets.getAuctionletInfo = function getAuctionletInfo(auctionletId) {
@@ -14,7 +22,7 @@ Auctionlets.getAuctionletInfo = function getAuctionletInfo(auctionletId) {
       if (!error & (result[0] != 0)) {
         const auctionlet = {
           auctionlet_id: auctionletId,
-          auction_id: result[0].toString(10),
+          auction_id: result[0].toNumber(),
           last_bidder: result[1],
           last_bid_time: new Date(result[2].toNumber() * 1000),
           buy_amount: result[3].toString(10),

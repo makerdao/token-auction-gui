@@ -1,10 +1,8 @@
 <template name="auctionlet">
-  {{#if currentAuctionletId}}
     <div class="boxDiv">
-      <h2>Auctionlet #{{auctionlet.auctionletId}}</h2>
-      {{#unless auctionNotFound}}
+      <h2>Auctionlet #{{auctionlet.auctionlet_id}}</h2>
         <table class="table">
-          {{#if unclaimed}}
+          {{#if auctionlet.unclaimed}}
           <tr>
             <td>Selling</td>
             <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">MKR</span></td>
@@ -37,10 +35,10 @@
           </tr>
           {{/if}}
         </table>
-        {{#if expired}}
+        {{#if auctionlet.expired}}
         <div class="form-group">
           <span>Auctionlet has expired.</span>
-          {{#unless unclaimed}}
+          {{#unless auctionlet.unclaimed}}
             <br/>
             <span>The tokens have been claimed by the auctionlet winner</span>
             <br/>
@@ -65,12 +63,8 @@
           {{/unless}}
         </div>
         {{/if}}
-      {{else}}
-        <span>Auctionlet was not found</span>
-      {{/unless}}
     </div>
-    {{#if unclaimed}}
+    {{#if auctionlet.unclaimed}}
       {{> bidHistory auctionlet=auctionlet}}
     {{/if}}
-  {{/if}}
 </template>

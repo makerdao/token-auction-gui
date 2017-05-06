@@ -34,12 +34,10 @@ Template.auctions.viewmodel({
     Meteor.setInterval(doCountdown, 1000);
   },
   auctions() {
-    const auctions = Auctions.find({ });
-    return auctions;
+    return Auctions.findAuctions();
   },
   auctionlets() {
-    const auctionlets = Auctionlets.find({ });
-    return auctionlets;
+    return Auctionlets.findAuctionlets();
   },
   timeRemaining(auctionletId) {
     return timeRemaining.get()[auctionletId];

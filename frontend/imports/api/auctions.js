@@ -2,8 +2,12 @@ import { Mongo } from 'meteor/mongo';
 
 const Auctions = new Mongo.Collection(null);
 
+Auctions.findAuctions = function findAuctions() {
+  return Auctions.find({ }, {sort: {auction_id: -1}});
+};
+
 Auctions.findAuction = function findAuction() {
-  return Auctions.findOne({ auctionId: Session.get('currentAuctionId') });
+  return Auctions.findOne({ auction_id: Session.get('currentAuctionId') });
 };
 
 Auctions.getAuction = function getAuction(auctionId) {

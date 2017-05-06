@@ -1,8 +1,6 @@
 <template name="auction">
-  {{#if currentAuctionId}}
     <div class="boxDiv">
-      <h2>Auction #{{auction.auctionId}}</h2>
-      {{#unless auctionNotFound}}
+      <h2>Auction #{{auction.auction_id}}</h2>
       <table class="table table-condensed">
         <tr>
           <td>Creator</td>
@@ -25,9 +23,9 @@
           <td>{{auction.ttl}} seconds</td>
         </tr>
       </table>
-      {{else}}
-    <span>Auction was not found</span>
-    {{/unless}}
   </div>
- {{/if}}
+
+  {{#each auctionlets}}
+    {{> auctionlet auctionlet=this}}
+  {{/each}}
 </template>

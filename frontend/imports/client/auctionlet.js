@@ -7,6 +7,7 @@ import Tokens from '/imports/api/tokens.js';
 
 import './auctionlet.html';
 
+// let auctionletId;
 const timeRemaining = new ReactiveVar(0);
 
 function doCountdown() {
@@ -27,22 +28,18 @@ function doCountdown() {
 
 Template.auctionlet.viewmodel({
   onCreated() {
+    // auctionletId = templateInstance.data.auctionlet.auctionlet_id;
     Meteor.setInterval(doCountdown, 1000);
-  },
-  auctionlet() {
-    const singleAuctionlet = Auctionlets.findAuctionlet();
-    const singleAuction = Auctions.findAuction();
-    return singleAuctionlet;
   },
   timeRemaining() {
     return timeRemaining.get();
   },
-  expired() {
-    const auctionlet = Auctionlets.findAuctionlet();
-    return auctionlet !== undefined && auctionlet.isExpired;
-  },
-  unclaimed() {
-    const auctionlet = Auctionlets.findAuctionlet();
-    return auctionlet !== undefined && auctionlet.auction_id !== '0' && auctionlet.unclaimed;
-  },
+  // expired() {
+  //   const auctionlet = Auctionlets.findAuctionlet();
+  //   return auctionlet !== undefined && auctionlet.isExpired;
+  // },
+  // unclaimed() {
+  //   const auctionlet = Auctionlets.findAuctionlet();
+  //   return auctionlet !== undefined && auctionlet.auction_id !== '0' && auctionlet.unclaimed;
+  // },
 });
