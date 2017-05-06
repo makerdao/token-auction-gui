@@ -97,7 +97,7 @@ Auctionlets.initialize = function initialize() {
   });
 
   // watch future bids and sync the auctionlet when one happends
-  TokenAuction.objects.auction.LogBid((error) => {
+  TokenAuction.objects.auction.LogBid((error, event) => {
     const auctionletId = event.args['auctionlet_id'].toNumber();
     Auctionlets.syncAuctionlet(auctionletId);
   });
