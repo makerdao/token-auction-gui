@@ -2,11 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import Auctions from './auctions.js';
 import Auctionlets from './auctionlets.js';
-import Transactions from './transactions.js';
 import prettyError from '../utils/prettyError.js';
 
 const Tokens = new Mongo.Collection(null);
-const APPROVE_GAS = 1000000;
 
 const tokens = {
   kovan: {
@@ -103,95 +101,6 @@ Tokens.sync = function sync() {
       });
     }
   }
-};
-
-Tokens.isBalanceSufficient = function isBalanceSufficient(bid, tokenAddress) {
-  const token = Tokens.findOne({ address: tokenAddress });
-  if (token !== undefined && web3.toBigNumber(token.balance).gte(web3.toBigNumber(bid))) {
-    // console.log('Success! Balance is', token.balance, 'and bid is', bid.toString(10));
-    return true;
-  } else if (token !== undefined) {
-    console.log('Insufficient! Balance is', token.balance, 'and bid is', bid.toString(10));
-    return false;
-  }
-  console.log('token is not found', tokenAddress);
-  return false;
-};
-
-Tokens.setEthAllowance = function setEthAllowance(amount) {
-  Tokens.getToken('ETH', (error, token) => {
-    if (!error) {
-      token.approve(Session.get('contractAddress'), amount, { gas: APPROVE_GAS }, (approveError, result) => {
-        if (!approveError) {
-          console.log('Eth approve transaction adding');
-          Session.set('bidProgress', 33);
-          Session.set('newBidMessage', {
-            message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Setting allowance for bid <i>(this can take a while)</i>',
-            type: 'info' });
-          Transactions.add('ethallowance', result, { value: amount.toString(10) });
-        } else {
-          console.log('SetEthAllowance error:', approveError);
-          Session.set('bidProgress', 0);
-          Session.set('newBidMessage', {
-            message: `Error setting allowance for bid: ${prettyError(approveError)}`,
-            type: 'danger' });
-        }
-      });
-    } else {
-      Session.set('bidProgress', 0);
-      Session.set('newBidMessage', {
-        message: `Error setting allowance for bid: ${prettyError(error)}`,
-        type: 'danger' });
-    }
-  });
-};
-
-Tokens.watchEthApproval = function watchEthApproval() {
-  Tokens.getToken('ETH', (error, token) => {
-    if (!error) {
-      /* eslint-disable new-cap */
-      token.Approval({ owner: Session.get('address'), spender: Session.get('contractAddress') },
-      (approvedError) => {
-        if (!approvedError) {
-          console.log('Approved, placing bid');
-        }
-      });
-      /* eslint-enable new-cap */
-    }
-  });
-};
-
-Tokens.watchMkrApproval = function watchMkrApproval() {
-  Tokens.getToken('MKR', (error, token) => {
-    if (!error) {
-      /* eslint-disable new-cap */
-      token.Approval({ owner: Session.get('address'), spender: Session.get('contractAddress') },
-      (approvalError) => {
-        if (!approvalError) {
-          console.log('Approved, creating auction');
-        }
-      });
-      /* eslint-enable new-cap */
-    }
-  });
-};
-
-Tokens.watchEthAllowanceTransactions = function watchEthAllowanceTransactions() {
-  Transactions.observeRemoved('ethallowance', (document) => {
-    if (document.receipt.logs.length === 0) {
-      console.log('Setting ETH allowance went wrong');
-      Session.set('bidProgress', 0);
-      Session.set('newBidMessage', { message: 'Error setting allowance for bid', type: 'danger' });
-    } else {
-      console.log('ETH allowance is set');
-      const auction = Auctions.findAuction();
-      Session.set('bidProgress', 66);
-      Session.set('newBidMessage', {
-        message: '<i class="fa fa-spinner fa-pulse fa-fw"></i> Allowance set, placing bid <i>(this can take a while)</i>',
-        type: 'info' });
-      Auctionlets.bidOnAuctionlet(Session.get('currentAuctionletId'), document.object.value, auction.sell_amount);
-    }
-  });
 };
 
 export default Tokens;

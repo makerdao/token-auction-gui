@@ -86,11 +86,6 @@ a:hover {
     color: #8E87C4;
 }
 
-#inputBid {
-    margin-bottom: 10px;
-    width: 200px;
-}
-
 .table {
     max-width: 600px;
 }
@@ -110,8 +105,4 @@ div.row {
 
 .message {
     color: #D0D0D0;
-}
-
-#inputBid {
-    display: inline-block;
 }

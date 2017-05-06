@@ -3,8 +3,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 auctionPath = '!/auction/';
 
 function clearSessionVariables() {
-  Session.set('newBidMessage', null);
-  Session.set('bidProgress', 0);
+  //TODO remove this method if will stay unused
 }
 
 function auctionAction() {

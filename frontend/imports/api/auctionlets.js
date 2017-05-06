@@ -1,12 +1,10 @@
 import { Mongo } from 'meteor/mongo';
 import Tokens from './tokens.js';
-import Transactions from './transactions.js';
 import prettyError from '../utils/prettyError.js';
 import callContractMethod from '../utils/etherscan-connector.js';
 import Auctions from './auctions.js';
 
 const Auctionlets = new Mongo.Collection(null);
-const BID_GAS = 1000000;
 
 Auctionlets.findAuctionlet = function findAuctionlet() {
   return Auctionlets.findOne({ auctionletId: Session.get('currentAuctionletId') });
@@ -231,58 +229,12 @@ Auctionlets.syncExpired = function syncExpired() {
   }
 };
 
-Auctionlets.calculateRequiredBid = function calculateRequiredBid(buyAmount, minIncrease) {
-  const requiredBid = web3.toBigNumber(buyAmount).mul(100 + minIncrease).div(100);
-  return requiredBid;
-};
-
-Auctionlets.doBid = function doBid(bidAmount) {
-  console.log('doBid function called');
-  Tokens.setEthAllowance(bidAmount);
-};
-
-Auctionlets.bidOnAuctionlet = function bidOnAuctionlet(auctionletId, bidAmount, quantity) {
-  TokenAuction.objects.auction.bid['uint256,uint256,uint256'](auctionletId, bidAmount, quantity,
-  { gas: BID_GAS }, (error, result) => {
-    if (!error) {
-      console.log(result);
-      Transactions.add('bid', result, { auctionletId, bid: bidAmount.toString(10) });
-    } else {
-      Session.set('bidProgress', 0);
-      Session.set('newBidMessage', { message: `Error placing bid: ${prettyError(error)}`, type: 'danger' });
-    }
-  });
-};
-
 Auctionlets.watchBid = function watchBid() {
   /* eslint-disable new-cap */
   TokenAuction.objects.auction.LogBid((error) => {
-    if (!error) {
-      console.log('Bid is set');
-      const currentAuctionletId = Session.get('currentAuctionletId');
-      Auctionlets.loadAuctionlet(currentAuctionletId);
-    } else {
-      Session.set('newBidMessage', { message: `Error placing bid: ${prettyError(error)}`, type: 'danger' });
-      Session.set('bidProgress', 0);
-      console.log('error: ', error);
-    }
+    console.log('Bid is set');
   });
   /* eslint-enable new-cap */
-};
-
-Auctionlets.watchBidTransactions = function watchBidTransactions() {
-  Transactions.observeRemoved('bid', (document) => {
-    if (document.receipt.logs.length === 0) {
-      Session.set('newBidMessage', { message: 'Error placing bid', type: 'danger' });
-    } else {
-      console.log('bid', document.object.bid);
-      Session.set('bidProgress', 100);
-      Session.set('newBidMessage', { message: 'Bid placed succesfully', type: 'success' });
-      Meteor.setTimeout(function () {
-        Session.set('bidProgress', 0);
-      }, 5000);
-    }
-  });
 };
 
 export default Auctionlets;

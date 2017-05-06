@@ -21,14 +21,9 @@ Template.body.onCreated(function created() {
     const address = Session.get('address');
     if (network && address) {
       // filters specific to the current address
-      Tokens.watchEthApproval();
-      Tokens.watchMkrApproval();
     }
   });
 
   //TODO will some other observing be needed here?
-
-  // observing collections, only required once
-  Tokens.watchEthAllowanceTransactions();
-  Auctionlets.watchBidTransactions();
+  //this is needed only for observing collections
 });

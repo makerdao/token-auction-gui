@@ -3,7 +3,6 @@ import Auctionlets from '/imports/api/auctionlets.js';
 import Tokens from '/imports/api/tokens.js';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
-import Transactions from '/imports/api/transactions.js';
 import clearMessages from '/imports/utils/clearmessages.js';
 
 Meteor.disconnect();
@@ -17,7 +16,6 @@ Session.set('latestBlock', 0);
 clearMessages();
 
 Session.set('lastMessages', []);
-Session.set('bidProgress', 0);
 
 let lastMessages = [];
 
@@ -53,7 +51,6 @@ function setupFilters() {
 
   web3.eth.filter('latest', () => {
     Tokens.sync();
-    Transactions.sync();
     Auctionlets.syncExpired();
   });
 }
@@ -119,9 +116,10 @@ function showNotification(notification) {
 }
 
 function checkBidNotifications() {
-  if (Session.get('newBidMessage') !== null) {
-    showNotification(Session.get('newBidMessage'));
-  }
+  //TODO replace with notifications for new bids placed by others
+  // if (Session.get('newBidMessage') !== null) {
+  //   showNotification(Session.get('newBidMessage'));
+  // }
 }
 
 function checkAuctionNotifications() {

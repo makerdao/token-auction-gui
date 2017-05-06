@@ -1,7 +1,7 @@
 import { Session } from 'meteor/session';
 
 export default function clearMessages() {
-  Session.set('newBidMessage', null);
+  //TODO may be needed if we introduce notifications again
   Session.set('lastMessages', []);
 
   console.log('Cleared messages...');
