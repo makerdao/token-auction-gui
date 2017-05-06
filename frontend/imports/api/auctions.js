@@ -2,6 +2,9 @@ import { Mongo } from 'meteor/mongo';
 
 const Auctions = new Mongo.Collection(null);
 
+Auctions.TYPE_FORWARD = 'forward';
+Auctions.TYPE_REVERSE = 'reverse';
+
 Auctions.findAuctions = function findAuctions() {
   return Auctions.find({ }, {sort: {auction_id: -1}});
 };
@@ -9,6 +12,19 @@ Auctions.findAuctions = function findAuctions() {
 Auctions.findAuction = function findAuction(auctionId) {
   return Auctions.findOne({ auction_id: auctionId });
 };
+
+Auctions.helpers({
+  type() {
+    if (this.min_increase > 0) return Auctions.TYPE_FORWARD;
+    else return Auctions.TYPE_REVERSE;
+  },
+  isForward: function isForward() {
+    return this.type() == Auctions.TYPE_FORWARD;
+  },
+  isReverse: function isForward() {
+    return this.type() == Auctions.TYPE_REVERSE;
+  }
+});
 
 Auctions.getAuction = function getAuction(auctionId) {
   return new Promise((resolve, reject) => {

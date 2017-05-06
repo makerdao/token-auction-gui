@@ -1,22 +1,41 @@
 <template name="auction">
     <div class="boxDiv">
-      <h2>Auction #{{auction.auction_id}}</h2>
+      <h2>
+        {{#if auction.isForward}}
+          Forward auction #{{auction.auction_id}}
+        {{/if}}
+        {{#if auction.isReverse}}
+          Reverse auction #{{auction.auction_id}}
+        {{/if}}
+      </h2>
       <table class="table table-condensed">
         <tr>
           <td>Creator</td>
           <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank">{{auction.creator}}</a></td>
         </tr>
-        <tr>
-          <td>Selling</td>
-          <td>{{formatBalance (fromWei auction.sell_amount)}} <span class="MKR">MKR</span></td>
-        </tr>
-        <tr>
-          <td>Start bid</td>
-          <td>{{formatBalance (fromWei auction.start_bid)}} <span class="ETH">ETH</span></td>
-        </tr>
+        {{#if auction.isForward}}
+          <tr>
+            <td>Selling</td>
+            <td><strong>{{formatBalance (fromWei auction.sell_amount)}} <span class="MKR">MKR</span></strong> (for at least <strong>{{formatBalance (fromWei auction.start_bid)}} <span class="ETH">ETH</span></strong>)</td>
+          </tr>
+        {{/if}}
+        {{#if auction.isReverse}}
+          <tr>
+            <td>Buying</td>
+            <td><strong>{{formatBalance (fromWei auction.start_bid)}} <span class="ETH">ETH</span></strong> (for at most <strong>{{formatBalance (fromWei auction.sell_amount)}} <span class="MKR">MKR</span></strong> - <i>this info is fake!!!</i>)</td>
+          </tr>
+        {{/if}}
+        <!--<tr>-->
+          <!--<td>Start bid</td>-->
+          <!--<td>{{formatBalance (fromWei auction.start_bid)}} <span class="ETH">ETH</span></td>-->
+        <!--</tr>-->
         <tr>
           <td>Minimum increase</td>
           <td>{{auction.min_increase}}%</td>
+        </tr>
+        <tr>
+          <td>Minimum decrease</td>
+          <td>{{auction.min_decrease}}%</td>
         </tr>
         <tr>
           <td>TTL <i>(after last bid)</i></td>

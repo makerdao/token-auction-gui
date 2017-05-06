@@ -37,29 +37,12 @@
         </table>
         {{#if auctionlet.expired}}
         <div class="form-group">
-          <span>Auctionlet has expired.</span>
+          <div>Auctionlet has expired.</div>
+          {{#if auctionlet.unclaimed}}
+            <div>The tokens are awaiting to be claimed by the auctionlet winner.</div>
+          {{/if}}
           {{#unless auctionlet.unclaimed}}
-            <br/>
-            <span>The tokens have been claimed by the auctionlet winner</span>
-            <br/>
-            <table class="table">
-              <tr>
-              <td>Sold</td>
-                <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">MKR</span></td>
-              </tr>
-              <tr>
-                <td>Winning bid</td>
-              <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">ETH</span></td>
-              </tr>
-              <tr>
-                <td>Unit price</td>
-                <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">ETH</span>/<span class="MKR">MKR</span></td>
-              </tr>
-              <tr>
-                <td>Last bid time</td>
-                <td>{{formatDateTime auctionlet.last_bid_time}}</td>
-              </tr>
-            </table>
+            <div>The tokens have been claimed by the auctionlet winner</div>
           {{/unless}}
         </div>
         {{/if}}

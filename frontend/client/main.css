@@ -21,7 +21,7 @@ a:hover {
 
 #inner {
     width: 70%;
-    margin: 0 auto; 
+    margin: 0 auto;
 }
 
 #networkStatusDiv, #accountDiv {
@@ -54,7 +54,6 @@ a:hover {
 .boxDiv {
     background-color: white;
     box-shadow: 2px 2px 5px #E0DFDF;
-    padding: 10px;
     margin-bottom: 20px;
     margin-top: 10px;
     border: 1px solid #E0DFDF;

@@ -1,4 +1,5 @@
 import { Mongo } from 'meteor/mongo';
+import Auctions from '/imports/api/auctions.js';
 
 const Auctionlets = new Mongo.Collection(null);
 
@@ -13,6 +14,12 @@ Auctionlets.findAuctionletsByAuctionId = function findAuctionletsByAuctionId(auc
 Auctionlets.findAuctionlet = function findAuctionlet(auctionletId) {
   return Auctionlets.findOne({ auctionlet_id: auctionletId });
 };
+
+Auctionlets.helpers({
+  auction() {
+    return Auctions.findAuction(this.auction_id);
+  }
+});
 
 Auctionlets.getAuctionletInfo = function getAuctionletInfo(auctionletId) {
   return new Promise((resolve, reject) => {
@@ -29,7 +36,7 @@ Auctionlets.getAuctionletInfo = function getAuctionletInfo(auctionletId) {
           sell_amount: result[4].toString(10),
           unit_price: result[3].div(result[4]).toString(10),
           unclaimed: result[5],
-          base: result[6]
+          base: result[6],
         };
         resolve(auctionlet);
       } else {
@@ -93,26 +100,34 @@ Auctionlets.initialize = function initialize() {
     const oldAuctionletId = event.args['base_id'].toNumber();
     const newAuctionletId = event.args['split_id'].toNumber();
     Auctionlets.syncAuctionlet(oldAuctionletId);
-    Auctionlets.syncAuctionlet(newAuctionletId);
+    Auctionlets.syncAuctionlet(newAuctionletId, true);
+    //TODO bids and splits on auctionlets in reverse auctions change the sell_amount of the auction itself!!!
+    //TODO until I figure out whether it's a bug, we also sync the auction to show the change in the UI
   });
 
   // watch future bids and sync the auctionlet when one happends
   TokenAuction.objects.auction.LogBid((error, event) => {
     const auctionletId = event.args['auctionlet_id'].toNumber();
-    Auctionlets.syncAuctionlet(auctionletId);
+    Auctionlets.syncAuctionlet(auctionletId, true);
+    //TODO bids and splits on auctionlets in reverse auctions change the sell_amount of the auction itself!!!
+    //TODO until I figure out whether it's a bug, we also sync the auction to show the change in the UI
   });
 
   //TODO how to detect claims??
   //TODO how to detect expirations??
 };
 
-Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId) {
+Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId, alsoSyncAuction) {
   return Promise.all([Auctionlets.getAuctionletInfo(auctionletId), Auctionlets.isExpired(auctionletId)]).then(values => {
     const auctionlet = values[0];
     auctionlet.expired = values[1];
 
     Auctionlets.remove({ auctionlet_id: auctionletId },
       () => Auctionlets.insert(auctionlet));
+
+    if (alsoSyncAuction) {
+      Auctions.syncAuction(auctionlet.auction_id);
+    }
   }).catch(() =>
     Auctionlets.remove({ auctionlet_id: auctionletId })
   );

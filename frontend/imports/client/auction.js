@@ -1,10 +1,12 @@
 import { Template } from 'meteor/templating';
+import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
 import './auction.html';
 
 Template.auction.helpers({
   auctionlets: function auctionlets() {
-    const auctionId = Template.instance().data.auction.auction_id;
+    const auction = Template.instance().data.auction;
+    const auctionId = auction.auction_id;
     return Auctionlets.findAuctionletsByAuctionId(auctionId);
   },
 });

@@ -31,3 +31,4 @@ shell-server
 chrismbeckett:toastr
 fortawesome:fontawesome
 templates:array
+dburles:collection-helpers
