@@ -39,7 +39,8 @@ Auctions.syncAuction = function syncAuction(auctionId) {
   });
 };
 
-Auctions.discoverExistingAuctions = function discoverExistingAuctions() {
+Auctions.initialize = function initialize() {
+  // discover existing auctions from past auction creation events
   TokenAuction.objects.auction.LogNewAuction({ }, { fromBlock: 0 }).get((error, events) => {
     if (error) {
       console.log('error: ', error);
@@ -50,17 +51,16 @@ Auctions.discoverExistingAuctions = function discoverExistingAuctions() {
       .map((event) => event.args['id'].toNumber())
       .map((auctionId) => Auctions.syncAuction(auctionId)));
   });
-};
 
-Auctions.loadAuction = function loadAuction(auctionId) {
-  Auctions.syncAuction(auctionId);
-};
-
-Auctions.watchNewAuctions = function watchNewAuctions() {
+  // watch future auction creation events for new auctions being created
   TokenAuction.objects.auction.LogNewAuction((error, result) => {
     const auctionId = result.args['id'].toNumber();
     Auctions.syncAuction(auctionId);
   });
+};
+
+Auctions.loadAuction = function loadAuction(auctionId) {
+  Auctions.syncAuction(auctionId);
 };
 
 Auctions.findAuction = function findAuction() {

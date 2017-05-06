@@ -22,10 +22,8 @@ let lastMessages = [];
 function setupFilters() {
   // log events need to be reset for each network
   if (Session.get('network')) {
-    Auctions.discoverExistingAuctions();
-    Auctions.watchNewAuctions();
-    Auctionlets.discoverExistingAuctionlets();
-    Auctionlets.watchBid();
+    Auctions.initialize();
+    Auctionlets.initialize();
   }
 
   web3.eth.filter('latest', () => {
@@ -207,15 +205,6 @@ Tracker.autorun(() => {
   checkBidNotifications();
   checkAuctionNotifications();
   checkClaimNotifications();
-  // const currentAuctionId = Session.get('currentAuctionId');
-  // if (currentAuctionId) {
-  //   Auctions.loadAuction(currentAuctionId);
-  // }
-  // const currentAuctionletId = Session.get('currentAuctionletId');
-  // if (currentAuctionletId) {
-  //   Auctionlets.loadAuctionlet(currentAuctionletId);
-  // } else {
-  //   Auctionlets.getOpenAuctionlets();
-  // }
+
   Session.get('network');
 });

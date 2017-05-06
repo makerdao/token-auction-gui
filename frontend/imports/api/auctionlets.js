@@ -1,6 +1,4 @@
 import { Mongo } from 'meteor/mongo';
-import callContractMethod from '../utils/etherscan-connector.js';
-import Auctions from './auctions.js';
 
 const Auctionlets = new Mongo.Collection(null);
 
@@ -57,8 +55,12 @@ Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId) {
   );
 };
 
-Auctionlets.discoverExistingAuctionlets = function discoverExistingAuctionlets() {
-  // the first auctionlet gets created when a new auction is created
+Auctionlets.initialize = function initialize() {
+  // clear existing auctionlets collection
+  Auctionlets.remove({ });
+
+  // discover existing auctionlets from past auction creation events
+  // (every time a new auction is created, one base auctionlet gets created as well)
   TokenAuction.objects.auction.LogNewAuction({ }, { fromBlock: 0 }).get((error, events) => {
     if (error) {
       console.log('error: ', error);
@@ -70,7 +72,7 @@ Auctionlets.discoverExistingAuctionlets = function discoverExistingAuctionlets()
       .map((auctionletId) => Auctionlets.syncAuctionlet(auctionletId)));
   });
 
-  // more auctionlets get created on a split bid
+  // discover even more existing auctionlets from past split events
   TokenAuction.objects.auction.LogSplit({ }, { fromBlock: 0 }).get((error, events) => {
     if (error) {
       console.log('error: ', error);
@@ -81,65 +83,31 @@ Auctionlets.discoverExistingAuctionlets = function discoverExistingAuctionlets()
       .map((event) => event.args['split_id'].toNumber())
       .map((auctionletId) => Auctionlets.syncAuctionlet(auctionletId)));
   });
-};
 
-Auctionlets.getOpenAuctionlets = function getOpenAuctions() {
-  if (typeof (TokenAuction.objects) !== 'undefined') {
-    /* eslint-disable new-cap */
-    TokenAuction.objects.auction.LogNewAuction({ }, { fromBlock: 0 }).get((error, result) => {
-      if (!error) {
-        const lastEventIndex = result.length - 1;
-        // TODO: When splitting auctions is active we will need to get the max auctionlet id using another way
-        const lastAuctionletId = result[lastEventIndex].args.id.toNumber();
-        const auctionPromises = [];
+  // watch future auction creation events
+  // (one auctionlet gets created on each such occasion)
+  TokenAuction.objects.auction.LogNewAuction((error, event) => {
+    const auctionletId = event.args['base_id'].toNumber();
+    Auctionlets.syncAuctionlet(auctionletId);
+  });
 
-        for (let i = 1; i <= lastAuctionletId; i++) {
-          auctionPromises.push(Auctionlets.getAuctionletInfo(i));
-        }
-        Promise.all(auctionPromises).then((resultProm) => {
-          const auctionPromises2 = [];
-          const notFinishedAutions = [];
-          for (let i = 0; i < resultProm.length; i++) {
-            // console.log(resultProm[i]);
-            if (resultProm[i].auctionletId && resultProm[i].unclaimed) {
-              notFinishedAutions.push(resultProm[i]);
-              auctionPromises2.push(Auctionlets.isExpired(resultProm[i].auctionletId));
-            }
-          }
+  // watch future auctionlet splits, if one happens we have to sync both auctionlets
+  // (the old one has changed, the new one has been just created and we should include it)
+  TokenAuction.objects.auction.LogSplit((error, event) => {
+    const oldAuctionletId = event.args['base_id'].toNumber();
+    const newAuctionletId = event.args['split_id'].toNumber();
+    Auctionlets.syncAuctionlet(oldAuctionletId);
+    Auctionlets.syncAuctionlet(newAuctionletId);
+  });
 
-          Promise.all(auctionPromises2).then((resultProm2) => {
-            Auctionlets.remove({});
-            for (let i = 0; i < resultProm2.length; i++) {
-              // console.log(notFinishedAutions[i]);
-              // console.log(resultProm2[i]);
-              if (!resultProm2[i]) {
-                notFinishedAutions[i].bids = 'undefined';
-                notFinishedAutions[i].ttl = 'undefined';
-                Auctionlets.insert(notFinishedAutions[i]);
+  // watch future bids and sync the auctionlet when one happends
+  TokenAuction.objects.auction.LogBid((error) => {
+    const auctionletId = event.args['auctionlet_id'].toNumber();
+    Auctionlets.syncAuctionlet(auctionletId);
+  });
 
-                // Update Bids# asynchronously
-                TokenAuction.objects.auction.LogBid({ auctionlet_id: notFinishedAutions[i].auctionletId },
-                { fromBlock: 0 }).get((errorBids, resultBids) => {
-                  if (!errorBids) {
-                    Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
-                    { $set: { bids: resultBids.length } });
-                  }
-                });
-
-                // Update Time Left asynchronously.
-                // TODO: When splitting auctions is active we should only call the auction once per group of auctionlets
-                Auctions.getAuction(notFinishedAutions[i].auction_id).then((resultAuction) => {
-                  Auctionlets.update({ auctionletId: notFinishedAutions[i].auctionletId },
-                  { $set: { ttl: resultAuction.ttl } });
-                });
-              }
-            }
-          });
-        });
-      }
-    });
-    /* eslint-enable new-cap */
-  }
+  //TODO how to detect claims??
+  //TODO how to detect expirations??
 };
 
 Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {
@@ -152,26 +120,6 @@ Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {
     result = 0;
   }
   return result;
-};
-
-Auctionlets.watchBid = function watchBid() {
-  TokenAuction.objects.auction.LogNewAuction((error, event) => {
-    const auctionletId = event.args['base_id'].toNumber();
-    Auctions.syncAuction(auctionletId);
-  });
-
-  TokenAuction.objects.auction.LogSplit((error, event) => {
-    const auctionletId = event.args['split_id'].toNumber();
-    Auctions.syncAuction(auctionletId);
-  });
-
-  TokenAuction.objects.auction.LogBid((error) => {
-    const auctionletId = event.args['auctionlet_id'].toNumber();
-    Auctions.syncAuction(auctionletId);
-  });
-
-  //TODO how to detect claims??
-  //TODO how to detect expirations??
 };
 
 export default Auctionlets;

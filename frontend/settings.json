@@ -10,8 +10,7 @@
                 "address": "0x4bb514a7f83fbb13c2b41448208e89fabbcfe2fb"
             },
             "auctionId": 1,
-            "auctionletId": 1,
-            "etherscanApiToken" : "E5ZYC8AQXH5EX3MPTZ7MXTGAUJJ9SDX1BH"
+            "auctionletId": 1
         },
         "live": {
             "ETH": {
@@ -23,8 +22,7 @@
                 "address": "0xc66ea802717bfb9833400264dd12c2bceaa34a6d"
             },
             "auctionId": 2,
-            "auctionletId": 2,
-            "etherscanApiToken" : "E5ZYC8AQXH5EX3MPTZ7MXTGAUJJ9SDX1BH"
+            "auctionletId": 2
         }
     }
 }
