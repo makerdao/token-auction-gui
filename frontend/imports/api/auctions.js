@@ -1,7 +1,4 @@
 import { Mongo } from 'meteor/mongo';
-import Tokens from './tokens.js';
-import auctionPath from '../startup/routes.js';
-import prettyError from '../utils/prettyError.js';
 
 const Auctions = new Mongo.Collection(null);
 

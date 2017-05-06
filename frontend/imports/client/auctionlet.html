@@ -7,7 +7,7 @@
           {{#if unclaimed}}
           <tr>
             <td>Selling</td>
-            <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
+            <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">MKR</span></td>
           </tr>
           {{#unless auctionlet.base}}
             <tr>
@@ -29,11 +29,11 @@
             {{else}}
               <td>Highest bid</td>
             {{/if}}
-            <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">{{ETHToken.name}}</span></td>
+            <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">ETH</span></td>
           </tr>
           <tr>
             <td>Unit price</td>
-            <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span></td>
+            <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">ETH</span>/<span class="MKR">MKR</span></td>
           </tr>
           {{/if}}
         </table>
@@ -47,15 +47,15 @@
             <table class="table">
               <tr>
               <td>Sold</td>
-                <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">{{MKRToken.name}}</span></td>
+                <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">MKR</span></td>
               </tr>
               <tr>
                 <td>Winning bid</td>
-              <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">{{ETHToken.name}}</span></td>
+              <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">ETH</span></td>
               </tr>
               <tr>
                 <td>Unit price</td>
-                <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">{{ETHToken.name}}</span>/<span class="MKR">{{MKRToken.name}}</span></td>
+                <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">ETH</span>/<span class="MKR">MKR</span></td>
               </tr>
               <tr>
                 <td>Last bid time</td>

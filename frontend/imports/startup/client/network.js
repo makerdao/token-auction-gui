@@ -19,29 +19,6 @@ Session.set('lastMessages', []);
 
 let lastMessages = [];
 
-// Check which accounts are available and if defaultAccount is still available,
-// Otherwise set it to localStorage, Session, or first element in accounts
-function checkAccounts() {
-  web3.eth.getAccounts((error, accounts) => {
-    if (!error) {
-      if (!_.contains(accounts, web3.eth.defaultAccount)) {
-        if (_.contains(accounts, localStorage.getItem('address'))) {
-          web3.eth.defaultAccount = localStorage.getItem('address');
-        } else if (_.contains(accounts, Session.get('address'))) {
-          web3.eth.defaultAccount = Session.get('address');
-        } else if (accounts.length > 0) {
-          web3.eth.defaultAccount = accounts[0];
-        } else {
-          web3.eth.defaultAccount = undefined;
-        }
-      }
-      localStorage.setItem('address', web3.eth.defaultAccount);
-      Session.set('address', web3.eth.defaultAccount);
-      Session.set('accounts', accounts);
-    }
-  });
-}
-
 function setupFilters() {
   // log events need to be reset for each network
   if (Session.get('network')) {
@@ -50,14 +27,13 @@ function setupFilters() {
   }
 
   web3.eth.filter('latest', () => {
-    Tokens.sync();
+    Session.get('network');
     Auctionlets.syncExpired();
   });
 }
 
 // Initialize everything on new network
 function initNetwork(newNetwork) {
-  checkAccounts();
   Session.set('network', newNetwork);
   Session.set('isConnected', true);
   Session.set('latestBlock', 0);
@@ -74,7 +50,7 @@ function initNetwork(newNetwork) {
   }*/
 
   TokenAuction.init(newNetwork);
-  Tokens.sync();
+  Session.get('network');
   Tokens.initialize(newNetwork);
 
   // filters need to be (re)registered after network switch.
@@ -230,7 +206,6 @@ Tracker.autorun(() => {
   checkBidNotifications();
   checkAuctionNotifications();
   checkClaimNotifications();
-  checkAccounts();
   const currentAuctionId = Session.get('currentAuctionId');
   if (currentAuctionId) {
     Auctions.loadAuction(currentAuctionId);
@@ -241,5 +216,5 @@ Tracker.autorun(() => {
   } else {
     Auctionlets.getOpenAuctionlets();
   }
-  Tokens.sync();
+  Session.get('network');
 });

@@ -31,21 +31,6 @@ Template.registerHelper('currentAuctionId', () => Session.get('currentAuctionId'
 
 Template.registerHelper('currentAuctionletId', () => Session.get('currentAuctionletId'));
 
-Template.registerHelper('ETHBalance', () => {
-  const balance = Session.get('ETHBalance');
-  return balance;
-});
-
-Template.registerHelper('ETHToken', () => {
-  const token = Tokens.findOne({ name: 'ETH' });
-  return token;
-});
-
-Template.registerHelper('MKRToken', () => {
-  const token = Tokens.findOne({ name: 'MKR' });
-  return token;
-});
-
 Template.registerHelper('auctionNotFound', () => {
   const auction = Auctions.findAuction();
   return auction === undefined || auction.creator === '0x0000000000000000000000000000000000000000'
