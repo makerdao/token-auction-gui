@@ -6,7 +6,6 @@ import Tokens from '/imports/api/tokens.js';
 import '/imports/client/accountselector.js';
 import '/imports/client/network-status.js';
 import '/imports/client/balance.js';
-import '/imports/client/newauction.js';
 import '/imports/client/auctions.js';
 import '/imports/client/auction.js';
 import '/imports/client/auctionlet.js';
@@ -29,8 +28,6 @@ Template.body.onCreated(function created() {
 
   // observing collections, only required once
   Tokens.watchEthAllowanceTransactions();
-  Tokens.watchMkrAllowanceTransactions();
   Auctionlets.watchBidTransactions();
-  Auctions.watchNewAuctionTransactions();
   Auctionlets.watchClaimTransactions();
 });

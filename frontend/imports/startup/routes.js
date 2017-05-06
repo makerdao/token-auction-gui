@@ -4,12 +4,9 @@ auctionPath = '!/auction/';
 
 function clearSessionVariables() {
   Session.set('newBidMessage', null);
-  Session.set('newAuctionMessage', null);
   Session.set('newTransactionMessage', null);
-  Session.set('newAuctionUrl', null);
   Session.set('claimMessage', null);
   Session.set('bidProgress', 0);
-  Session.set('newAuctionProgress', 0);
 }
 
 function auctionAction() {

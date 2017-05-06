@@ -5,7 +5,6 @@ import auctionPath from '../startup/routes.js';
 import prettyError from '../utils/prettyError.js';
 
 const Auctions = new Mongo.Collection(null);
-const AUCTION_GAS = 1000000;
 
 Auctions.getAuction = function getAuction(auctionId) {
   const p = new Promise((resolve, reject) => {
@@ -44,59 +43,13 @@ Auctions.loadAuction = function loadAuction(auctionId) {
   }
 };
 
-Auctions.createAuction = function createAuction(sellAmount) {
-  Tokens.setMkrAllowance(sellAmount);
-};
-
-Auctions.newAuction = function newAuction(account, selling, buying, sellAmount, startBid, minIncrease, duration) {
-  TokenAuction.objects.auction.newAuction(account, selling, buying, sellAmount, startBid,
-  minIncrease, duration, { gas: AUCTION_GAS }, (error, result) => {
-    if (!error) {
-      console.log('New auction transaction started');
-      Transactions.add('auction', result, { selling, sellAmount });
-    } else {
-      Session.set('newAuctionMessage', {
-        message: `Error creating new auction: ${prettyError(error)}`,
-        type: 'danger' });
-      Session.set('newAuctionProgress', 0);
-    }
-  });
-};
-
 Auctions.watchNewAuction = function watchNewAuction() {
   /* eslint-disable new-cap */
   TokenAuction.objects.auction.LogNewAuction((error, result) => {
-    if (!error) {
-      const auctionId = result.args.id.toNumber();
-      console.log('AuctionId: ', auctionId);
-      /* eslint-disable prefer-template */
-      const auctionUrl = Meteor.absoluteUrl() + '#' + auctionPath + auctionId;
-      /* eslint-disable prefer-template */
-      Session.set('newAuctionUrl', auctionUrl);
-    } else {
-      Session.set('newAuctionMessage', {
-        message: `Error creating new auction: ${prettyError(error)}`,
-        type: 'danger' });
-      Session.set('newAuctionProgress', 0);
-    }
+    const auctionId = result.args.id.toNumber();
+    console.log('AuctionId: ', auctionId);
   });
   /* eslint-disable new-cap */
-};
-
-Auctions.watchNewAuctionTransactions = function watchNewAuctionTransactions() {
-  Transactions.observeRemoved('auction', (document) => {
-    if (document.receipt.logs.length === 0) {
-      console.log('Creating auction went wrong');
-      Session.set('newAuctionMessage', { message: 'Error creating new auction', type: 'danger' });
-    } else {
-      console.log('Creating auction is succesful');
-      Session.set('newAuctionMessage', { message: 'New Auction successfully created', type: 'success' });
-      Session.set('newAuctionProgress', 100);
-      Meteor.setTimeout(() => {
-        Session.set('newAuctionProgress', 0);
-      }, 5000);
-    }
-  });
 };
 
 Auctions.findAuction = function findAuction() {

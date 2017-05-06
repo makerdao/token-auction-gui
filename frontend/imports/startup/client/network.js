@@ -18,7 +18,6 @@ clearMessages();
 
 Session.set('lastMessages', []);
 Session.set('bidProgress', 0);
-Session.set('newAuctionProgress', 0);
 
 let lastMessages = [];
 
@@ -132,9 +131,10 @@ function checkAuctionNotifications() {
 }
 
 function checkTransactionNotifications() {
-  if (Session.get('newTransactionMessage') !== null) {
-    showNotification(Session.get('newTransactionMessage'));
-  }
+  //TODO replace with notifications for new auctions created by others
+  // if (Session.get('newTransactionMessage') !== null) {
+  //   showNotification(Session.get('newTransactionMessage'));
+  // }
 }
 
 function checkClaimNotifications() {
