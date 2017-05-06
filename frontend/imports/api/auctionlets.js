@@ -13,8 +13,8 @@ Auctionlets.getAuctionletInfo = function getAuctionletInfo(auctionletId) {
       // this is a way to detect that the getAuctionInfo(...) contract call actually failed
       if (!error & (result[0] != 0)) {
         const auctionlet = {
-          auctionletId: auctionletId,
-          auctionId: result[0].toString(10),
+          auctionlet_id: auctionletId,
+          auction_id: result[0].toString(10),
           last_bidder: result[1],
           last_bid_time: new Date(result[2].toNumber() * 1000),
           buy_amount: result[3].toString(10),
@@ -103,10 +103,10 @@ Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId) {
     const auctionlet = values[0];
     auctionlet.expired = values[1];
 
-    Auctionlets.remove({ auctionletId: auctionletId },
+    Auctionlets.remove({ auctionlet_id: auctionletId },
       () => Auctionlets.insert(auctionlet));
   }).catch(() =>
-    Auctionlets.remove({ auctionletId: auctionletId })
+    Auctionlets.remove({ auctionlet_id: auctionletId })
   );
 };
 

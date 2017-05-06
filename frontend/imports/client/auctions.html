@@ -14,7 +14,7 @@
           </tr>
           {{#each auctionlets}}
           <tr>
-            <td><a href="/#!/auction/{{auctionletId}}">Show #{{auctionletId}}</a></td>
+            <td><a href="/#!/auction/{{auctionlet_id}}">Show #{{auctionlet_id}}</a></td>
             <td>{{formatBalance (fromWei sell_amount)}}</td>
             <td>
               {{#if equals bids "undefined"}}
@@ -50,7 +50,7 @@
             </tr>
             {{#each auctions}}
             <tr>
-                <td><a href="/#!/auction/{{auctionId}}">Show #{{auctionId}}</a></td>
+                <td><a href="/#!/auction/{{auction_id}}">Show #{{auction_id}}</a></td>
                 <td>{{formatBalance (fromWei start_bid)}}</td>
                 <td>{{selling}}</td>
                 <td>{{buying}}</td>

@@ -11,7 +11,7 @@ Auctions.getAuction = function getAuction(auctionId) {
     TokenAuction.objects.auction.getAuctionInfo(auctionId, (error, result) => {
       if (!error) {
         const auction = {
-          auctionId: auctionId,
+          auction_id: auctionId,
           creator: result[0],
           selling: result[1],
           buying: result[2],
@@ -53,7 +53,7 @@ Auctions.initialize = function initialize() {
 
 Auctions.syncAuction = function syncAuction(auctionId) {
   return Auctions.getAuction(auctionId).then((auction) => {
-    Auctions.remove({ auctionId: auctionId }, function() {
+    Auctions.remove({ auction_id: auctionId }, function() {
       Auctions.insert(auction)
     });
   }).catch((error) =>
