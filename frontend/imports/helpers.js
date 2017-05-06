@@ -56,11 +56,16 @@ Template.registerHelper('shortAddress', (address) => {
   return short;
 });
 
-Template.registerHelper('countdown', (timeRemaining) => {
+Template.registerHelper('formatTimeRemaining', (timeRemaining) => {
+  function pad(n) {
+    return (n < 10) ? ("0" + n) : n;
+  }
+
   if (typeof timeRemaining !== 'undefined') {
     const time = moment.duration(timeRemaining);
-    const returnVar = `${time.days()}d ${time.hours()}h ${time.minutes()}m ${time.seconds()}s`;
-    return returnVar;
+    const dayPart = (time.days() > 1) ? `${time.days()} days` : ((time.days() == 1) ? `${time.days()} day` : '');
+    const timePart = `${time.hours()}:${pad(time.minutes())}:${pad(time.seconds())}`;
+    return (dayPart + ' ' + timePart).trim();
   }
   return false;
 });
