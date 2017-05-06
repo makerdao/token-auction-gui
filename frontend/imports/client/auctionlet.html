@@ -82,16 +82,6 @@
               </tr>
             </table>
           {{/unless}}
-          {{#if auctionwinner}}
-            {{#if auctionlet.unclaimed}}
-            <br>
-              <span>You made the highest bid. Click to receive the tokens</span>
-              <button class="btn btn-primary" {{b "click: claim"}}>Claim</button><br>
-              {{#if claimMessage}}
-                <span id='spnClaimMessage' class="messageSpan alert alert-{{claimMessageType}}">{{{ claimMessage }}}</span>
-              {{/if}}
-            {{/if}}
-          {{/if}}
         </div>
         {{/unless}}
       {{else}}

@@ -7,7 +7,6 @@ import Auctions from './auctions.js';
 
 const Auctionlets = new Mongo.Collection(null);
 const BID_GAS = 1000000;
-const CLAIM_GAS = 1000000;
 
 Auctionlets.findAuctionlet = function findAuctionlet() {
   return Auctionlets.findOne({ auctionletId: Session.get('currentAuctionletId') });
@@ -282,32 +281,6 @@ Auctionlets.watchBidTransactions = function watchBidTransactions() {
       Meteor.setTimeout(function () {
         Session.set('bidProgress', 0);
       }, 5000);
-    }
-  });
-};
-
-Auctionlets.doClaim = function doClaim(auctionletId) {
-  TokenAuction.objects.auction.claim(auctionletId, { gas: CLAIM_GAS }, (error, result) => {
-    if (!error) {
-      Transactions.add('claim', result, { auctionletId });
-      Session.set('claimMessage', { message: 'Claiming your tokens', type: 'info' });
-    } else {
-      console.log('Claim error: ', error);
-      Session.set('claimMessage', { message: `Error claiming tokens: ${prettyError(error)}`, type: 'danger' });
-    }
-  });
-};
-
-Auctionlets.watchClaimTransactions = function watchClaimTransactions() {
-  Transactions.observeRemoved('claim', (document) => {
-    if (document.receipt.logs.length === 0) {
-      console.log('Claim went wrong');
-      Session.set('claimMessage', { message: 'Error claiming tokens', type: 'danger' });
-    } else {
-      console.log('Claim is succesful');
-      Session.set('claimMessage', { message: 'Tokens successfully claimed', type: 'success' });
-      const currentAuctionletId = Session.get('currentAuctionletId');
-      Auctionlets.loadAuctionlet(currentAuctionletId);
     }
   });
 };

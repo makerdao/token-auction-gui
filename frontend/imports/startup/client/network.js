@@ -138,9 +138,10 @@ function checkTransactionNotifications() {
 }
 
 function checkClaimNotifications() {
-  if (Session.get('claimMessage') !== null) {
-    showNotification(Session.get('claimMessage'));
-  }
+  //TODO replace with notifications about new claims made by others
+  // if (Session.get('claimMessage') !== null) {
+  //   showNotification(Session.get('claimMessage'));
+  // }
 }
 
 // CHECK FOR NETWORK

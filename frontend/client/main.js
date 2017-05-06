@@ -26,8 +26,9 @@ Template.body.onCreated(function created() {
     }
   });
 
+  //TODO will some other observing be needed here?
+
   // observing collections, only required once
   Tokens.watchEthAllowanceTransactions();
   Auctionlets.watchBidTransactions();
-  Auctionlets.watchClaimTransactions();
 });

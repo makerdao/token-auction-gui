@@ -116,22 +116,4 @@ Template.auctionlet.viewmodel({
     const auctionlet = Auctionlets.findAuctionlet();
     return auctionlet !== undefined && auctionlet.auction_id !== '0' && auctionlet.unclaimed;
   },
-  auctionwinner() {
-    const auctionlet = Auctionlets.findAuctionlet();
-    return this.expired() && auctionlet !== undefined && Session.get('address') === auctionlet.last_bidder
-    && auctionlet.unclaimed;
-  },
-  claimMessage() {
-    return Session.get('claimMessage') !== null ? Session.get('claimMessage').message : Session.get('claimMessage');
-  },
-  claimMessageType() {
-    return Session.get('claimMessage') !== null ? Session.get('claimMessage').type : 'info';
-  },
-  claim(event) {
-    event.preventDefault();
-    const auctionlet = Auctionlets.findAuctionlet();
-    if (auctionlet.unclaimed && this.expired()) {
-      Auctionlets.doClaim(Session.get('currentAuctionletId'));
-    }
-  },
 });
