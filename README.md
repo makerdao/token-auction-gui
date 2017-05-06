@@ -36,7 +36,7 @@ gulp build
 ## Usage
 
 ```bash
-cd frontend && npm run start
+npm run start
 ```
 
 Meteor has to be started with `npm run start` in order to include the settings.json file
@@ -59,6 +59,5 @@ There's an eslintConfig section in frontend/package.json for the configuration o
 You can run the linter with:
 
 ```bash
-cd frontend
 meteor npm run lint
 ``` 
