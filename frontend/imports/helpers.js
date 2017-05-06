@@ -56,6 +56,10 @@ Template.registerHelper('shortAddress', (address) => {
   return short;
 });
 
+Template.registerHelper('formatDateTime', function(date) {
+  return moment(date).format('DD-MMM-YYYY HH:mm:ss');
+});
+
 Template.registerHelper('formatTimeRemaining', (timeRemaining) => {
   function pad(n) {
     return (n < 10) ? ("0" + n) : n;
