@@ -9,7 +9,7 @@ var ghPages = require('gulp-gh-pages')
 // meteor-build-client ../build
 gulp.task('build-meteor', function (cb) {
   // setting ROOT_URL with --url so that we can use Meteor.absoluteUrl() from within the app
-  exec('meteor-build-client ../dist --path "" --url "https://makerdao.github.io/weekly-mkr-auction/" -s settings.json', {cwd: 'frontend'}, function (err, res, failed) {
+  exec('meteor-build-client ../dist --path "" --url "https://makerdao.github.io/weekly-mkr-auction/"', {cwd: 'frontend'}, function (err, res, failed) {
     if (err) {
       console.log(err)
     } else if (failed) {

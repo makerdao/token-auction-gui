@@ -3,15 +3,25 @@
       <h2>Auctionlet #{{auctionlet.auctionlet_id}}</h2>
         <table class="table">
           {{#if auctionlet.unclaimed}}
+          {{#unless auctionlet.base}}
+          <tr>
+            <td>Last bidder</td>
+            <td><a href="{{etherscanHref}}{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
+          </tr>
+          {{/unless}}
+          {{#if auctionlet.auction.isForward}}
+          <tr>
+            <td>Buying</td>
+            <td><strong>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">MKR</span></strong> for <strong>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">ETH</span></strong></td>
+          </tr>
+          {{/if}}
+          {{#if auctionlet.auction.isReverse}}
           <tr>
             <td>Selling</td>
-            <td>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">MKR</span></td>
+            <td><strong>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">ETH</span></strong> for <strong>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">MKR</span></strong></td>
           </tr>
+          {{/if}}
           {{#unless auctionlet.base}}
-            <tr>
-              <td>Last bidder</td>
-              <td><a href="{{etherscanHref}}{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
-            </tr>
             <tr>
               <td>Last bid time</td>
               <td>{{formatDateTime auctionlet.last_bid_time}}</td>

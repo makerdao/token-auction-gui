@@ -2,7 +2,7 @@
   "name": "frontend",
   "private": true,
   "scripts": {
-    "start": "meteor --settings settings.json",
+    "start": "meteor",
     "lint": "eslint .",
     "pretest": "npm run lint --silent"
   },

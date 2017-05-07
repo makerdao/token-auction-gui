@@ -38,15 +38,6 @@ function initNetwork(newNetwork) {
   Session.set('isConnected', true);
   Session.set('latestBlock', 0);
   /* const networkSettings = Meteor.settings.public[newNetwork];
-  const currentAuctionId = Session.get('currentAuctionId');
-  if (!currentAuctionId) {
-    // setting default auction id for the current network
-    Session.set('currentAuctionId', networkSettings.auctionId);
-  }
-  const currentAuctionletId = Session.get('currentAuctionletId');
-  if (!currentAuctionletId) {
-    // setting default auction id for the current network
-    Session.set('currentAuctionletId', networkSettings.auctionletId);
   }*/
 
   TokenAuction.init(newNetwork);

@@ -39,8 +39,6 @@ gulp build
 cd frontend && npm run start
 ```
 
-Meteor has to be started with `npm run start` in order to include the settings.json file
-
 You can access the user interface on [http://localhost:3000/](http://localhost:3000/)
 
 To deploy the frontend to Github Pages:

@@ -27,10 +27,6 @@ Template.registerHelper('json', (a) => {
   }
 });
 
-Template.registerHelper('currentAuctionId', () => Session.get('currentAuctionId'));
-
-Template.registerHelper('currentAuctionletId', () => Session.get('currentAuctionletId'));
-
 Template.registerHelper('auctionNotFound', () => {
   const auction = Auctions.findAuction();
   return auction === undefined || auction.creator === '0x0000000000000000000000000000000000000000'
