@@ -37,7 +37,6 @@
       "Web3": true,
       "window": true,
       "TokenAuction": true,
-      "ERC20": true,
       "auctionPath": true,
       "Template": true,
       "numeral": true,

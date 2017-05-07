@@ -21,7 +21,6 @@ ethereum:tools
 twbs:bootstrap
 token-auction:dapple
 manuel:viewmodel
-erc20:dapple
 web3:dapple
 session@1.1.6
 numeral:numeral
