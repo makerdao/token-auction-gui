@@ -33,11 +33,19 @@ Template.registerHelper('auctionNotFound', () => {
   || auction.creator === '0x';
 });
 
+Template.registerHelper('tokenSymbol', (address) => {
+  const symbol = Tokens.getTokenSymbol(address);
+  return (symbol != null) ? symbol : '???';
+});
+
 Template.registerHelper('etherscanHref', () => {
   const network = Session.get('network');
-  /* eslint-disable prefer-template */
   return 'https://' + (network === 'kovan' ? 'kovan.' : '') + 'etherscan.io/address/';
-  /* eslint-enable prefer-template */
+});
+
+Template.registerHelper('etherscanTokenHref', (address) => {
+  const network = Session.get('network');
+  return 'https://' + (network === 'kovan' ? 'kovan.' : '') + 'etherscan.io/token/' + address;
 });
 
 Template.registerHelper('contractExists', () => {

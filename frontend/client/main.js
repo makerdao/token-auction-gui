@@ -4,6 +4,7 @@ import '/imports/client/network-status.js';
 import '/imports/client/auctions.js';
 import '/imports/client/auction.js';
 import '/imports/client/auctionlet.js';
+import '/imports/client/token.js';
 
 import '/imports/startup/client/index.js';
 import '/imports/helpers.js';

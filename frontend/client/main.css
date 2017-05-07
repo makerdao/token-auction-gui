@@ -60,12 +60,32 @@ a:hover {
     padding: 10px 20px 10px 20px;
 }
 
-.ETH, a.ETH {
+a.address {
+    text-decoration: none;
+}
+
+.amount {
+  font-weight: 900;
+}
+
+.separator {
+  font-size: 80%;
+}
+
+.DAI, a.DAI {
     color: #82DACA;
+    text-decoration: none;
 }
 
 .MKR, a.MKR {
     color: #8E87C4;
+    text-decoration: none;
+}
+
+/* TODO temporary by @reverendus; to be removed later */
+.MKP, a.MKP {
+    color: #8E87C4;
+    text-decoration: none;
 }
 
 .table {

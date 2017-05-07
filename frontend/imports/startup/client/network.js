@@ -37,12 +37,9 @@ function initNetwork(newNetwork) {
   Session.set('network', newNetwork);
   Session.set('isConnected', true);
   Session.set('latestBlock', 0);
-  /* const networkSettings = Meteor.settings.public[newNetwork];
-  }*/
 
   TokenAuction.init(newNetwork);
   Session.get('network');
-  Tokens.initialize(newNetwork);
 
   // filters need to be (re)registered after network switch.
   setupFilters();

@@ -6,19 +6,19 @@
           {{#unless auctionlet.base}}
           <tr>
             <td>Last bidder</td>
-            <td><a href="{{etherscanHref}}{{auctionlet.last_bidder}}">{{auctionlet.last_bidder}}</a></td>
+            <td><a href="{{etherscanHref}}{{auctionlet.last_bidder}}" target="_blank" class="address">{{auctionlet.last_bidder}}</a></td>
           </tr>
           {{/unless}}
           {{#if auctionlet.auction.isForward}}
           <tr>
             <td>Buying</td>
-            <td><strong>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">MKR</span></strong> for <strong>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">ETH</span></strong></td>
+            <td><span class="amount">{{formatBalance (fromWei auctionlet.sell_amount)}} {{> token address=auctionlet.auction.selling}}</span> <span class="separator">for</span> <span class="amount">{{formatBalance (fromWei auctionlet.buy_amount)}} {{> token address=auctionlet.auction.buying}}</span></td>
           </tr>
           {{/if}}
           {{#if auctionlet.auction.isReverse}}
           <tr>
             <td>Selling</td>
-            <td><strong>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">ETH</span></strong> for <strong>{{formatBalance (fromWei auctionlet.sell_amount)}} <span class="MKR">MKR</span></strong></td>
+            <td><span class="amount">{{formatBalance (fromWei auctionlet.buy_amount)}} {{> token address=auctionlet.auction.buying}}</span> <span class="separator">for</span> <span class="amount">{{formatBalance (fromWei auctionlet.sell_amount)}} {{> token address=auctionlet.auction.selling}}</span></td>
           </tr>
           {{/if}}
           {{#unless auctionlet.base}}
@@ -31,14 +31,6 @@
               <td>{{formatTimeRemaining timeRemaining}}</td>
             </tr>
           {{/unless}}
-          <tr>
-            {{#if auctionlet.base}}
-              <td>Initial bid</td>
-            {{else}}
-              <td>Highest bid</td>
-            {{/if}}
-            <td>{{formatBalance (fromWei auctionlet.buy_amount)}} <span class="ETH">ETH</span></td>
-          </tr>
           <tr>
             <td>Unit price</td>
             <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">ETH</span>/<span class="MKR">MKR</span></td>

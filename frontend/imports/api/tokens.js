@@ -19,39 +19,19 @@ const tokens = {
 };
 
 
-Tokens.initialize = function initialize(network) {
-  ERC20.init(network);
-};
-
-Tokens.getTokenAddress = function getTokenAddress(network, symbol) {
+Tokens.getTokenAddress = function getTokenAddress(symbol) {
+  const network = Session.get('network');
   return tokens[network][symbol];
 };
 
-Tokens.getToken = function getToken(symbol, callback) {
+Tokens.getTokenSymbol = function getTokenSymbol(address) {
   const network = Session.get('network');
-  if (!(network in tokens)) {
-    console.log('unknown environment: ', network);
-    callback('Unknown environment', null);
-    return;
+  for (let symbol in tokens[network]) {
+    if (tokens[network].hasOwnProperty(symbol) && (tokens[network][symbol] == address)) {
+      return symbol;
+    }
   }
-  if (!(symbol in tokens[network])) {
-    console.log('unknown token');
-    callback(`Unknown token "${symbol}"`, null);
-    return;
-  }
-
-  const address = Tokens.getTokenAddress(network, symbol);
-  try {
-    ERC20.classes.ERC20.at(address, (error, token) => {
-      if (!error) {
-        callback(false, token);
-      } else {
-        callback(error, token);
-      }
-    });
-  } catch (e) {
-    callback(e, null);
-  }
+  return null;
 };
 
 export default Tokens;
