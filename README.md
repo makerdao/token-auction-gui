@@ -1,21 +1,12 @@
-[![Stories in Ready](https://badge.waffle.io/MakerDAO/weekly-mkr-auction.png?label=ready&title=Ready)](https://waffle.io/MakerDAO/weekly-mkr-auction)
+[![Stories in Ready](https://badge.waffle.io/MakerDAO/token-auction-gui.png?label=ready&title=Ready)](https://waffle.io/MakerDAO/token-auction-gui)
 
-"Weekly MKR Auction" is a simple frontend for the [Token Auction project](https://github.com/MakerDAO/token-auction). The project is aimed at weekly auctions to sell MKR.
+"Token Auction GUI" is a simple frontend for the [Token Auction project](https://github.com/MakerDAO/token-auction).
 
-This has a few benefits:
-
-* Contained project. Just implement the forward auction at first.
-* Low system risk. Only smallish amount of MKR goes in each week (we are guessing 50-100MKR).
-* Field test the auction contract. Despite low system risk there is still an incentive to try and break the contract.
-* Easy to upgrade. Can switch the contract on weekly auction expiry (we expect there to be backend changes as we integrate with Maker).
-* Work out ui snags before working on the 'real' Maker liquidation auctions.
-* Presents a target for a keeper task. This can be written afterward as a demo of linking the market and auctions.
-
-The auction would have a single beneficiary: the Maker fund.
+It is a basic, read-only frontend that displays all auctions and auctionlets present on a specified AuctionManager. The list is updated in real-time. There is no bidding, claiming functionality etc.
 
 ## Overview
 
-This dapp uses [Meteor](https://www.meteor.com/) as a frontend and the contract can be deployed/tested with [dapp](https://github.com/dapphub/dapp).
+This dapp uses [Meteor](https://www.meteor.com/).
 
 ## Installation
 
@@ -47,13 +38,14 @@ To deploy the frontend to Github Pages:
 gulp deploy
 ```
 
-The deployed frontend can be found at: [http://makerdao.com/token-auction-gui/](http://makerdao.com/token-auction-gui/)
+The deployed frontend can be found at: [http://makerdao.com/token-auction-gui/](http://makerdao.com/token-auction-gui/).
+There is also a test instance maintained by @reverendus deployed at [http://token-auction-gui.surge.sh/](http://token-auction-gui.surge.sh/).
 
 ## Development
 
 This project uses the [AirBnB style guide](https://github.com/airbnb/javascript) for coding standard guidelines.
 We use [ESLint](http://eslint.org/docs/user-guide/getting-started) to automatically check for common code problems or style errors.
-There's an eslintConfig section in frontend/package.json for the configuration of ESLint.
+There's an eslintConfig section in `frontend/package.json` for the configuration of ESLint.
 You can run the linter with:
 
 ```bash
