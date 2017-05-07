@@ -27,12 +27,6 @@ Template.registerHelper('json', (a) => {
   }
 });
 
-Template.registerHelper('auctionNotFound', () => {
-  const auction = Auctions.findAuction();
-  return auction === undefined || auction.creator === '0x0000000000000000000000000000000000000000'
-  || auction.creator === '0x';
-});
-
 Template.registerHelper('tokenSymbol', (address) => {
   const symbol = Tokens.getTokenSymbol(address);
   return (symbol != null) ? symbol : '???';
