@@ -2,9 +2,11 @@
     <div class="auctionBox">
       <h3>{{#if auction.isForward}}
           Forward auction #{{auction.auction_id}}
+          <small>Buy and Burn</small>
         {{/if}}
         {{#if auction.isReverse}}
           Reverse auction #{{auction.auction_id}}
+          <small>MKR Sale</small>
         {{/if}}
       </h3>
       <table class="table table-condensed">
@@ -32,18 +34,18 @@
           <td><span class="todo"><span class="amount">TBD</span></span></td>
         </tr>
         {{/if}}
-        <tr>
-          <td>Minimum increase</td>
-          <td>{{auction.min_increase}}%</td>
-        </tr>
-        <tr>
-          <td>Minimum decrease</td>
-          <td>{{auction.min_decrease}}%</td>
-        </tr>
-        <tr>
-          <td>TTL <i>(after last bid)</i></td>
-          <td>{{auction.ttl}} seconds</td>
-        </tr>
+        <!--<tr>-->
+          <!--<td>Minimum increase</td>-->
+          <!--<td>{{auction.min_increase}}%</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+          <!--<td>Minimum decrease</td>-->
+          <!--<td>{{auction.min_decrease}}%</td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+          <!--<td>TTL <i>(after last bid)</i></td>-->
+          <!--<td>{{auction.ttl}} seconds</td>-->
+        <!--</tr>-->
       </table>
   </div>
 
