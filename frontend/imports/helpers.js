@@ -19,14 +19,6 @@ Template.registerHelper('formatBalance', (wei) => {
   return numeral(wei).format(format);
 });
 
-Template.registerHelper('json', (a) => {
-  try {
-    return JSON.stringify(a);
-  } catch (e) {
-    return a;
-  }
-});
-
 Template.registerHelper('tokenSymbol', (address) => {
   const symbol = Tokens.getTokenSymbol(address);
   return (symbol != null) ? symbol : '???';
