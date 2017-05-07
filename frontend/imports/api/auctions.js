@@ -75,9 +75,7 @@ Auctions.initialize = function initialize() {
 
 Auctions.syncAuction = function syncAuction(auctionId) {
   return Auctions.getAuction(auctionId).then((auction) => {
-    Auctions.remove({ auction_id: auctionId }, function() {
-      Auctions.insert(auction)
-    });
+    Auctions.upsert({ auction_id: auctionId }, { $set: auction });
   }).catch((error) =>
     console.log('error: ', error));
 };

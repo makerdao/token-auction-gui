@@ -120,8 +120,7 @@ Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId, alsoSyncAucti
     const auctionlet = values[0];
     auctionlet.expired = values[1];
 
-    Auctionlets.remove({ auctionlet_id: auctionletId },
-      () => Auctionlets.insert(auctionlet));
+    Auctionlets.upsert({ auctionlet_id: auctionletId }, { $set: auctionlet });
 
     if (alsoSyncAuction) {
       Auctions.syncAuction(auctionlet.auction_id);

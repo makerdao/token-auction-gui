@@ -19,7 +19,7 @@ function setupFilters() {
 
   web3.eth.filter('latest', () => {
     Session.get('network');
-    // Auctionlets.resyncAuctionlets();
+    Auctionlets.resyncAuctionlets();
   });
 }
 
