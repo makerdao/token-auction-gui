@@ -34,8 +34,8 @@ Auctionlets.getAuctionletInfo = function getAuctionletInfo(auctionletId) {
           last_bid_time: new Date(result[2].toNumber() * 1000),
           buy_amount: result[3].toString(10),
           sell_amount: result[4].toString(10),
-          unit_price_forward: result[3].div(result[4]).toString(10),
-          unit_price_reverse: result[4].div(result[3]).toString(10),
+          unit_price_forward: result[4].div(result[3]).toString(10),
+          unit_price_reverse: result[3].div(result[4]).toString(10),
           unclaimed: result[5],
           base: result[6],
         };
