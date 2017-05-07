@@ -136,16 +136,4 @@ Auctionlets.resyncAuctionlets = function resyncAuctionlets() {
     .forEach((auctionletId) => Auctionlets.syncAuctionlet(auctionletId, false));
 };
 
-Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {
-  let result = 0;
-  if (a.buy_amount > b.buy_amount) {
-    result = -1;
-  } else if (a.buy_amount < b.buy_amount) {
-    result = 1;
-  } else {
-    result = 0;
-  }
-  return result;
-};
-
 export default Auctionlets;
