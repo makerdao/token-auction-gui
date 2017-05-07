@@ -113,9 +113,6 @@ Auctionlets.initialize = function initialize() {
     //TODO bids and splits on auctionlets in reverse auctions change the sell_amount of the auction itself!!!
     //TODO until I figure out whether it's a bug, we also sync the auction to show the change in the UI
   });
-
-  //TODO how to detect claims??
-  //TODO how to detect expirations??
 };
 
 Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId, alsoSyncAuction) {
@@ -132,6 +129,12 @@ Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId, alsoSyncAucti
   }).catch(() =>
     Auctionlets.remove({ auctionlet_id: auctionletId })
   );
+};
+
+Auctionlets.resyncAuctionlets = function resyncAuctionlets() {
+  Auctionlets.find({ })
+    .map((auctionlet) => auctionlet.auctionlet_id)
+    .forEach((auctionletId) => Auctionlets.syncAuctionlet(auctionletId, false));
 };
 
 Auctionlets.sortByBuyAmountDesc = function sortByBuyAmountDesc(a, b) {

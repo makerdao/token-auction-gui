@@ -1,9 +1,7 @@
 import Auctions from '/imports/api/auctions.js';
 import Auctionlets from '/imports/api/auctionlets.js';
-import Tokens from '/imports/api/tokens.js';
 import { Meteor } from 'meteor/meteor';
 import { Tracker } from 'meteor/tracker';
-import clearMessages from '/imports/utils/clearmessages.js';
 
 Meteor.disconnect();
 Session.set('network', false);
@@ -11,13 +9,6 @@ Session.set('outOfSync', false);
 Session.set('syncing', false);
 Session.set('isConnected', false);
 Session.set('latestBlock', 0);
-
-// Clear UI Messages
-clearMessages();
-
-Session.set('lastMessages', []);
-
-let lastMessages = [];
 
 function setupFilters() {
   // log events need to be reset for each network
@@ -28,7 +19,7 @@ function setupFilters() {
 
   web3.eth.filter('latest', () => {
     Session.get('network');
-    //TODO Auctionlets.syncExpired();
+    // Auctionlets.resyncAuctionlets();
   });
 }
 
@@ -43,61 +34,6 @@ function initNetwork(newNetwork) {
 
   // filters need to be (re)registered after network switch.
   setupFilters();
-}
-
-// Check if there are notifications to route through toastr
-function showNotification(notification) {
-  const syncing = Session.set('syncing');
-  if (!syncing) {
-    if (typeof (notification) !== 'undefined' && notification !== null) {
-      const message = notification.message;
-      const type = notification.type ? notification.type : 'warning';
-      if (lastMessages.indexOf(message) === -1) {
-        switch (type) {
-          case 'success':
-            toastr.success(message);
-            break;
-          case 'info':
-            toastr.info(message);
-            break;
-          case 'warning':
-            toastr.warning(message);
-            break;
-          case 'danger':
-            toastr.error(message);
-            break;
-          default:
-            toastr.warning(message);
-            break;
-        }
-        lastMessages.unshift(message);
-        if (lastMessages.length > 3) {
-          lastMessages = lastMessages.splice(0, 3);
-        }
-      }
-    }
-  }
-}
-
-function checkBidNotifications() {
-  //TODO replace with notifications for new bids placed by others
-  // if (Session.get('newBidMessage') !== null) {
-  //   showNotification(Session.get('newBidMessage'));
-  // }
-}
-
-function checkAuctionNotifications() {
-  //TODO replace with notifications for new auctions created by others
-  // if (Session.get('newAuctionMessage') !== null) {
-  //   showNotification(Session.get('newAuctionMessage'));
-  // }
-}
-
-function checkClaimNotifications() {
-  //TODO replace with notifications about new claims made by others
-  // if (Session.get('claimMessage') !== null) {
-  //   showNotification(Session.get('claimMessage'));
-  // }
 }
 
 // CHECK FOR NETWORK
@@ -190,9 +126,5 @@ Meteor.startup(() => {
 });
 
 Tracker.autorun(() => {
-  checkBidNotifications();
-  checkAuctionNotifications();
-  checkClaimNotifications();
-
   Session.get('network');
 });
