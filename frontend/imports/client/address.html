@@ -1,0 +1,8 @@
+<template name="address">
+  {{#if owner}}
+  <span class="identity">{{owner}}</span> (<a href="{{etherscanAddressHref address}}" target="_blank" class="address">{{shortAddress address}}</a>)
+  {{/if}}
+  {{#unless owner}}
+  <a href="{{etherscanAddressHref address}}" target="_blank" class="address">{{address}}</a>
+  {{/unless}}
+</template>

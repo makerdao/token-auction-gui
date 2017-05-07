@@ -1,52 +1,72 @@
 <template name="auctionlet">
-    <div class="boxDiv">
-      <h2>Auctionlet #{{auctionlet.auctionlet_id}}</h2>
+    <div class="auctionletBox">
+      <h4>Auctionlet #{{auctionlet.auctionlet_id}}
+        {{#if auctionlet.base}}
+        <small>no bids</small>
+        {{/if}}
+        {{#unless auctionlet.base}}
+          {{#if auctionlet.expired}}
+            {{#if auctionlet.unclaimed}}
+            <small>expired, unclaimed</small>
+            {{/if}}
+            {{#unless auctionlet.unclaimed}}
+            <small>expired, claimed</small>
+            {{/unless}}
+          {{/if}}
+          {{#unless auctionlet.expired}}
+            <small>active</small>
+          {{/unless}}
+        {{/unless}}
+      </h4>
+
         <table class="table">
-          {{#if auctionlet.unclaimed}}
           {{#unless auctionlet.base}}
           <tr>
             <td>Last bidder</td>
-            <td><a href="{{etherscanHref}}{{auctionlet.last_bidder}}" target="_blank" class="address">{{auctionlet.last_bidder}}</a></td>
+            <td>{{> address address=auctionlet.last_bidder}}</td>
+          </tr>
+          <tr>
+            <td>Last bid time</td>
+            <td>{{formatDateTime auctionlet.last_bid_time}} <span class="timeRemaining">(time remaining: {{formatTimeRemaining timeRemaining}})</span></td>
           </tr>
           {{/unless}}
           {{#if auctionlet.auction.isForward}}
+          {{#unless auctionlet.base}}
           <tr>
             <td>Buying</td>
             <td><span class="amount">{{formatBalance (fromWei auctionlet.sell_amount)}} {{> token address=auctionlet.auction.selling}}</span> <span class="separator">for</span> <span class="amount">{{formatBalance (fromWei auctionlet.buy_amount)}} {{> token address=auctionlet.auction.buying}}</span></td>
           </tr>
+          {{/unless}}
+          {{#if auctionlet.base}}
+          <tr>
+            <td>Remaining</td>
+            <td><span class="amount">{{formatBalance (fromWei auctionlet.sell_amount)}} {{> token address=auctionlet.auction.selling}}</span> <span class="separator">for at least</span> <span class="amount">{{formatBalance (fromWei auctionlet.buy_amount)}} {{> token address=auctionlet.auction.buying}}</span></td>
+          </tr>
           {{/if}}
+          <tr>
+            <td>Price</td>
+            <td><span class="amount">{{formatBalance (auctionlet.unit_price_forward)}} {{> token address=auctionlet.auction.buying}}/{{> token address=auctionlet.auction.selling}}</span></td>
+          </tr>
+          {{/if}}
+
           {{#if auctionlet.auction.isReverse}}
+          {{#unless auctionlet.base}}
           <tr>
             <td>Selling</td>
             <td><span class="amount">{{formatBalance (fromWei auctionlet.buy_amount)}} {{> token address=auctionlet.auction.buying}}</span> <span class="separator">for</span> <span class="amount">{{formatBalance (fromWei auctionlet.sell_amount)}} {{> token address=auctionlet.auction.selling}}</span></td>
           </tr>
-          {{/if}}
-          {{#unless auctionlet.base}}
-            <tr>
-              <td>Last bid time</td>
-              <td>{{formatDateTime auctionlet.last_bid_time}}</td>
-            </tr>
-            <tr>
-              <td>Time remaining</td>
-              <td>{{formatTimeRemaining timeRemaining}}</td>
-            </tr>
           {{/unless}}
+          {{#if auctionlet.base}}
           <tr>
-            <td>Unit price</td>
-            <td>{{formatBalance (auctionlet.unit_price)}} <span class="ETH">ETH</span>/<span class="MKR">MKR</span></td>
+            <td>Remaining</td>
+            <td><span class="amount">{{formatBalance (fromWei auctionlet.buy_amount)}} {{> token address=auctionlet.auction.buying}}</span> <span class="separator">for at most</span> <span class="amount">{{formatBalance (fromWei auctionlet.sell_amount)}} {{> token address=auctionlet.auction.selling}}</span></td>
+          </tr>
+          {{/if}}
+          <tr>
+            <td>Price</td>
+            <td><span class="amount">{{formatBalance (auctionlet.unit_price_reverse)}} {{> token address=auctionlet.auction.selling}}/{{> token address=auctionlet.auction.buying}}</span></td>
           </tr>
           {{/if}}
         </table>
-        {{#if auctionlet.expired}}
-        <div class="form-group">
-          <div>Auctionlet has expired.</div>
-          {{#if auctionlet.unclaimed}}
-            <div>The tokens are awaiting to be claimed by the auctionlet winner.</div>
-          {{/if}}
-          {{#unless auctionlet.unclaimed}}
-            <div>The tokens have been claimed by the auctionlet winner</div>
-          {{/unless}}
-        </div>
-        {{/if}}
     </div>
 </template>

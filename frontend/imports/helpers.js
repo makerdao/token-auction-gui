@@ -38,9 +38,9 @@ Template.registerHelper('tokenSymbol', (address) => {
   return (symbol != null) ? symbol : '???';
 });
 
-Template.registerHelper('etherscanHref', () => {
+Template.registerHelper('etherscanAddressHref', (address) => {
   const network = Session.get('network');
-  return 'https://' + (network === 'kovan' ? 'kovan.' : '') + 'etherscan.io/address/';
+  return 'https://' + (network === 'kovan' ? 'kovan.' : '') + 'etherscan.io/address/' + address;
 });
 
 Template.registerHelper('etherscanTokenHref', (address) => {
@@ -57,7 +57,7 @@ Template.registerHelper('contractExists', () => {
 
 Template.registerHelper('shortAddress', (address) => {
   const short = address.substring(0, 10);
-  return short;
+  return short + '…';
 });
 
 Template.registerHelper('formatDateTime', function(date) {

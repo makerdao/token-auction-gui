@@ -1,34 +1,37 @@
 <template name="auction">
-    <div class="boxDiv">
-      <h2>
-        {{#if auction.isForward}}
+    <div class="auctionBox">
+      <h3>{{#if auction.isForward}}
           Forward auction #{{auction.auction_id}}
         {{/if}}
         {{#if auction.isReverse}}
           Reverse auction #{{auction.auction_id}}
         {{/if}}
-      </h2>
+      </h3>
       <table class="table table-condensed">
         <tr>
           <td>Creator</td>
-          <td><a href="{{etherscanHref}}{{auction.creator}}" target="_blank" class="address">{{auction.creator}}</a></td>
+          <td>{{> address address=auction.creator}}</td>
         </tr>
         {{#if auction.isForward}}
           <tr>
             <td>Selling</td>
             <td><span class="amount">{{formatBalance (fromWei auction.sell_amount)}} {{> token address=auction.selling}}</span> <span class="separator">for at least</span> <span class="amount">{{formatBalance (fromWei auction.start_bid)}} {{> token address=auction.buying}}</span></td>
           </tr>
+          <tr>
+            <td>Initial price</td>
+            <td><span class="amount">{{formatBalance (auction.unit_price_forward)}} {{> token address=auction.buying}}/{{> token address=auction.selling}}</span></td>
+          </tr>
         {{/if}}
         {{#if auction.isReverse}}
           <tr>
             <td>Buying</td>
-            <td><span class="amount">{{formatBalance (fromWei auction.start_bid)}} {{> token address=auction.buying}}</span> <span class="separator">for at most</span> <span class="amount">{{formatBalance (fromWei auction.sell_amount)}} {{> token address=auction.selling}}</span> (<i>this info is fake!!!</i>)</td>
+            <td><span class="amount">{{formatBalance (fromWei auction.start_bid)}} {{> token address=auction.buying}}</span> <span class="separator">for at most</span> <span class="todo"><span class="amount">{{formatBalance (fromWei auction.sell_amount)}} {{> token address=auction.selling}}</span> (<i>this info is fake!!!</i>)</span></td>
           </tr>
+        <tr>
+          <td>Initial price</td>
+          <td><span class="todo"><span class="amount">TBD</span></span></td>
+        </tr>
         {{/if}}
-        <!--<tr>-->
-          <!--<td>Start bid</td>-->
-          <!--<td>{{formatBalance (fromWei auction.start_bid)}} <span class="ETH">ETH</span></td>-->
-        <!--</tr>-->
         <tr>
           <td>Minimum increase</td>
           <td>{{auction.min_increase}}%</td>

@@ -51,17 +51,35 @@ a:hover {
     padding-left: 40px;
 }
 
-.boxDiv {
+.auctionBox {
     background-color: white;
     box-shadow: 2px 2px 5px #E0DFDF;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     margin-top: 10px;
     border: 1px solid #E0DFDF;
     padding: 10px 20px 10px 20px;
 }
 
+.auctionletBox {
+    background-color: white;
+    box-shadow: 2px 2px 5px #E0DFDF;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    border: 1px solid #E0DFDF;
+    border-top: 0px;
+    padding: 10px 20px 10px 20px;
+}
+
 a.address {
     text-decoration: none;
+}
+
+.identity {
+  font-weight: 900;
+}
+
+.timeRemaining {
+  font-size: 80%;
 }
 
 .amount {
@@ -90,6 +108,13 @@ a.address {
 
 .table {
     max-width: 600px;
+    table-layout: fixed;
+}
+
+.table tr td:first-child {
+  width: 160px;
+  min-width: 160px;
+  max-width: 160px;
 }
 
 div.box {
@@ -107,4 +132,8 @@ div.row {
 
 .message {
     color: #D0D0D0;
+}
+
+.todo {
+  background-color: yellow;
 }

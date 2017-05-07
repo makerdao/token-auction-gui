@@ -39,6 +39,8 @@ Auctions.getAuction = function getAuction(auctionId) {
           min_increase: result[4].toNumber(),
           min_decrease: result[5].toNumber(),
           sell_amount: result[6].toString(10),
+          unit_price_forward: result[3].div(result[6]).toString(10),
+          unit_price_reverse: result[6].div(result[3]).toString(10),
           ttl: result[7].toNumber(),
           reversed: result[8],
           unsold: result[9],

@@ -18,7 +18,6 @@ const tokens = {
   },
 };
 
-
 Tokens.getTokenAddress = function getTokenAddress(symbol) {
   const network = Session.get('network');
   return tokens[network][symbol];

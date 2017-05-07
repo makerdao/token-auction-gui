@@ -1,6 +1,7 @@
 import { Template } from 'meteor/templating';
 
 import '/imports/client/network-status.js';
+import '/imports/client/address.js';
 import '/imports/client/auctions.js';
 import '/imports/client/auction.js';
 import '/imports/client/auctionlet.js';
