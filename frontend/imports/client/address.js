@@ -6,8 +6,6 @@ Template.address.helpers({
   owner: function owner() {
     const address = Template.instance().data.address;
     if (typeof address !== 'undefined') {
-      console.log("ADDRESS:" + address);
-      console.log("NAME:" + Participants.getParticipantName(address));
       return Participants.getParticipantName(address);
     }
     else {
