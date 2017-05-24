@@ -19,10 +19,10 @@ Auctions.helpers({
     else return Auctions.TYPE_REVERSE;
   },
   isForward: function isForward() {
-    return this.type() == Auctions.TYPE_FORWARD;
+    return this.type() === Auctions.TYPE_FORWARD;
   },
   isReverse: function isForward() {
-    return this.type() == Auctions.TYPE_REVERSE;
+    return this.type() === Auctions.TYPE_REVERSE;
   }
 });
 
