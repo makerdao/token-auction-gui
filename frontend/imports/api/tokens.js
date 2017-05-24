@@ -7,9 +7,8 @@ const tokens = {
   kovan: {
     'ETH': '0x53eccc9246c1e537d79199d0c7231e425a40f896',
     'DAI': '0x0000000000000000000000000000000000000000',
+    'RAI': '0x383105dc3dab1646119335ae54afdfd9f2af4713', //TODO a substitute of DAI by @reverendus
     'MKR': '0x4bb514a7f83fbb13c2b41448208e89fabbcfe2fb',
-    'REVERENDUS-DAI': '0x383105dc3dab1646119335ae54afdfd9f2af4713',
-    'REVERENDUS-SAI': '0x408f224724a7680b6172bd37bf482c50e2be5d02',
   },
   live: {
     'ETH': '0xecf8f87f810ecf450940c9f60066b4a7a501d6a7',

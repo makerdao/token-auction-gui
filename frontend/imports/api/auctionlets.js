@@ -101,17 +101,13 @@ Auctionlets.initialize = function initialize() {
     const oldAuctionletId = event.args['base_id'].toNumber();
     const newAuctionletId = event.args['split_id'].toNumber();
     Auctionlets.syncAuctionlet(oldAuctionletId);
-    Auctionlets.syncAuctionlet(newAuctionletId, true);
-    //TODO bids and splits on auctionlets in reverse auctions change the sell_amount of the auction itself!!!
-    //TODO until I figure out whether it's a bug, we also sync the auction to show the change in the UI
+    Auctionlets.syncAuctionlet(newAuctionletId);
   });
 
   // watch future bids and sync the auctionlet when one happends
   TokenAuction.objects.auction.LogBid((error, event) => {
     const auctionletId = event.args['auctionlet_id'].toNumber();
-    Auctionlets.syncAuctionlet(auctionletId, true);
-    //TODO bids and splits on auctionlets in reverse auctions change the sell_amount of the auction itself!!!
-    //TODO until I figure out whether it's a bug, we also sync the auction to show the change in the UI
+    Auctionlets.syncAuctionlet(auctionletId);
   });
 };
 
@@ -121,10 +117,6 @@ Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId, alsoSyncAucti
     auctionlet.expired = values[1];
 
     Auctionlets.upsert({ auctionlet_id: auctionletId }, { $set: auctionlet });
-
-    if (alsoSyncAuction) {
-      Auctions.syncAuction(auctionlet.auction_id);
-    }
   }).catch(() =>
     Auctionlets.remove({ auctionlet_id: auctionletId })
   );
@@ -133,7 +125,7 @@ Auctionlets.syncAuctionlet = function syncAuctionlet(auctionletId, alsoSyncAucti
 Auctionlets.resyncAuctionlets = function resyncAuctionlets() {
   Auctionlets.find({ })
     .map((auctionlet) => auctionlet.auctionlet_id)
-    .forEach((auctionletId) => Auctionlets.syncAuctionlet(auctionletId, false));
+    .forEach((auctionletId) => Auctionlets.syncAuctionlet(auctionletId));
 };
 
 export default Auctionlets;
