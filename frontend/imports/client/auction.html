@@ -8,6 +8,10 @@
           Reverse auction #{{auction.auction_id}}
           <small>MKR Sale</small>
         {{/if}}
+        {{#if auction.isTwoWay}}
+          Two-way auction #{{auction.auction_id}}
+          <small><span class="todo">TBD</span></small>
+        {{/if}}
       </h3>
       <table class="table table-condensed">
         <tr>

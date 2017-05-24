@@ -4,6 +4,7 @@ const Auctions = new Mongo.Collection(null);
 
 Auctions.TYPE_FORWARD = 'forward';
 Auctions.TYPE_REVERSE = 'reverse';
+Auctions.TYPE_TWO_WAY = 'two_way';
 
 Auctions.findAuctions = function findAuctions() {
   return Auctions.find({ }, {sort: {auction_id: -1}});
@@ -15,7 +16,8 @@ Auctions.findAuction = function findAuction(auctionId) {
 
 Auctions.helpers({
   type() {
-    if (this.min_increase > 0) return Auctions.TYPE_FORWARD;
+    if ((this.min_increase > 0) && (this.min_decrease > 0)) return Auctions.TYPE_TWO_WAY;
+    else if (this.min_increase > 0) return Auctions.TYPE_FORWARD;
     else return Auctions.TYPE_REVERSE;
   },
   isForward: function isForward() {
@@ -23,6 +25,9 @@ Auctions.helpers({
   },
   isReverse: function isForward() {
     return this.type() === Auctions.TYPE_REVERSE;
+  },
+  isTwoWay: function isForward() {
+    return this.type() === Auctions.TYPE_TWO_WAY;
   }
 });
 
