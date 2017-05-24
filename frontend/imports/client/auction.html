@@ -27,11 +27,11 @@
         {{#if auction.isReverse}}
           <tr>
             <td>Buying</td>
-            <td><span class="amount">{{formatBalance (fromWei auction.start_bid)}} {{> token address=auction.buying}}</span> <span class="separator">for at most</span> <span class="todo"><span class="amount">{{formatBalance (fromWei auction.sell_amount)}} {{> token address=auction.selling}}</span> (<i>this info is fake!!!</i>)</span></td>
+            <td><span class="amount">{{formatBalance (fromWei auction.start_bid)}} {{> token address=auction.buying}}</span> <span class="separator">for at most</span> <span class="amount">{{formatBalance (fromWei auction.sell_amount)}} {{> token address=auction.selling}}</span></td>
           </tr>
         <tr>
           <td>Initial price</td>
-          <td><span class="todo"><span class="amount">TBD</span></span></td>
+          <td><span class="amount">{{formatBalance (auction.unit_price_reverse)}} {{> token address=auction.selling}}/{{> token address=auction.buying}}</span></td>
         </tr>
         {{/if}}
         <!--<tr>-->
