@@ -25,7 +25,7 @@ Tokens.getTokenAddress = function getTokenAddress(symbol) {
 Tokens.getTokenSymbol = function getTokenSymbol(address) {
   const network = Session.get('network');
   for (let symbol in tokens[network]) {
-    if (tokens[network].hasOwnProperty(symbol) && (tokens[network][symbol] == address)) {
+    if (tokens[network].hasOwnProperty(symbol) && (tokens[network][symbol] === address)) {
       return symbol;
     }
   }
